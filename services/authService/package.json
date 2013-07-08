@@ -1,0 +1,22 @@
+{
+  "name": "notoja-backend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "3.2.6",
+    "jade": "*",
+    "stylus": "*",
+    "mongoose": "*",
+    "underscore": "*",
+    "email-templates": "*",
+    "nodemailer": "*",
+    "ejs": "*",
+    "handlebars": "*",
+    "mustache": "*",
+    "oauth2-provider": "*",
+    "ejs-locals": "~1.0.2"
+  }
+}

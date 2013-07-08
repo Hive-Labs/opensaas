@@ -1,0 +1,42 @@
+{
+  "server": {
+    "port": 4455,
+    "mongooseServer": "mongodb://localhost/backend",
+    "activationEmail": "default",
+    "activationSubject": "Welcome to <company name>"
+  },
+
+
+  "security": {
+    "sessionPassword": "superNinjaMonkeyPower",
+    "oAuthCryptKey": "encryption secret",
+    "oAuthSigningSecret": "signing secret",
+
+    "ssl": {
+      "enable": false,
+      "key": "ssl/eric-key.pem",
+      "cert": "ssl/eric-cert.pem"
+    }
+  },
+
+
+  "email": {
+    "senderAddresses": {
+      "default": {
+        "deliveryMethod": "SMTP",
+        "displayName": "default",
+        "fromAddress": "someemail@gmail.com",
+
+        "deliverySettings": {
+          "service": "Gmail",
+          "auth": {
+            "user": "someemail@gmail.com",
+            "pass": "somepassword"
+          }
+        }
+      }
+    },
+
+    "emailTemplateFolder": "./email_templates/"
+  }
+}

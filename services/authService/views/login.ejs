@@ -1,0 +1,313 @@
+<head>
+<title>Title</title>
+<script type="text/javascript" src="javascripts/jquery-latest.js"></script>
+<script type="text/javascript" src="javascripts/jquery-ui.min.js"></script>
+<script type="text/javascript" src="javascripts/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/modifiedBootstrap.css">
+<style type="text/css">
+                body
+                {
+                padding-left:30px;
+                padding-right:30px;
+                padding-top: 60px;
+                padding-bottom: 40px;
+                  background-size: 50px
+                50px;
+                background-color: #33B5E5;
+                background-image:
+                -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+                transparent 25%,
+                transparent 50%, rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2) 75%,
+                transparent 75%, transparent);
+                background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2)
+                25%, transparent
+                25%,
+                transparent 50%, rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2) 75%,
+                transparent 75%, transparent);
+                background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+                transparent 25%,
+                transparent 50%, rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2)
+                75%,
+                transparent 75%, transparent);
+                -pie-background: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+                transparent 25%,
+                transparent 50%, rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2)
+                75%,
+                transparent 75%, transparent) 0 0 / 50px
+                50px #33B5E5;
+                behavior: url(/pie/PIE.htc);
+                }
+                .nameField
+                {
+                float:left;
+                margin:0px;
+                margin-right:10px;
+                }
+                .ddBoxTop
+                {
+                height:25px;
+                width:250px;
+                background: -moz-linear-gradient(top, rgba(255,255,255,0.65) 0%,
+                rgba(244,244,244,0.83) 34%, rgba(244,244,244,1) 66%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom,
+                color-stop(0%,rgba(255,255,255,0.65)),
+                color-stop(34%,rgba(244,244,244,0.83)),
+                color-stop(66%,rgba(244,244,244,1))); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top, rgba(255,255,255,0.65)
+                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /*
+                Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,
+                rgba(255,255,255,0.65)
+                0%,rgba(244,244,244,0.83)
+                34%,rgba(244,244,244,1) 66%); /* Opera 
+                11.10+ */
+                background:
+                -ms-linear-gradient(top, rgba(255,255,255,0.65)
+                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* IE10+ */
+                background: linear-gradient(to bottom, rgba(255,255,255,0.65)
+                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient(
+                startColorstr='#a6ffffff', endColorstr='#f4f4f4',GradientType=0 ); /*
+                IE6-9 */
+                }
+                .ddBoxBottom
+                {
+                height:15px;
+                width:230px;
+                padding-left:10px;
+                padding-right:10px;
+                padding-top:4px;
+                }
+                .hLine
+                {
+                height:1px;
+                width:250px;
+                background: -moz-linear-gradient(top, rgba(160,160,160,0.73) 0%,
+                rgba(67,67,67,0.73) 58%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+                background:
+                -webkit-gradient(linear, left top, left bottom,
+                color-stop(0%,rgba(160,160,160,0.73)),
+                color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
+                /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /*
+                Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,
+                rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
+                58%,rgba(0,0,0,0) 100%);
+                /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /* IE10+ */
+                background: linear-gradient(to bottom,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient(
+                startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
+                /* IE6-9 */
+                }
+                .topLeftDiv
+                {
+                float:left;
+                padding-left:10px;
+                width:114px;
+                text-align:center;
+                color: #989898 ;
+                font-family:'Trebuchet MS';
+                text-shadow: 1px 1px 0px #FFFFFF;
+                }
+                .topMiddleDiv
+                {
+                float:left;
+                width:1px;
+                height:100%;
+                background: -moz-linear-gradient(top,
+                rgba(160,160,160,0.73) 0%,
+                rgba(67,67,67,0.73) 58%, rgba(0,0,0,0)
+                100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left
+                bottom,
+                color-stop(0%,rgba(160,160,160,0.73)),
+                color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
+                /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /*
+                Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,
+                rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
+                58%,rgba(0,0,0,0) 100%);
+                /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /* IE10+ */
+                background: linear-gradient(to bottom,
+                rgba(160,160,160,0.73)
+                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+                /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient(
+                startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
+                /* IE6-9 */
+                }
+                .topRightDiv
+                {
+                float:right;
+                padding-right:10px;
+                width:115px;
+                text-align:center;
+                color: #344251;
+                color: #989898 ;
+                font-family:'Trebuchet MS';
+                text-shadow: 1px 1px 0px #FFFFFF;
+                }
+.notificationItem
+{
+height: 25px; 
+background-color: rgb(198, 198, 255); 
+border: 1px none; 
+padding: 10px; 
+width: 230px;
+}
+.notificationIcon
+{
+margin-top:auto;
+margin-bottom:auto;
+}
+.modal-body{
+    font-size:12pt;
+}
+.appContainer{
+      margin-left:auto;
+        margin-right: auto;
+        background-color:white;
+        border-radius:5px;
+        padding:10px;
+        min-height:500px;
+}
+.loginDiv{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+    </style>
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top blackBar">
+  <div class="blackBar navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="/">Notoja</a>
+      <div class="nav-collapse collapse pull-right">
+        <ul class="nav">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              My Apps <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/app/university">University</a>
+              </li>
+              <li>
+                <a href="/app/bookTrade">Book Trade</a>
+              </li>
+              <li class="divider"></li>
+              <li class="nav-header">Notebook</li>
+              <li>
+                <a href="/app/notebook">New Entry</a>
+              </li>
+              <li>
+                <a href="/app/binder">My Binder</a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="/app/market">Market</a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Me</a>
+
+            <ul style="width:250px;" class="dropdown-menu">
+              <div class="ddBoxTop">
+                <div class="topLeftDiv"> <i class="icon-user icon-black"></i>
+                  <a href="#profile">Profile</a>
+                </div>
+                <div class="topMiddleDiv"></div>
+                <div class="topRightDiv"> <i class="icon-remove-circle icon-black"></i>
+                  Clear
+                </div>
+              </div>
+              <div class="hLine"></div>
+              <div ui:field="notifications"></div>
+              <div class="hLine"></div>
+              <div class="ddBoxBottom">
+                <a style="float:left;" href="/settings">
+                  <i class="icon-wrench icon-black"></i>
+                </a>
+                <a style="float:right;" href="/logout">
+                  <i class="icon-off icon-black"></i>
+                </a>
+              </div>
+            </ul>
+          </li>
+          <li>
+            <a href="#about"  data-toggle="modal">About</a>
+          </li>
+        </ul>
+      </div>
+      <!--/.nav-collapse --> </div>
+  </div>
+</div>
+
+<div id="appContainer" class="appContainer">
+  <form method="post" action="/login" class="loginDiv">
+    <h1>Login</h1>
+    <input type="hidden" name="next" value="<%=next_url%>
+    ">
+    <br/>
+    <input type="text" placeholder="Email Address" name="username">
+    <br/>
+    <input type="password" placeholder="Password" name="password">
+    <br/>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>
+<!-- Modal -->
+<div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">A note from our team:</h3>
+  </div>
+  <div class="modal-body">
+    <p>Hello,</p>
+    <p>
+      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspNotoja is a developing platform that helps individuals do research more effectively using better technology. We plan on delivering this through intelligence, and collaboration. Our Notebook app (available to all members), is designed to provide suggestions to the user on their document as they type it. This eliminates the requirement for additional research, and also increases efficiency. These suggestions include links to relevant/related sources, graphs and media that pertain to the document, or even a simple tip that may spark a new idea. We also understand that it's human nature to share our creations with others or work together on large projects (think of the great pyramids!), so we made it easier to do so (yes, feel free to click that share button). By doing so, you will be allowing your friends to read, edit, or even collaboratively edit your document. To maintain privacy, the owner still has full control over the publicity of their documents. In order to make it more of a platform and less of just another app, we have allowed 3rd party developers to also publish their modules to Notoja. Such modules add features we may have overlooked. Overall, we hope to make a community in which getting work done can be more efficient, and collaborative.
+    </p>
+    <br/>
+    <p>Thanks,</p>
+    <p>Notoja Team</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Okay</button>
+  </div>
+</div>
+
+</body>
