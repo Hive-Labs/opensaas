@@ -1,0 +1,16 @@
+{
+  "name": "dbService",
+  "version": "0.0.0",
+  "description": "An API wrapper for the db service that other node apps can use",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.notoja.com/notoja_saas/notoja-saas/tree/master/notoja_modules/dbService"
+  },
+  "author": "Notoja",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}

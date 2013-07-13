@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -28,6 +27,8 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/runners/list', runners.list);
+app.post('/runners/ping', runners.ping);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Orchestrator Service listening on port ' + app.get('port'));
