@@ -2,7 +2,7 @@
   "name": "dbService",
   "version": "0.0.0",
   "description": "An API wrapper for the db service that other node apps can use",
-  "main": "index.js",
+  "main": "lib",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
