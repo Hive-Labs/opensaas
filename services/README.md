@@ -2,12 +2,12 @@
 
 1) Go to each service you would like and run:
       
-      '''sudo npm install'''
+      sudo npm install
 
 2) navigate to grunt-hub directory
 
-      '''cd grunt-hub'''
+      cd grunt-hub
 
 3) run the grunt script
 
-      '''grunt'''
+      grunt
