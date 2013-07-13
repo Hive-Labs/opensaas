@@ -1,5 +1,5 @@
 {
-  "name": "notoja-backend",
+  "name": "notoja-auth_service",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -18,5 +18,12 @@
     "mustache": "*",
     "oauth2-provider": "*",
     "ejs-locals": "~1.0.2"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-nodemon": "0.0.7"
   }
 }
