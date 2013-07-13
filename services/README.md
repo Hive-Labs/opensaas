@@ -1,3 +1,4 @@
+
 ## Running all services with grunt
 
 1) Go to each service you would like and run:
@@ -14,7 +15,6 @@
 
 
 ## Running single service
-
 
 
 1) Navigate to the service you would like to run
