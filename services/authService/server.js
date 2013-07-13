@@ -257,10 +257,11 @@ db.once('open', function callback() {
 
     if(validateEmail(newUser.email) && 
         validateUsername(newUser.username) &&
-        validatePassword(newUser.password)) {
+        validatePassword(newUser.password) &&
+        validateNonExistingUser(newUser)) {
 
       newUser[activationKey] = newUser.generateActivationKey();
-      newUser.save(function(err, fluffy) { //TODO change fluffy :P
+      newUser.save(function(err,user) {
         if(err){
           console.log('User save failed');
         }
@@ -314,6 +315,10 @@ function validateEmail(email) {
 
 function validatePassword(password) {
   return password.length >= 6;
+}
+
+function validateNonExistingUser(user) {
+  
 }
 
 function stripTrailingSlash(str) {
