@@ -1,11 +1,12 @@
 {
-  "name": "DB_Service",
+  "name": "dbService",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "3.3.4"
+    "express": "3.3.4",
+    "underscore": "1.5.1"
   }
 }
