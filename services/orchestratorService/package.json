@@ -7,7 +7,9 @@
   },
   "dependencies": {
     "express": "3.3.4",
-    "jade": "*"
+    "jade": "*",
+    "dbService": "*",
+    "ejs-locals": "~1.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

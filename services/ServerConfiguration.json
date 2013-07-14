@@ -1,0 +1,5 @@
+{
+  "orchestratorServer": "localhost:3000"
+  ,"dbService": "localhost:3001"
+  ,"authService": "localhost:4455"
+}

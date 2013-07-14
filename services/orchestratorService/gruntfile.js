@@ -1,5 +1,6 @@
-module.exports = function(grunt) {
+var path = require('path');
 
+module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -22,7 +23,8 @@ module.exports = function(grunt) {
           debug: true,
           delayTime: 1,
           env: {
-            PORT: '3000'
+             PORT: '3000'
+            ,SERVERCONF: path.resolve('../ServerConfiguration.json')
           },
           cwd: '.'
         }

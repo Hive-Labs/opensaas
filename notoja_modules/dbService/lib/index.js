@@ -1,24 +1,32 @@
 
-exports.get = function(collectionType, entityType, entityId){
+//Unimplimented
+exports.get = function(collectionName, entityType, entityId) {
   console.log("Get entity by id");
 };
-
-exports.get = function(collectionType, entityType){
+//Unimplimented
+exports.get = function(collectionName, entityType) {
+  var runner = {
+    runnerId: 'id',
+    runnerName: 'name',
+    runnerIp: 'ip'
+  }
+  return [runner];
   console.log("Get entity by type");
 };
-
-exports.set = function(collectionType, entityType, entityId){
+//Unimplimented
+exports.set = function(collectionName, entityType, entityId) {
   console.log("Set entity by id");
 };
-
-exports.set = function(collectionType, entityType){
-  console.log("Set entity by type");
+//Unimplimented
+exports.set = function(collectionName, entityType) {
+  console.log("Adding " + JSON.stringify(entityType) + " to " + collectionName);
+  console.log(process.env.configFile);
 };
-
-exports.remove = function(collectionType, entityType){
+//Unimplimented
+exports.remove = function(collectionName, entityType) {
   console.log("Remove entity by type");
 };
-
-exports.remove = function(collectionType, entityType, entityId){
+//Unimplimented
+exports.remove = function(collectionName, entityType, entityId) {
   console.log("Remove entity by id");
 };

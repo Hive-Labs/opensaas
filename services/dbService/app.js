@@ -10,7 +10,7 @@ var express = require('express'),
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.set('selectedAdaptor', process.env.ADAPTOR || mongo);
 app.use(express.favicon());
 app.use(express.logger('dev'));
