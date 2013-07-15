@@ -1,15 +1,3 @@
-# DB Service Module
+# DB Service
 
-This is the module that can be required by other services to communicate with the db service. It is meant for node.js apps.
-
-Add the following to the top of your .js file
-
-      require('dbService')
-
-Run this to link to the development branch
-
-      npm link ../../notoja_modules/dbService #To install locally
-
-
-
-
+The DB (Database) service provides a central database for all applications.  Database functions are abstracted from the underlying database so that application need not be concerned with the underlying database technology.  In doing so connectors can be made for any underlying database that the systems administrator has confidence in scaling.  It also simplifies the job of scaling as only a single database must be scaled to meet the demand of a companies users.

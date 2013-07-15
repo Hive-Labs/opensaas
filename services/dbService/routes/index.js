@@ -1,8 +1,3 @@
-
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
-};
+exports.db = require('./db');
+exports.schema = require('./schema');
+exports.entity = require('./entity');
