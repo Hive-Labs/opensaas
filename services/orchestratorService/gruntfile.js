@@ -24,7 +24,6 @@ module.exports = function(grunt) {
           delayTime: 1,
           env: {
              PORT: '3000'
-            ,SERVERCONF: path.resolve('../ServerConfiguration.json')
           },
           cwd: '.'
         }
