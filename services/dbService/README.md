@@ -9,7 +9,7 @@ ___
 An entity is an object that is stored in a datastore.  Entities are made up of what are called fields.  They
 are represented by routes starting in `/enity/:applcation/:collection/:entity` where `:application` maps to the
 name (in slug form) of the application making the request.  The `:collection` maps to the name of the collection
-that the object belongs to collections are orginizational units used to group similar entites.  The `:entity` 
+that the object belongs to. collections are orginizational units used to group similar entites.  The `:entity` 
 maps to the name of the entity type itself.
 
 #### Entity Routes:
