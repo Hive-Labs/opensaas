@@ -12,5 +12,8 @@
   },
   "author": "Notoja",
   "license": "BSD",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "restler": "~2.0.1"
+  }
 }
