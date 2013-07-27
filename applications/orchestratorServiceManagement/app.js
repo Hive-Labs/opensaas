@@ -19,6 +19,7 @@ if(!process.env.SERVERIP){
 //Setup express
 var app = express();
 app.set('port', process.env.SUBPORT || 3003);
+app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || ;'localhost:3000');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
@@ -35,9 +36,6 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/runners/list', runnersRoute.list);
-app.post('/runners/ping', runnersRoute.ping);
-app.post('/runners/add', runnersRoute.add);
 
 
 //Start the http server

@@ -1,9 +1,11 @@
-var dbService = require('dbService');
+var dbService = require('dbService'),
+    request = require('request');
 /*
  * GET users listing.
  */
 exports.list = function() {
-  var runnerList = [{
+  console.log(request.get(app.get('orchestratorIP') + "/runners/list");       
+    var runnerList = [{
       id: '0'
       ,appName: 'Notebook'
       ,ip: '192.168.15.10'

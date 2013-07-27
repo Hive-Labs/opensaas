@@ -1,0 +1,12 @@
+{
+	"dbService": "localhost:3001",
+	"bareMetalMachines": [
+		{
+			"ip": "localhost",
+			"username": "rohit",
+			"password": "Surola1993",
+			"runnerLocation" : "~/notoja/notoja-saas/services/nodeRunnerService/server.js",
+			"runnerPort" : "3002"
+		}
+	]
+}
