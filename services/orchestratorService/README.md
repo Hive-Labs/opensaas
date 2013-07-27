@@ -9,7 +9,10 @@ The server that handles all saved application data.  It is responsible for downl
 
 #Install dependencies
 
-      npm link ../../notoja_modules/dbService
+      sudo npm link ../../notoja_modules/dbService
 
-      npm install
+      sudo npm install
 
+      sudo npm install --dev
+
+      sudo apt-get install expect
