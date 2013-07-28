@@ -1,24 +1,22 @@
-var dbService = require('dbService'),
-    request = require('request');
+//var dbService = require('dbService'),
+var request = require('request');
+var orchestratorIP;
+
+exports.init = function(orchestratorIP) {
+  this.orchestratorIP = orchestratorIP;
+}
+exports.orchestratorIP = orchestratorIP;
 /*
  * GET users listing.
  */
-exports.list = function() {
-  console.log(request.get(app.get('orchestratorIP') + "/runners/list");       
-    var runnerList = [{
-      id: '0'
-      ,appName: 'Notebook'
-      ,ip: '192.168.15.10'
-      ,ping: new Date()
-    },
-    {
-      id: '1'
-      ,appName: 'Book Trade'
-      ,ip: '192.168.15.11'
-      ,ping: new Date()
+exports.list = function(callback) {
+  console.log(callback);
+  request(exports.orchestratorIP + "/runners/list", function(error, response, body) {
+    if (!error) {
+      console.log(callback);
+      callback(JSON.parse(body));
     }
-    ]
-  return runnerList;
+  })
 };
 
 
@@ -35,14 +33,14 @@ Form data:
 */
 
 exports.add = function(runnerId, runnerName, runnerIp) {
-    var runner = {
-      id: runnerId,
-      name: runnerName,
-      ip: runnerIp,
-      ping: new Date()
-    }
-    currentRunners = dbService.get('runners', 'runner');
-    currentRunners.push(runner);
-    dbService.set('runners', runner);
-    return runner;
+  var runner = {
+    id: runnerId,
+    name: runnerName,
+    ip: runnerIp,
+    ping: new Date()
+  }
+  currentRunners = dbService.get('runners', 'runner');
+  currentRunners.push(runner);
+  dbService.set('runners', runner);
+  return runner;
 };

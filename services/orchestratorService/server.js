@@ -64,7 +64,7 @@ deployAllApps(appList);
 /* Monitor every runner and throw an error if 
 runner has been inactive for more than five minutes */
 var runnerIndex = 0;
-var FIVE_MINUTES = 20 * 1 * 1000; /* ms */
+var TIMEOUT_TIME = 3 * 60 * 1000; /* ms */
 monitorRunners();
 
 /////////////////////////Internal methods////////////////////
@@ -88,10 +88,15 @@ function spawnRunner(runnerId) {
   if (runnerId) {
     runners.removeRunner(runnerId);
   }
+  else{
+    runnerId = s4();
+  }
   var currMachine = bareMetalList[currentRoundRobinIndex];
   var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
-  ssh.exec("node " + currMachine.runnerLocation);
-  runners.add("ID", "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort);
+  ssh.exec("node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
+  console.log("runing command: " + "node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
+
+  runners.add(runnerId, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort);
   currentRoundRobinIndex++;
   if (currentRoundRobinIndex >= bareMetalList.length) currentRoundRobinIndex = 0;
   console.log('done!');
@@ -99,7 +104,7 @@ function spawnRunner(runnerId) {
 
 function monitorRunners() {
   if (runnerList && runnerList.length > 0) {
-    if ((new Date) - runnerList[runnerIndex].ping > FIVE_MINUTES) {
+    if ((new Date) - runnerList[runnerIndex].ping > TIMEOUT_TIME) {
       console.log('runner ' + runnerList[runnerIndex].id + " is dead. I am respawning it now.");
       runners.setAlive(runnerList[runnerIndex].id, false);
       spawnRunner(runnerList[runnerIndex].id);
@@ -119,14 +124,19 @@ function monitorRunners() {
 
 //This will get the list of apps to be deployed to individual runners
 
-
 function getAppDeploymentList() {
 
 }
 
 //Given a list of apps to deploy, it will spawn a new runner and deploy
 
-
 function deployAllApps(appList) {
 
 }
+
+/////////////////////////////////MISC/////////////////////////////
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+};
