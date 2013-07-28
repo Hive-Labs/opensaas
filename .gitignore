@@ -314,7 +314,6 @@
 /services/nodeRunnerService/routes/applicationRoute.js
 /services/nodeRunnerService/routes/index.js
 /services/nodeRunnerService/server.js
-/services/orchestratorService/ServerConfiguration.json
 /notoja_modules/dbService/node_modules/restler/.npmignore
 /notoja_modules/dbService/node_modules/restler/MIT-LICENSE
 /notoja_modules/dbService/node_modules/restler/README.md
