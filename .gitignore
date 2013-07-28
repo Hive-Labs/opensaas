@@ -292,9 +292,6 @@
 /applications/orchestratorServiceManagement/node_modules/grunt-contrib-jshint/node_modules/jshint/node_modules/shelljs/test/resources/ls/filename(with)[chars$]^that.must+be-escaped
 /applications/orchestratorServiceManagement/node_modules/grunt-contrib-jshint/node_modules/jshint/node_modules/shelljs/test/resources/ls/filename(with)[chars$]^that.must+be-escaped
 /applications/orchestratorServiceManagement/node_modules/grunt-contrib-jshint/node_modules/jshint/node_modules/shelljs/test/resources/ls/filename(with)[chars$]^that.must+be-escaped
-/services/nodeRunnerService/.nodemonignore
-/services/nodeRunnerService/ServerConfiguration.json
-/services/nodeRunnerService/application.js
 /services/nodeRunnerService/build/server.min.js
 /services/nodeRunnerService/currentApp/orchestratorServiceManagement/README.md
 /services/nodeRunnerService/currentApp/orchestratorServiceManagement/app.js
@@ -309,11 +306,6 @@
 /services/nodeRunnerService/currentApp/orchestratorServiceManagement/runners.js
 /services/nodeRunnerService/currentApp/orchestratorServiceManagement/views/index.ejs
 /services/nodeRunnerService/currentApp/orchestratorServiceManagement/views/layout.ejs
-/services/nodeRunnerService/gruntfile.js
-/services/nodeRunnerService/package.json
-/services/nodeRunnerService/routes/applicationRoute.js
-/services/nodeRunnerService/routes/index.js
-/services/nodeRunnerService/server.js
 /notoja_modules/dbService/node_modules/restler/.npmignore
 /notoja_modules/dbService/node_modules/restler/MIT-LICENSE
 /notoja_modules/dbService/node_modules/restler/README.md
