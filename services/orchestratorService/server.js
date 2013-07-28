@@ -119,7 +119,7 @@ function monitorRunners() {
   } else {
     spawnRunner();
   }
-  setImmediate(monitorRunners);
+  setTimeout(function callback(){setImmediate(monitorRunners)}, 5000);
 }
 
 //This will get the list of apps to be deployed to individual runners

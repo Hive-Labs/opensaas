@@ -44,5 +44,5 @@ function pingOrchestrator() {
 		request.post(app.get('orchestratorIP') + "/runners/ping", {form:{runnerID: app.get('runnerID')}})      	
 		lastPing = new Date();
     }
-  setImmediate(pingOrchestrator);
+   setTimeout(function callback(){setImmediate(pingOrchestrator)}, 5000);
 } 
