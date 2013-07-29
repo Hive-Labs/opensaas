@@ -92,8 +92,8 @@ function spawnRunner(runnerId) {
   }
   var currMachine = bareMetalList[currentRoundRobinIndex];
   var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
-  ssh.exec("RUNNER_ID=" + runnerId + " PORT=" + currMachine.runnerPort +" node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
-  console.log("RUNNER_ID=" + runnerId + " PORT=" + currMachine.runnerPort +" node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
+  ssh.exec("ORCHESTRATOR_IP=http://" + currMachine.ip +":" + app.get('PORT') + " RUNNER_ID=" + runnerId + " PORT=" + currMachine.runnerPort +" node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
+  console.log("ORCHESTRATOR_IP=http://" + currMachine.ip +":" + app.get('PORT') + " RUNNER_ID=" + runnerId + " PORT=" + currMachine.runnerPort +" node " + currMachine.runnerLocation + " > \"runner" + runnerId + ".log\"");
   //Assume that it will take max 10 seconds for the new runner to be spawned.
   runners.add(runnerId, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, false);
   currentRoundRobinIndex++;
