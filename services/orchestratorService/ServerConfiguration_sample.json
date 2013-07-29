@@ -4,14 +4,14 @@
 		{
 			"ip": "localhost",
 			"username": "rohit",
-			"password": "Surola1993",
+			"password": "COMPUTER_PASSWORD",
 			"runnerLocation" : "~/notoja/notoja-saas/services/nodeRunnerService/server.js",
 			"runnerPort" : "3001"
 		},
 		{
 			"ip": "localhost",
 			"username": "rohit",
-			"password": "Surola1993",
+			"password": "COMPUTER_PASSWORD",
 			"runnerLocation" : "~/notoja/notoja-saas/services/nodeRunnerService/server.js",
 			"runnerPort" : "3002"
 		}
