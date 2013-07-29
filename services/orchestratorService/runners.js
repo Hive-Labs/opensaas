@@ -1,9 +1,10 @@
-var dbService = require('dbService');
+var dbService = require('dbService'),
+  request = require('request');
 
 //Until db service is implimented, use this.
 var tempRunnerList = [];
 
-exports.init = function(dbServiceIP){
+exports.init = function(dbServiceIP) {
   dbService.init(dbServiceIP);
 }
 
@@ -22,20 +23,21 @@ exports.list = function() {
 exports.ping = function(runnerId) {
   var pingTime = new Date();
   var currentList = exports.list();
-  for(var i = 0; i<currentList.length; i++){
-    if(currentList[i].id == runnerId){
+  for (var i = 0; i < currentList.length; i++) {
+    if (currentList[i].id == runnerId) {
       currentList[i].ping = pingTime;
+      currentList[i].alive = true;
       exports.updateRunner(runnerId, currentList[i]);
     }
-  } 
+  }
   console.log('runner ' + runnerId + " was pinged at " + pingTime);
   exports.setAlive(runnerId, true);
 };
 
-exports.setAlive = function(runnerId, status){
+exports.setAlive = function(runnerId, status) {
   var currentList = exports.list();
-  for(var i = 0; i<tempRunnerList.length; i++){
-    if(currentList[i].id == runnerId){
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (currentList[i].id == runnerId) {
       currentList[i].alive = status;
     }
   }
@@ -50,10 +52,10 @@ exports.add = function(runnerId, runnerName, runnerIp) {
     name: runnerName,
     ip: runnerIp,
     ping: new Date(),
-    alive: true,
+    alive: false,
     appName: null
   }
-  console.log("new runner added!");
+  console.log("New runner has been added, but will be marked as dead. I will wait for the runner to ping back.");
   console.log(runner);
   currentRunners = exports.list();
   currentRunners.push(runner);
@@ -62,29 +64,45 @@ exports.add = function(runnerId, runnerName, runnerIp) {
   return runner;
 };
 
-exports.getAvailableRunner = function(){
-  var currentList = exports.list();
-  for(var i = 0; i<tempRunnerList.length; i++){
-    if(currentList[i].alive == true && currentList[i].appName == null){
-      return currentList[i].id;
+exports.getRunnersByApp = function(appName){
+   var currentList = exports.list();
+   var returnList = [];
+  for (var i = 0; i < currentList.length; i++) {
+    if (currentList[i].alive == true && currentList[i].appName == appName) {
+      returnList.push(currentList[i]);
     }
-  } 
+  }
+  return returnList;
 }
 
-exports.updateRunner = function(runnerId, newRunner){
-  for(var i = 0; i<tempRunnerList.length; i++){
-    if(tempRunnerList[i].id == runnerId){
+exports.getAvailableRunner = function() {
+  var currentList = exports.list();
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (currentList[i].alive == true && currentList[i].appName == null) {
+      return currentList[i].id;
+    }
+  }
+  return null;
+}
+
+exports.updateRunner = function(runnerId, newRunner) {
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (tempRunnerList[i].id == runnerId) {
       tempRunnerList[i] = newRunner;
       break;
     }
-  } 
+  }
 }
 
-exports.removeRunner = function(runnerId){
- for(var i = 0; i<tempRunnerList.length; i++){
-    if(tempRunnerList[i].id == runnerId){
-      tempRunnerList.splice(i, 1);
+exports.removeRunner = function(runnerId) {
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (tempRunnerList[i].id == runnerId) {
+      var r = request.post(tempRunnerList[i].ip + "/runner/kill")
+      setTimeout(function callback(){
+        tempRunnerList.splice(i, 1);
+        console.log('Removing old runner from list');
+      }, 5000);
       break;
     }
-  }  
+  }
 }

@@ -82,7 +82,7 @@ footer{
   </div>
   <hr>
   <footer>
-    <p>version 1.1</p>
+    <p>version 1.101</p>
     <p>&copy; Notoja 2013</p>
   </footer>
 <!-- /javascripts -->
@@ -99,7 +99,28 @@ function openTerminateDialog(runner){
     });
 }
 function terminateRunner(runnerId){
-    alert('Runner ' + runnerId + " has been terminated  ;)");
+    post_to_url('<%= orchestratorIP %>/runners/remove','runnerID=' + runnerId);
+    setTimeout(function callback(){
+      location.reload(false);
+    }, 7000);
+}
+function httpGet(theUrl)
+{
+  var xmlHttp = null;
+  xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", theUrl, false );
+  xmlHttp.send( null );
+  return xmlHttp.responseText;
+}
+function post_to_url(path, params, method) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', path, true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhr.onload = function () {
+    // do something to response
+    console.log(this.responseText);
+  };
+  xhr.send(params);
 }
 </script>
 <!-- /modals -->

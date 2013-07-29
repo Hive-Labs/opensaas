@@ -16,8 +16,8 @@ if(!process.env.SERVERIP){
 
 //Setup express
 var app = express();
-app.set('port', process.env.SUBPORT || 3003);
-app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || 'http://localhost:3000');
+app.set('port', process.env.SUBPORT || 4000);
+app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || 'http://localhost:2000');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);

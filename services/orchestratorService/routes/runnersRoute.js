@@ -38,3 +38,14 @@ exports.add = function(req, res) {
     res.send("Runner has been added with details: " + JSON.stringify(runner));
   }
 };
+
+exports.removeRunner= function(req, res) {
+  if (!req.body.runnerID) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.send("You are missing some parameters, you need to specify a runnerId.");
+  } else {
+    var runner = exports.runners.removeRunner(req.body.runnerID);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.send("Runner has been removed.");
+  }
+};

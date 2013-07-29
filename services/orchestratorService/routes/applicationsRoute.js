@@ -11,6 +11,6 @@ exports.runners = runners;
 exports.applications = applications;
 
 exports.deploy = function(req, res) {
-	exports.applications.deploy(req.body.appName);	
-  	res.send('App has been deployed, it will show up soon.');
+	exports.applications.add(req.body.appName);
+  	res.send('App has been queued. If there are no runners yet, this will take up to 4 minutes.');
 };

@@ -10,6 +10,7 @@ exports.runners = runners;
 
 exports.index = function(req, res) {
 	exports.runners.list(function(runnerList) {
+		console.log(exports.runners.orchestratorIP);
 		console.log("---------");
 		console.log(runnerList);
 		res.render('index', {
@@ -19,7 +20,8 @@ exports.index = function(req, res) {
 			_layoutFile: true,
 			databaseServiceDet: runnerList,
 			authenticationServiceDet: runnerList,
-			runnerList: runnerList
+			runnerList: runnerList,
+			orchestratorIP: exports.runners.orchestratorIP
 		});
 	})
 

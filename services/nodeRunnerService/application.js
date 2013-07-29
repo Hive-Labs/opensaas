@@ -6,6 +6,16 @@ var fs = require('fs'),
   path = require('path'),
   childProcess = require('child_process');
 
+var orchestratorIP;
+var runnerID;
+
+exports.init = function(orchestratorIP, runnerID){
+  this.orchestratorIP = orchestratorIP;
+  this.runnerID = runnerID;
+}
+
+exports.orchestratorIP = orchestratorIP;
+exports.runnerID = runnerID;
 /*
  * Host a new application.
  * applicationTar: The req.file of the request
@@ -41,7 +51,8 @@ exports.start = function(applicationTar, applicationName) {
     tarProcess.on('close', function(code) {
 
       //Spawn a new process to run the child node app
-      var nodeProcess = childProcess.exec('/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js > " + path.resolve(__dirname, "currentApp") + "/" + applicationName +".log"),
+      console.log('running: ' + 'orchestratorIP='+ exports.orchestratorIP + ' /usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js > " + path.resolve(__dirname, "currentApp") + "/" + exports.runnerID +".log"));
+      var nodeProcess = childProcess.exec('orchestratorIP='+ exports.orchestratorIP + ' /usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js > " + path.resolve(__dirname, "currentApp") + "/" + exports.runnerID +".log"),
 
       //If child app throws an error or console.logs something, display it
 
