@@ -63,6 +63,7 @@ footer{
         <div class="btn-group runnersBtnGroup">
           <button class="btn btn-success">Configure</button>
           <a class="btn btn-danger" data-toggle="modal" href="#terminateRunnerModal" onClick="openTerminateDialog(<%=JSON.stringify(runnerList[i])%>);">Terminate</a>
+          <a class="btn btn-default" data-toggle="modal" href="#logRunnerModal" onClick="openLogDialog(<%=JSON.stringify(runnerList[i])%>);">View Log</a>
         </div>
         <% } %></div>
     </div>
@@ -82,11 +83,25 @@ footer{
   </div>
   <hr>
   <footer>
-    <p>version 1.101</p>
+    <p>version 1.2</p>
     <p>&copy; Notoja 2013</p>
   </footer>
 <!-- /javascripts -->
 <script type="text/javascript">
+function openLogDialog(runner){
+   var log = httpGet('<%= orchestratorIP %>/runners/log?runnerID=' + runner.id);
+   var arrayOfLines = log.match(/[^\r\n]+/g);
+   for(var i = 0; i<arrayOfLines.length; i++){
+    var color;
+    if(i%2 == 0){
+      color='blue';  
+    }
+    else{
+      color='green';
+    }
+    $("#logRunnerModalLogText").append('<p style="color:' + color +'">' + JSON.stringify(JSON.parse(arrayOfLines[i]), null, '<br/>\t') + '</p>');
+   }
+}
 function openTerminateDialog(runner){
     $("#myModalLabel").text('Terminate runner ' + runner.id  + "?");
     $("#terminateRunnerModalHeader").text('Runner ' + runner.id);
@@ -145,6 +160,19 @@ function post_to_url(path, params, method) {
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
       <button id="terminateRunnerModalTerminateButton" class="btn btn-danger">Terminate</button>
+    </div>
+</div>
+<div id="logRunnerModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Runner Log</h3>
+    </div>
+    <div class="modal-body">
+      <p id="logRunnerModalLogText">
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
 </div>
 </div>

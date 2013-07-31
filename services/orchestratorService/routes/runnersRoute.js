@@ -65,3 +65,15 @@ exports.removeRunner= function(req, res) {
     res.send("Runner has been removed.");
   }
 };
+
+exports.log= function(req, res) {
+  if (!req.query.runnerID) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.send("You are missing some parameters, you need to specify a runnerID.");
+  } else {
+    var runner = exports.runners.log(req.query.runnerID, function callback(data){
+      res.header("Access-Control-Allow-Origin", "*");
+      res.send(data.body);
+    });
+  }
+};

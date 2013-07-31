@@ -10,7 +10,9 @@ var express = require('express'),
   http = require('http'),
   path = require('path'),
   fs = require('fs'),
-  request = require('request');
+  winston = require('winston'),
+  request = require('request'),
+  runner = require('./runner');
 
 var app = express();
 app.set('port', process.env.PORT || 3001);
@@ -23,31 +25,48 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 
+winston.add(winston.transports.File, {
+  filename: 'runner' + app.get('runnerID') + '.log',
+  handleExceptions: true
+});
+
+//Provide application.js with orchestratorIP and runnerID
+application.init(app.get('orchestratorIP'), app.get('runnerID'), winston);
+//Provide applicationRoute.js with application.js
+applicationRoute.init(application);
+
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//Application information route
 app.get('/', routes.index);
 app.post('/application/start', applicationRoute.start);
+app.get('/runner/log', routes.log);
 app.post('/runner/kill', routes.kill);
 
-application.init(app.get('orchestratorIP'), app.get('runnerID'));
-applicationRoute.init(application);
+runner.init(app.get('runnerID'));
+routes.init(runner);
 
-//Start listening for requests
 http.createServer(app).listen(app.get('port'), function() {
-  console.log('Node Runner Service listening on port ' + app.get('port'));
+  winston.log('info', 'RUNNER: Node Runner Service listening on port ' + app.get('port'));
 });
 
 var TIMEOUT_TIME = 1 * 60 * 1000; /* ms */
-pingOrchestrator();
 var lastPing = new Date() - TIMEOUT_TIME - 1000;
+pingOrchestrator();
+
 function pingOrchestrator() {
-    if ((new Date) - lastPing > TIMEOUT_TIME) {
-    	console.log('pinging orchestrator at ' + app.get('orchestratorIP'));
-		request.post(app.get('orchestratorIP') + "/runners/ping", {form:{runnerID: app.get('runnerID')}})      	
-		lastPing = new Date();
-    }
-   setTimeout(function callback(){setImmediate(pingOrchestrator)}, 5000);
-} 
+  if ((new Date) - lastPing > TIMEOUT_TIME) {
+    winston.log('info', 'RUNNER: pinging orchestrator at ' + app.get('orchestratorIP'));
+    request.post(app.get('orchestratorIP') + "/runners/ping", {
+      form: {
+        runnerID: app.get('runnerID')
+      }
+    })
+    lastPing = new Date();
+  }
+  setTimeout(function callback() {
+    setImmediate(pingOrchestrator)
+  }, 5000);
+}
+

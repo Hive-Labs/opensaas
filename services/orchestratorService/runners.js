@@ -134,7 +134,7 @@ exports.updateRunner = function(runnerID, newRunner) {
 exports.removeRunner = function(runnerID) {
   for (var i = 0; i < tempRunnerList.length; i++) {
     if (tempRunnerList[i].id == runnerID) {
-      var r = request.post(tempRunnerList[i].ip + "/runner/kill")
+      var r = request.post(tempRunnerList[i].ip + "/runner/kill");
       setTimeout(function callback() {
         tempRunnerList.splice(i, 1);
         console.log('Removing old runner from list');
@@ -142,4 +142,16 @@ exports.removeRunner = function(runnerID) {
       break;
     }
   }
-} 
+}
+
+exports.log = function(runnerID, callback){
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (tempRunnerList[i].id == runnerID) {
+      request.get(tempRunnerList[i].ip + "/runner/log", function (error, response, body) {
+        callback(response);
+      });
+      break;
+    }
+  }
+
+}

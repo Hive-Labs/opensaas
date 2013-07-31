@@ -40,6 +40,7 @@ parseConfigurationFile();
 //Setup the routes for accessing runner information
 app.get('/', routes.index);
 app.get('/runners/list', runnersRoute.list);
+app.get('/runners/log', runnersRoute.log);
 app.post('/runners/ping', runnersRoute.ping);
 app.post('/runners/add', runnersRoute.add);
 app.post('/runners/remove', runnersRoute.removeRunner);
