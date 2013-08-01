@@ -12,3 +12,4 @@ results
 ServerConfiguration.json
 npm-debug.log
 node_modules
+build
