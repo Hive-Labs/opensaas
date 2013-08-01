@@ -14,7 +14,8 @@ var express = require('express'),
   SSHClient = require("NodeSSH"),
   Expect = require('node-expect'),
   winston = require('winston'),
-  fs = require('fs');
+  asciimo = require('asciimo').Figlet;
+fs = require('fs');
 
 var app = express();
 app.set('port', process.env.PORT || 2000);
@@ -34,8 +35,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//Read ServerConfiguration.json file
-parseConfigurationFile();
 
 //Setup the routes for accessing runner information
 app.get('/', routes.index);
@@ -46,28 +45,41 @@ app.post('/runners/add', runnersRoute.add);
 app.post('/runners/remove', runnersRoute.removeRunner);
 app.post('/applications/deploy', applicationsRoute.deploy);
 
-winston.add(winston.transports.File, {
+ //Refresh the runner list
+  var runnerList;
+  //The list of bare metal machines from config file
+  var bareMetalList;
+  //Index of the active machine in roundrobin scheme
+  var currentRoundRobinIndex = 0;
+
+  //Monitor the runners frequently to see if any died
+  var runnerIndex = 0;
+  var TIMEOUT_TIME = 3 * 60 * 1000; //milliseconds
+
+//Read ServerConfiguration.json file
+parseConfigurationFile(function callback() {
+  asciimo.write('Open SAAS', 'Banner', function(result, font) {
+    console.log(result);
+    console.log("\n\n\n\n");
+  });
+
+  winston.add(winston.transports.File, {
     filename: 'orchestrator.log',
     handleExceptions: true
   });
 
-//Start listening for clients
-http.createServer(app).listen(app.get('port'), function() {
-  winston.log('info', 'Orchestrator Service listening on port ' + app.get('port'));
-  winston.log('info', 'Winston logging has started.');
+  //Start listening for clients
+  http.createServer(app).listen(app.get('port'), function() {
+    winston.log('info', 'Orchestrator Service listening on port ' + app.get('port'));
+    winston.log('info', 'Winston logging has started.');
+  });
+
+  runnerList = runners.list();
+  
+  monitorRunners();
+  applications.add("orchestratorServiceManagement");
 });
 
-//Refresh the runner list
-var runnerList = runners.list();
-//The list of bare metal machines from config file
-var bareMetalList;
-//Index of the active machine in roundrobin scheme
-var currentRoundRobinIndex = 0;
-
-//Monitor the runners frequently to see if any died
-var runnerIndex = 0;
-var TIMEOUT_TIME = 3 * 60 * 1000; //milliseconds
-monitorRunners();
 
 /*
   Summary:      Parse the ServerConfiguration.json file in current directory
@@ -75,9 +87,54 @@ monitorRunners();
                 configuration from the file.
  */
 
-function parseConfigurationFile() {
+function parseConfigurationFile(callback) {
+
+
   if (!fs.existsSync("./ServerConfiguration.json")) {
-    throw new Error('Server configuration file has not been specified. I am checking process.env.SERVERCONF');
+    var finalFile = {};
+    finalFile.bareMetalMachines = [];
+    console.log("Welcome! This seems to be your first time because you have not yet setup your server configuration file. I will ask you a series of questions and automatically create this for you (how nice of me).");
+    ask("1) How many node runners would you like to create? (minimum 2 required)", '.', function(numberOfRunners) {
+      ask("2) OK. What is the location of the dbService (eg. localhost:2001)", '.', function(dbService) {
+        finalFile.dbService = dbService;
+
+        function incrementQuestion(i) {
+          if (i > numberOfRunners) {
+            var outputFilename = 'ServerConfiguration.json';
+            fs.writeFile(outputFilename, JSON.stringify(finalFile, null, 4), function(err) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log('THANKS! I have made a file called ServerConfiguration.json and I will remember this next time.');
+                parseConfigurationFile(callback);
+              }
+            });
+          } else {
+            ask((i + 3) + "a) What is the IP of runner " + i + "? (eg. localhost)", '.', function(runnerIP) {
+              ask((i + 3) + "b) What is the SSH username of runner " + i + "? (eg. steve)", '.', function(runnerUsername) {
+                ask((i + 3) + "c) What is the SSH password of runner " + i + "? (eg. fluffybunnies)", '.', function(runnerPassword) {
+                  ask((i + 3) + "d) Where is the nodeRunnerService located in runner " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/server.js)", '.', function(runnerLocation) {
+                    ask((i + 3) + "e) Where is the port that runner " + i + " should run on? (eg. 300" + i + ")", '.', function(runnerPort) {
+                      finalFile.bareMetalMachines.push({
+                        "ip": runnerIP,
+                        "username": runnerUsername,
+                        "password": runnerPassword,
+                        "runnerLocation": runnerLocation,
+                        "runnerPort": runnerPort
+                      });
+                      incrementQuestion(i + 1);
+                    });
+                  });
+                });
+              });
+            });
+          }
+        }
+        incrementQuestion(1);
+      });
+    });
+
+
   } else {
     //Store json into a variable
     var data = fs.readFileSync("./ServerConfiguration.json", 'utf8');
@@ -90,6 +147,7 @@ function parseConfigurationFile() {
     applications.init(data.dbService, runners);
     //Get the list of bare metal machines from config file and store it
     bareMetalList = data.bareMetalMachines;
+    callback();
   }
 }
 
@@ -111,6 +169,7 @@ function spawnRunner(runnerID) {
   var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
   //Feed the ip of the orchestrator server, the port to run on, and the id of the runner to the runner
   var sshCommand = "ORCHESTRATOR_IP=http://" + currMachine.ip + ":" + app.get('port') + " RUNNER_ID=" + runnerID + " PORT=" + currMachine.runnerPort + " node " + currMachine.runnerLocation;
+  winston.log('info', 'Executing SSH:' + sshCommand);
   //Execute the ssh command
   ssh.exec(sshCommand);
   //Add this new runner to the existing list of runners
@@ -173,3 +232,22 @@ function monitorRunners() {
 function generateID() {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
+
+function ask(question, format, callback) {
+  var stdin = process.stdin,
+    stdout = process.stdout;
+
+  stdin.resume();
+  stdout.write(question + ": ");
+
+  stdin.once('data', function(data) {
+    data = data.toString().trim();
+    var regex = new RegExp(format);
+    if (regex.test(data)) {
+      callback(data);
+    } else {
+      stdout.write("It should match: " + regex + "\n");
+      ask(question, format, callback);
+    }
+  });
+}
