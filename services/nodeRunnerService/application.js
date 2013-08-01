@@ -9,6 +9,13 @@ var fs = require('fs'),
 var orchestratorIP;
 var runnerID;
 var winston;
+var nodeProcess;
+
+exports.kill = function(){
+  if(nodeProcess){
+    nodeProcess.exit(0);
+  }
+}
 exports.init = function(orchestratorIP, runnerID, winston) {
   this.orchestratorIP = orchestratorIP;
   this.runnerID = runnerID;
@@ -55,7 +62,7 @@ exports.start = function(applicationTar, applicationName) {
       exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
       var envCopy = [];
       envCopy['orchestratorIP']=exports.orchestratorIP;
-      var nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
+      nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
       //If child app throws an error or console.logs something, display it
       nodeProcess.on('error', function(err) {
         exports.winston.log('info', 'CHILD:' + err);

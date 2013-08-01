@@ -60,6 +60,9 @@ exports.deployApps = function(appList) {
 			}
 		}
 	}
+	else{
+		setTimeout(function(){exports.deployApps(appList)}, 10000);
+	}
 }
 
 /*
