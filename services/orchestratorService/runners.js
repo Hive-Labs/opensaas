@@ -22,6 +22,19 @@ exports.list = function() {
 };
 
 /*
+  Summary:      Get a list of runners (dead or alive)
+  Returns:      A list of current runners (dead or alive)
+ */
+exports.getRunnerByID = function(runnerID) {
+  var currentList = exports.list();
+  for (var i = 0; i < currentList.length; i++) {
+    if (currentList[i].id == runnerID) {
+     return currentList[i];
+    }
+  }
+};
+
+/*
   Summary:      Given a runnerID, set its ping time to right now
   Parameters:   runnerID - the id of the runner to ping
  */
@@ -62,16 +75,18 @@ exports.setAlive = function(runnerID, alive) {
   Parameters:   runnerID - the id of the newly created runner
                 runnerName - the name of the runner
                 runnerIP - the ip address of the new runner
+                currMachine - the bare metal machine that this runner is running on
   Returns:      The runner that was just added
  */
-exports.add = function(runnerID, runnerName, runnerIP) {
+exports.add = function(runnerID, runnerName, runnerIP, currMachine) {
   var runner = {
     id: runnerID,
     name: runnerName,
     ip: runnerIP,
     ping: new Date(),
     alive: false,
-    appName: null
+    appName: null,
+    machine: currMachine
   }
   console.log("New runner has been added, but will be marked as dead. I will wait for the runner to ping back.");
   console.log(JSON.stringify(runner));
@@ -133,12 +148,12 @@ exports.updateRunner = function(runnerID, newRunner) {
  */
 exports.removeRunner = function(runnerID) {
   for (var i = 0; i < tempRunnerList.length; i++) {
+    console.log('i:' + i);
     if (tempRunnerList[i].id == runnerID) {
+      console.log('posting to ' + tempRunnerList[i].ip);
       var r = request.post(tempRunnerList[i].ip + "/runner/kill");
-      setTimeout(function callback() {
-        tempRunnerList.splice(i, 1);
-        console.log('Removing old runner from list');
-      }, 5000);
+      console.log('done posting...');
+      tempRunnerList.splice(i, 1);
       break;
     }
   }

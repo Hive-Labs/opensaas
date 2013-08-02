@@ -37,7 +37,7 @@ exports.start = function(applicationTar, applicationName) {
     fs.writeFileSync(newPath + "/app.tar.gz", data);
 
     //Delete any pre-existing version of this app
-    deleteFolderRecursive(nIDewPath + "/" + applicationName);
+    deleteFolderRecursive(newPath + "/" + applicationName);
     exports.winston.log('info', 'RUNNER:' + path.resolve(__dirname, "currentApp/" + applicationName));
     //Spawn a process to un-tar this app
     var tarProcess = childProcess.spawn('tar', ['-xvf', newPath + "/app.tar.gz", '-C', newPath]);

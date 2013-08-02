@@ -14,10 +14,11 @@ var express = require('express'),
   SSHClient = require("NodeSSH"),
   Expect = require('node-expect'),
   winston = require('winston'),
-  asciimo = require('asciimo').Figlet;
-fs = require('fs');
+  nodeRunnerBalancer = require('./loadbalancers/nodeRunners-roundrobin.js')
+  asciimo = require('asciimo').Figlet,
+  fs = require('fs')
 
-var app = express();
+  var app = express();
 app.set('port', process.env.PORT || 2000);
 app.set('views', __dirname + '/views');
 app.use(express.favicon());
@@ -45,17 +46,12 @@ app.post('/runners/add', runnersRoute.add);
 app.post('/runners/remove', runnersRoute.removeRunner);
 app.post('/applications/deploy', applicationsRoute.deploy);
 
- //Refresh the runner list
-  var runnerList;
-  //The list of bare metal machines from config file
-  var bareMetalList;
-  //Index of the active machine in roundrobin scheme
-  var currentRoundRobinIndex = 0;
+//Refresh the runner list
+var runnerList;
 
-  //Monitor the runners frequently to see if any died
-  var runnerIndex = 0;
-  var TIMEOUT_TIME = 3 * 60 * 1000; //milliseconds
-
+//Monitor the runners frequently to see if any died
+var runnerIndex = 0;
+var TIMEOUT_TIME = 3 * 60 * 1000; //milliseconds
 //Read ServerConfiguration.json file
 parseConfigurationFile(function callback() {
   asciimo.write('Open SAAS', 'Banner', function(result, font) {
@@ -63,10 +59,10 @@ parseConfigurationFile(function callback() {
     console.log("\n\n\n\n");
   });
 
-  winston.add(winston.transports.File, {
+/*winston.add(winston.transports.File, {
     filename: 'orchestrator.log',
     handleExceptions: true
-  });
+  });*/
 
   //Start listening for clients
   http.createServer(app).listen(app.get('port'), function() {
@@ -75,7 +71,7 @@ parseConfigurationFile(function callback() {
   });
 
   runnerList = runners.list();
-  
+
   monitorRunners();
   applications.add("orchestratorServiceManagement");
 });
@@ -94,7 +90,7 @@ function parseConfigurationFile(callback) {
     var finalFile = {};
     finalFile.bareMetalMachines = [];
     console.log("Welcome! This seems to be your first time because you have not yet setup your server configuration file. I will ask you a series of questions and automatically create this for you (how nice of me).");
-    ask("1) How many node runners would you like to create? (minimum 2 required)", '.', function(numberOfRunners) {
+    ask("1) How many machines would you like to register?", '.', function(numberOfRunners) {
       ask("2) OK. What is the location of the dbService (eg. localhost:2001)", '.', function(dbService) {
         finalFile.dbService = dbService;
 
@@ -110,25 +106,29 @@ function parseConfigurationFile(callback) {
               }
             });
           } else {
-            ask((i + 3) + "a) What is the IP of runner " + i + "? (eg. localhost)", '.', function(runnerIP) {
-              ask((i + 3) + "b) What is the SSH username of runner " + i + "? (eg. steve)", '.', function(runnerUsername) {
-                ask((i + 3) + "c) What is the SSH password of runner " + i + "? (eg. fluffybunnies)", '.', function(runnerPassword) {
-                  ask((i + 3) + "d) Where is the nodeRunnerService located in runner " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/server.js)", '.', function(runnerLocation) {
-                    ask((i + 3) + "e) Where is the port that runner " + i + " should run on? (eg. 300" + i + ")", '.', function(runnerPort) {
-                      finalFile.bareMetalMachines.push({
-                        "ip": runnerIP,
-                        "username": runnerUsername,
-                        "password": runnerPassword,
-                        "runnerLocation": runnerLocation,
-                        "runnerPort": runnerPort
+            ask((i + 3) + "a) What is the IP of machine " + i + "? (eg. localhost)", '.', function(runnerIP) {
+              ask((i + 3) + "b) What is the SSH username of machine " + i + "? (eg. steve)", '.', function(runnerUsername) {
+                ask((i + 3) + "c) What is the SSH password of machine " + i + "? (eg. fluffybunnies)", '.', function(runnerPassword) {
+                  ask((i + 3) + "d) Where is the nodeRunnerService located in machine " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/server.js)", '.', function(runnerLocation) {
+                    ask((i + 3) + "e) Where is the start port for machine " + i + "? (eg. 3000)", '.', function(portStart) {
+                      ask((i + 3) + "f) Where is the finish port for machine " + i + "? (eg. 3400)", '.', function(portFinish) {
+                        finalFile.bareMetalMachines.push({
+                          "ip": runnerIP,
+                          "username": runnerUsername,
+                          "password": runnerPassword,
+                          "runnerLocation": runnerLocation,
+                          "portStart": portStart,
+                          "portFinish": portFinish
+                        });
+                        incrementQuestion(i + 1);
                       });
-                      incrementQuestion(i + 1);
                     });
                   });
                 });
               });
             });
           }
+
         }
         incrementQuestion(1);
       });
@@ -146,7 +146,8 @@ function parseConfigurationFile(callback) {
     //Provide applications.js with access to dbService and runners.js
     applications.init(data.dbService, runners);
     //Get the list of bare metal machines from config file and store it
-    bareMetalList = data.bareMetalMachines;
+    nodeRunnerBalancer.init(data.bareMetalMachines);
+
     callback();
   }
 }
@@ -164,8 +165,9 @@ function spawnRunner(runnerID) {
   } else {
     runnerID = generateID();
   }
-  var currMachine = bareMetalList[currentRoundRobinIndex];
-  //Connect via SSH to the bare metal machine to run the runner
+  var currMachine = nodeRunnerBalancer.nextMachine();
+  console.log(currMachine);
+  //Connect via SSH to the bare metal machine and start the runner
   var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
   //Feed the ip of the orchestrator server, the port to run on, and the id of the runner to the runner
   var sshCommand = "ORCHESTRATOR_IP=http://" + currMachine.ip + ":" + app.get('port') + " RUNNER_ID=" + runnerID + " PORT=" + currMachine.runnerPort + " node " + currMachine.runnerLocation;
@@ -175,8 +177,6 @@ function spawnRunner(runnerID) {
   //Add this new runner to the existing list of runners
   runners.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, false);
   //Increment the roundRobin index to the next bare metal machine
-  currentRoundRobinIndex++;
-  if (currentRoundRobinIndex >= bareMetalList.length) currentRoundRobinIndex = 0;
 }
 
 /*

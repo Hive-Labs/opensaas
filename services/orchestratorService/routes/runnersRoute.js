@@ -42,10 +42,10 @@ exports.ping = function(req, res) {
                 runnerName - the name of the new runner to be created
  */
 exports.add = function(req, res) {
-  if (!req.body.runnerID || !req.body.runnerName || !req.body.runnerIp) {
-    res.send("You are missing some parameters, you need to specify a runnerId, runnerName, and runnerIp");
+  if (!req.body.runnerID || !req.body.runnerName || !req.body.runnerIp || !req.body.machine) {
+    res.send("You are missing some parameters, you need to specify a runnerId, runnerName, runnerIp, and machine");
   } else {
-    var runner = exports.runners.add(req.body.runnerID, req.body.runnerName, req.body.runnerIp);
+    var runner = exports.runners.add(req.body.runnerID, req.body.runnerName, req.body.runnerIp, req.body.machine);
     res.send("Runner has been added with details: " + JSON.stringify(runner));
   }
 };
