@@ -11,5 +11,5 @@ The server that handles all saved application data.  It is responsible for downl
 
       npm link ../../notoja_modules/dbService
 
-      npm install
+      sudo npm install
 

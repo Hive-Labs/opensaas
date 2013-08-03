@@ -20,6 +20,7 @@ exports.init = function(runners, applications){
                 dead or alive.
  */
 exports.list = function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send(exports.runners.list());
 };
 
@@ -51,27 +52,27 @@ exports.add = function(req, res) {
 };
 
 /*
-  Summary:      Route to POST /runners/remove. This will kill a runner and 
+  Summary:      Route to DELETE /runners/runner. This will kill a runner and 
                 remove it from the list.
-  Parameters    runnerID - the id of the runner to be removed.
+  Parameters    id - the id of the runner to be removed.
  */
 exports.removeRunner= function(req, res) {
-  if (!req.body.runnerID) {
+  if (!req.params.id) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.send("You are missing some parameters, you need to specify a runnerId.");
+    res.send("You are missing some parameters bro, you need to specify a id.");
   } else {
-    var runner = exports.runners.removeRunner(req.body.runnerID);
+    var runner = exports.runners.removeRunner(req.params.id);
     res.header("Access-Control-Allow-Origin", "*");
     res.send("Runner has been removed.");
   }
 };
 
 exports.log= function(req, res) {
-  if (!req.query.runnerID) {
+  if (!req.params.id) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.send("You are missing some parameters, you need to specify a runnerID.");
+    res.send("You are missing some parameters, you need to specify an id.");
   } else {
-    var runner = exports.runners.log(req.query.runnerID, function callback(data){
+    var runner = exports.runners.log(req.params.id, function callback(data){
       res.header("Access-Control-Allow-Origin", "*");
       res.send(data.body);
     });

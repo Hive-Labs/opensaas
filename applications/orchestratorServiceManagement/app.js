@@ -18,15 +18,12 @@ if(!process.env.SERVERIP){
 var app = express();
 app.set('port', process.env.SUBPORT || 4000);
 app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || 'http://localhost:2000');
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('ejs', engine);
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(express.static(__dirname+'/public'));
+app.use(express.static(__dirname+'/dist'));
 
 runners.init(app.get('orchestratorIP'));
 // development only
@@ -35,7 +32,6 @@ if ('development' == app.get('env')) {
 }
 
 routes.init(runners);
-app.get('/', routes.index);
 
 
 //Start the http server

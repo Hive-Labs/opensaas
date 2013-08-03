@@ -19,6 +19,24 @@ var express = require('express'),
   fs = require('fs')
 
   var app = express();
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
+};
+
+
+app.configure(function(){
+app.use(allowCrossDomain);
 app.set('port', process.env.PORT || 2000);
 app.set('views', __dirname + '/views');
 app.use(express.favicon());
@@ -26,6 +44,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
+});
+
 
 //Provide applicationRoute.js with access to runners.js and applications.js
 applicationsRoute.init(runners, applications);
@@ -39,11 +59,11 @@ if ('development' == app.get('env')) {
 
 //Setup the routes for accessing runner information
 app.get('/', routes.index);
-app.get('/runners/list', runnersRoute.list);
-app.get('/runners/log', runnersRoute.log);
+app.get('/runner/list', runnersRoute.list);
+app.get('/runner/:id/log', runnersRoute.log);
 app.post('/runners/ping', runnersRoute.ping);
 app.post('/runners/add', runnersRoute.add);
-app.post('/runners/remove', runnersRoute.removeRunner);
+app.del('/runner/:id', runnersRoute.removeRunner);
 app.post('/applications/deploy', applicationsRoute.deploy);
 
 //Refresh the runner list
@@ -73,7 +93,7 @@ parseConfigurationFile(function callback() {
   runnerList = runners.list();
 
   monitorRunners();
-  applications.add("orchestratorServiceManagement");
+  //applications.add("orchestratorServiceManagement");
 });
 
 
@@ -251,3 +271,17 @@ function ask(question, format, callback) {
     }
   });
 }
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
+};
