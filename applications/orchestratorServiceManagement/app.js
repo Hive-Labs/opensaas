@@ -24,7 +24,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(__dirname+'/dist'));
 
-runners.init(app.get('orchestratorIP'));
+//runners.init(app.get('orchestratorIP'));
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
