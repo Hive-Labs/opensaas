@@ -1,0 +1,26 @@
+.dashboardDiv{
+    padding:60px;
+    overflow:auto;
+}
+.connectedServicesInner{
+  padding-left:45px;
+}
+.connectedRunnersInner{
+  padding-left:45px;
+}
+.connectedServicesDetInner{
+  padding-left:45px;
+}
+footer{
+  text-align: center;
+}
+.runnersBtnGroup{
+  margin-left:25px;
+}
+.terminateRunnerModalRunnerInfo{
+  padding-left:30px;
+}
+.twoColumn{
+    width:50%;
+    float:left;
+}
