@@ -2,7 +2,6 @@
  * Module dependencies.
  */
 var express = require('express')
-  , routes = require('./routes')
   , runners = require('./runners')
   , http = require('http')
   , engine = require('ejs-locals')
@@ -30,8 +29,6 @@ runners.init(app.get('orchestratorIP'));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
-routes.init(runners);
 
 
 //Start the http server

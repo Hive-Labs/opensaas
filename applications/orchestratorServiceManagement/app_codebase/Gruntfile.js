@@ -223,18 +223,18 @@ module.exports = function(grunt) {
         },
         files: [{
           src: ['../build/**'],
-          dest: 'build/',
+          dest: 'orchestratorServiceManagement/build/',
           },{
           src: ['../dist/**'],
-          dest: 'dist/',
+          dest: 'orchestratorServiceManagement/dist/',
           },
           {
           src: ['../node_modules/**'],
-          dest: 'node_modules/',
+          dest: 'orchestratorServiceManagement/node_modules/',
           },
           {
           src: ['../*'],
-          dest: 'orchestratorServiceManagement/',
+          dest: 'orchestratorServiceManagement/orchestratorServiceManagement/',
           },
         ]
       }
