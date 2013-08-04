@@ -9,3 +9,4 @@ services/orchestratorService/node_modules
 services/orchestratorService/ServerConfiguration.json
 services/orchestratorService/build/*
 services/orchestratorService/apps/*
+applications/orchestratorServiceManagement/app_codebase/orchestratorServiceManagement.tar.gz
