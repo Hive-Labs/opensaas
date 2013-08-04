@@ -25,6 +25,17 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 
+try{
+  fs.mkdirSync(path.resolve(__dirname, "currentApp/"));
+  console.log('Creating currentApp directory because it doesn\'t exist.');
+}
+catch(e){
+}
+
+    // Is it a directory?
+    if (stats.isDirectory()) {
+        // Yes it is
+    }
 
 
 //Provide application.js with orchestratorIP and runnerID
