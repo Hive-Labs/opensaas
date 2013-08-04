@@ -6,6 +6,16 @@ Intro to Open SAAS here...
 
 To get a basic test server working on a single machine, follow the below steps. They can be adapted for multiple nodes and production machines too.
 
+		#Make a notoja folder and put this in it
+
+		rm -rf ~/notoja
+
+		mkdir ~/notoja
+
+		cd ~/notoja
+
+		git clone http://git.notoja.com/notoja_saas/notoja-saas.git
+
 		#Setup the node runner service
 
 		cd services/nodeRunnerService
