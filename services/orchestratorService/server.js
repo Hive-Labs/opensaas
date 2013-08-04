@@ -28,22 +28,21 @@ var allowCrossDomain = function(req, res, next) {
     // intercept OPTIONS method
     if ('OPTIONS' == req.method) {
       res.send(200);
-    }
-    else {
+    } else {
       next();
     }
-};
+  };
 
 
-app.configure(function(){
-app.use(allowCrossDomain);
-app.set('port', process.env.PORT || 2000);
-app.set('views', __dirname + '/views');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
+app.configure(function() {
+  app.use(allowCrossDomain);
+  app.set('port', process.env.PORT || 2000);
+  app.set('views', __dirname + '/views');
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
 });
 
 
@@ -93,7 +92,7 @@ parseConfigurationFile(function callback() {
   runnerList = runners.list();
 
   monitorRunners();
-  //applications.add("orchestratorServiceManagement");
+  applications.add("orchestratorServiceManagement");
 });
 
 
@@ -280,8 +279,7 @@ var allowCrossDomain = function(req, res, next) {
     // intercept OPTIONS method
     if ('OPTIONS' == req.method) {
       res.send(200);
-    }
-    else {
+    } else {
       next();
     }
-};
+  };

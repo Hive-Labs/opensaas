@@ -7,12 +7,18 @@ The orchestrator service monitors traffic and availability on each of the applic
 
 The server that handles all saved application data.  It is responsible for downloading applications from the centralized notoja application distribution server and populating runner nodes with applications at the request of the orchestrator.
 
-#Install dependencies
+#Running the orchestrator server
 
-      sudo npm link ../../notoja_modules/dbService
+	cd notoja-saas/services/orchestratorService/
 
-      sudo npm install
+    sudo npm link ../../notoja_modules/dbService
 
-      sudo npm install --dev
+    sudo npm install
 
-      sudo apt-get install expect
+    sudo apt-get install expect
+
+    sudo apt-get install openssh-server
+
+    grunt
+
+You can now navigate to http://localhost:2000 to access this server's api calls, or you can access the frontend UI by navigating to http://localhost:4000

@@ -1,15 +1,19 @@
-# Orchestrator
+#Orchestrator Service Management
 
-The orchestrator service monitors traffic and availability on each of the application runner nodes.  If a node is down or experiencing high traffic it's job is seek out a new node (if available) and ask the packaging service to populate that node with a new copy of that application. 
+This is the sample app included in the Open Saas project that will provide a web ui frontend for the orchestrator service.
 
+#How To Run
 
-# Packaging Server
+Although this is intended to be run on the Open Saas framework, it can also be run as a standalone app. 
 
-The server that handles all saved application data.  It is responsible for downloading applications from the centralized notoja application distribution server and populating runner nodes with applications at the request of the orchestrator.
+		cd notoja-saas/applications/orchestratorServiceManagement/app_codebase
+		sudo npm install
+		grunt build
 
-#Install dependencies
+At this point, there will be a .tar.gz archive which can be deployed on to an orchestrator. However, to run as a standalone app, do the following:
 
-      npm link ../../notoja_modules/dbService
+		cd notoja-saas/applications/orchestratorServiceManagement
+		sudo npm install
+		node app.js
 
-      sudo npm install
-
+The frontend ui will be now running by default at: http://localhost:4000
