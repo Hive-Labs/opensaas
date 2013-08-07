@@ -59,6 +59,7 @@ if ('development' == app.get('env')) {
 //Setup the routes for accessing runner information
 app.get('/', routes.index);
 app.get('/runner/list', runnersRoute.list);
+app.post('/runner/spawn', runnersRoute.spawn);
 app.get('/runner/:id/log', runnersRoute.log);
 app.post('/runners/ping', runnersRoute.ping);
 app.post('/runners/add', runnersRoute.add);
@@ -70,7 +71,7 @@ var runnerList;
 
 //Monitor the runners frequently to see if any died
 var runnerIndex = 0;
-var TIMEOUT_TIME = 3 * 60 * 1000; //milliseconds
+var TIMEOUT_TIME = 25 * 1 * 1000; //milliseconds
 //Read ServerConfiguration.json file
 parseConfigurationFile(function callback() {
   asciimo.write('Open SAAS', 'Banner', function(result, font) {
@@ -128,9 +129,12 @@ function parseConfigurationFile(callback) {
             ask((i + 3) + "a) What is the IP of machine " + i + "? (eg. localhost)", '.', function(runnerIP) {
               ask((i + 3) + "b) What is the SSH username of machine " + i + "? (eg. steve)", '.', function(runnerUsername) {
                 ask((i + 3) + "c) What is the SSH password of machine " + i + "? (eg. fluffybunnies)", '.', function(runnerPassword) {
-                  ask((i + 3) + "d) Where is the nodeRunnerService located in machine " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/server.js)", '.', function(runnerLocation) {
+                  ask((i + 3) + "d) Where is the nodeRunnerService located in machine " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/)", '.', function(runnerLocation) {
                     ask((i + 3) + "e) Where is the start port for machine " + i + "? (eg. 3000)", '.', function(portStart) {
                       ask((i + 3) + "f) Where is the finish port for machine " + i + "? (eg. 3400)", '.', function(portFinish) {
+                        if(runnerLocation.indexOf('/', runnerLocation.length - 1) == -1){
+                            runnerLocation = runnerLocation + "/";
+                        }
                         finalFile.bareMetalMachines.push({
                           "ip": runnerIP,
                           "username": runnerUsername,
@@ -161,7 +165,7 @@ function parseConfigurationFile(callback) {
     //Initialize the dbServer module with the ip address and application name
     dbService.init(data.dbService, "OrchestratorService");
     //Provide runners.js with access to dbService variable
-    runners.init(data.dbService);
+    runners.init(data.dbService, nodeRunnerBalancer, app.get('port'), winston);
     //Provide applications.js with access to dbService and runners.js
     applications.init(data.dbService, runners);
     //Get the list of bare metal machines from config file and store it
@@ -171,32 +175,7 @@ function parseConfigurationFile(callback) {
   }
 }
 
-/*
-  Summary:      If a runnerID is specified, it will spawn a new runner
-                with that id. Otherwise, it will create a new id and 
-                spawn a runner with that.
-  Parameters:   runnerID(optional)
- */
 
-function spawnRunner(runnerID) {
-  if (runnerID) {
-    runners.removeRunner(runnerID);
-  } else {
-    runnerID = generateID();
-  }
-  var currMachine = nodeRunnerBalancer.nextMachine();
-  console.log(currMachine);
-  //Connect via SSH to the bare metal machine and start the runner
-  var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
-  //Feed the ip of the orchestrator server, the port to run on, and the id of the runner to the runner
-  var sshCommand = "ORCHESTRATOR_IP=http://" + currMachine.ip + ":" + app.get('port') + " RUNNER_ID=" + runnerID + " PORT=" + currMachine.runnerPort + " node " + currMachine.runnerLocation;
-  winston.log('info', 'Executing SSH:' + sshCommand);
-  //Execute the ssh command
-  ssh.exec(sshCommand);
-  //Add this new runner to the existing list of runners
-  runners.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, false);
-  //Increment the roundRobin index to the next bare metal machine
-}
 
 /*
   Summary:      Loop through every runner in the runnerList using
@@ -210,13 +189,16 @@ function monitorRunners() {
   //Make sure there is at least 1 runner that is running no apps.
   if (runners.getAvailableRunner()) {
     //Make sure that this runner has pinged the orchestrator TIMEOUT_TIME milliseconds ago
-    if (runnerList[runnerIndex] && (new Date) - runnerList[runnerIndex].ping > TIMEOUT_TIME) {
+    if (runnerList[runnerIndex].alive && runnerList[runnerIndex] && (new Date) - runnerList[runnerIndex].ping > TIMEOUT_TIME) {
       //If ping time was long ago, complain about it
-      winston.log('info', 'runner ' + runnerList[runnerIndex].id + " is dead. I am respawning it now.");
+      winston.log('info', 'runner ' + runnerList[runnerIndex].id + " is dead. Let me spin up another runner now.");
       //Set its status to dead
       runners.setAlive(runnerList[runnerIndex].id, false);
       //Spin up a new runner with the same id as the old one
-      spawnRunner(runnerList[runnerIndex].id);
+      runners.spawnRunner();
+      setTimeout(function callback() {
+      applications.deployApps(applications.list());
+      }, 15000);
     }
     if (runnerIndex < runnerList.length - 1) {
       //Increment the counter
@@ -228,12 +210,12 @@ function monitorRunners() {
     //Rerun this function again in 5 seconds
     setTimeout(function callback() {
       setImmediate(monitorRunners)
-    }, 5000);
+    }, 15000);
   } else {
     //If there isn't at least 1 runner that is running no apps, complain
     winston.log('info', 'There are no available runners now. I am going to spin one up now.');
     //Then spin up a new runner
-    spawnRunner();
+    runners.spawnRunner();
     //Wait 30 seconds for this new runner to spin up, then start deploying apps again.
     setTimeout(function callback() {
       applications.deployApps(applications.list());
@@ -242,15 +224,7 @@ function monitorRunners() {
   }
 }
 
-/*
-  Summary:      Generate a random id of letters and numbers that is
-                4 characters long.
-  Returns:      A string id of random letters and numbers
- */
 
-function generateID() {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-};
 
 function ask(question, format, callback) {
   var stdin = process.stdin,

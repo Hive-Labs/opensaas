@@ -83,11 +83,9 @@ exports.deploy = function(appName) {
 					currentList[i].appName = appName;
 					exports.runners.updateRunner(currentList[i].id, currentList[i]);
 					runnerIp = currentList[i].ip;
-					console.log(currentList[i].ip);
 					break;
 				}
 			}
-			console.log(path.join(__dirname, 'apps/' + appName + ".tar.gz"));
 			var r = request.post(runnerIp + "/application/start")
 			var form = r.form()
 			form.append('applicationTar', fs.createReadStream(path.join(__dirname, 'apps/' + appName + ".tar.gz")));

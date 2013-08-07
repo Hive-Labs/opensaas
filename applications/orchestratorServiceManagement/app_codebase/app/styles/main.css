@@ -24,3 +24,12 @@ footer{
     width:50%;
     float:left;
 }
+.addRunnerBtn{
+  margin-top:-4px;
+}
+.green{
+  color:green;
+}
+.red{
+  color:red;
+}

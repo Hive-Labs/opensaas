@@ -21,6 +21,15 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
         callback(data);
       });
     },
+    add: function(callback){
+      $http({
+        method: 'POST',
+        url: 'http://localhost:2000/runner/spawn',
+      }).
+      success(function(data, status, headers, config) {
+        callback(data);
+      });
+    },
     log: function(runnerID, callback){
       $http({
         method: 'GET',

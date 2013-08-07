@@ -25,6 +25,16 @@ exports.list = function(req, res) {
 };
 
 /*
+  Summary:      Route to GET /runners/list. Returns the list of runners
+                dead or alive.
+ */
+exports.spawn = function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.send('A new runner has been spawned. Please wait for it to appear.');
+  exports.runners.spawnRunner();
+};
+
+/*
   Summary:      Route to POST /runners/ping. 
   Parameters:   runnerID - the id of the runner to be marked as pinged
                            at the current time.
@@ -78,3 +88,5 @@ exports.log= function(req, res) {
     });
   }
 };
+
+

@@ -32,10 +32,13 @@ try{
 catch(e){
 }
 
-//Provide application.js with orchestratorIP and runnerID
-application.init(app.get('orchestratorIP'), app.get('runnerID'), winston);
-//Provide applicationRoute.js with application.js
-applicationRoute.init(application);
+try{
+  fs.mkdirSync(path.resolve(__dirname, "logs/"));
+  console.log('Creating logs directory because it doesn\'t exist.');
+}
+catch(e){
+}
+
 
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -46,17 +49,23 @@ app.post('/application/start', applicationRoute.start);
 app.get('/runner/log', routes.log);
 app.post('/runner/kill', routes.kill);
 
-runner.init(app.get('runnerID'));
-routes.init(runner);
+runner.init(app.get('runnerID'), winston);
+routes.init(runner, application, winston);
+
+winston.add(winston.transports.File, { filename: 'logs/runner' + app.get('runnerID') + '.log', handleExceptions: true});
+
+
+//Provide application.js with orchestratorIP and runnerID
+application.init(app.get('orchestratorIP'), app.get('runnerID'), winston)
+//Provide applicationRoute.js with application.js
+applicationRoute.init(application);
 
 http.createServer(app).listen(app.get('port'), function() {
   winston.log('info', 'RUNNER: Node Runner Service listening on port ' + app.get('port'));
 });
 
-winston.add(winston.transports.File, { filename: 'runner' + app.get('runnerID') + '.log', handleExceptions: true});
 
-
-var TIMEOUT_TIME = 1 * 60 * 1000; /* ms */
+var TIMEOUT_TIME = 15 * 1 * 1000; /* ms */
 var lastPing = new Date() - TIMEOUT_TIME - 1000;
 pingOrchestrator();
 

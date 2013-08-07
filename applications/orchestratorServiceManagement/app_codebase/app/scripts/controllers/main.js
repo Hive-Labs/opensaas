@@ -23,10 +23,17 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 		});
 	};
 
+	$scope.addRunner = function(){
+		orchestratorRunnersAPI.add(function(data){
+			alert(data);	
+		});
+	};
+
 	$scope.log = function(runner) {
 		$('#logRunnerModal').modal('show');
 			orchestratorRunnersAPI.log(runner.id, function callback(log) {
 				var arrayOfLines = log;
+				$("#logRunnerModalLogText").text('');
 				for (var i = 0; i < arrayOfLines.length; i++) {
 					var color;
 					if (i % 2 == 0) {

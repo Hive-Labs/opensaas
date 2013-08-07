@@ -39,7 +39,6 @@ exports.getMachineByIndex = function(index) {
 		if (machineIdx >= exports.bareMetalList.length) {
 			machineIdx = 0;
 		}
-			console.log(exports.bareMetalList);
 		currMachine = exports.bareMetalList[machineIdx];
 		if (portIdx > exports.bareMetalList[0].portFinish) {
 			machineIdx++;

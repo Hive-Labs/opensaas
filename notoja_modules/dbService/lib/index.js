@@ -8,7 +8,6 @@ var applicationName = "";
 exports.init = function(serverHost, applicationName) {
   this.serverHost = serverHost;
   this.applicationName = applicationName;
-  console.log(this.serverHost);
 };
 
 exports.get = function(collectionName, entityType, entityId) {

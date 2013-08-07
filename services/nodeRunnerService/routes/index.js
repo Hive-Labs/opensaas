@@ -1,10 +1,17 @@
 var runner;
+var application;
+var winston;
 
-exports.init = function(runner){
+exports.winston = winston;
+
+exports.init = function(runner, application, winston){
 	this.runner = runner;
+	this.application = application;
+  this.winston = winston;
 }
 
 exports.runner = runner;
+exports.application = application;
 
 exports.index = function(req, res) {
   res.end('hello world! I am the node runner service.')
@@ -12,7 +19,13 @@ exports.index = function(req, res) {
 
 exports.kill = function(req, res) {
   res.end('Goodbye!');
-  process.exit(0);
+  setTimeout(function(){
+    exports.winston.log('info', 'Killing runner.');
+    exports.runner.kill();
+  }, 5000);
+  exports.winston.log('info', 'Killing app...');
+  exports.winston.log('info', exports.application);
+  exports.application.kill();
 };
 
 exports.log = function(req, res){

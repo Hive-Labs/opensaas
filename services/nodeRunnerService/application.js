@@ -11,9 +11,17 @@ var runnerID;
 var winston;
 var nodeProcess;
 
+
+exports.winston = winston;
+exports.orchestratorIP = orchestratorIP;
+exports.runnerID = runnerID;
+exports.nodeProcess = nodeProcess;
+
 exports.kill = function(){
-  if(nodeProcess){
-    nodeProcess.exit(0);
+  exports.winston.log('info', 'node process...' + exports.nodeProcess);
+  if(exports.nodeProcess){
+    exports.winston.log('info', 'Killing child app');
+    exports.nodeProcess.kill('SIGQUIT');
   }
 }
 exports.init = function(orchestratorIP, runnerID, winston) {
@@ -22,9 +30,8 @@ exports.init = function(orchestratorIP, runnerID, winston) {
   this.winston = winston;
 }
 
-exports.winston = winston;
-exports.orchestratorIP = orchestratorIP;
-exports.runnerID = runnerID;
+
+
 /*
  * Host a new application.
  * applicationTar: The req.file of the request
@@ -62,17 +69,17 @@ exports.start = function(applicationTar, applicationName) {
       exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
       var envCopy = [];
       envCopy['orchestratorIP']=exports.orchestratorIP;
-      nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
+      exports.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
       //If child app throws an error or console.logs something, display it
-      nodeProcess.on('error', function(err) {
+      exports.nodeProcess.on('error', function(err) {
         exports.winston.log('info', 'CHILD:' + err);
       });
 
-      nodeProcess.stderr.on('data', function(data) {
+      exports.nodeProcess.stderr.on('data', function(data) {
         exports.winston.log('info', 'CHILD:' + data);
       });
 
-      nodeProcess.stdout.on('data', function(data) {
+      exports.nodeProcess.stdout.on('data', function(data) {
         exports.winston.log('info', 'CHILD:' + data);
       });
 

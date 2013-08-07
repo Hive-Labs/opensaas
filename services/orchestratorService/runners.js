@@ -1,18 +1,27 @@
 var dbService = require('dbService'),
+  SSHClient = require("NodeSSH"),
   request = require('request');
 
 //Until db service is implimented, use this.
 var tempRunnerList = [];
+var nodeRunnerBalancer;
+var orchestratorPort;
+var winston;
 
 /*
   Summary:      External method to feed ip address of dbService into 
                 this file
   Parameters:   dbServiceIp - ip address of dbService
  */
-exports.init = function(dbServiceIP) {
+exports.init = function(dbServiceIP, nodeRunnerBalancer, orchestratorPort, winston) {
   dbService.init(dbServiceIP);
+  this.nodeRunnerBalancer = nodeRunnerBalancer;
+  this.orchestratorPort = orchestratorPort;
+  this.winston = winston;
 }
 
+exports.nodeRunnerBalancer = nodeRunnerBalancer;
+exports.winston = winston;
 /*
   Summary:      Get a list of runners (dead or alive)
   Returns:      A list of current runners (dead or alive)
@@ -48,7 +57,7 @@ exports.ping = function(runnerID) {
       exports.updateRunner(runnerID, currentList[i]);
     }
   }
-  console.log('runner ' + runnerID + " was pinged at " + pingTime);
+  //winston.log('runner ' + runnerID + " was pinged at " + pingTime);
   exports.setAlive(runnerID, true);
 };
 
@@ -148,12 +157,11 @@ exports.updateRunner = function(runnerID, newRunner) {
  */
 exports.removeRunner = function(runnerID) {
   for (var i = 0; i < tempRunnerList.length; i++) {
-    console.log('i:' + i);
     if (tempRunnerList[i].id == runnerID) {
-      console.log('posting to ' + tempRunnerList[i].ip);
+      console.log('killing' +  tempRunnerList[i].ip);
       var r = request.post(tempRunnerList[i].ip + "/runner/kill");
-      console.log('done posting...');
-      tempRunnerList.splice(i, 1);
+      exports.setAlive(runnerID, false);
+     // tempRunnerList.splice(i, 1);
       break;
     }
   }
@@ -170,3 +178,39 @@ exports.log = function(runnerID, callback){
   }
 
 }
+
+/*
+  Summary:      If a runnerID is specified, it will spawn a new runner
+                with that id. Otherwise, it will create a new id and 
+                spawn a runner with that.
+  Parameters:   runnerID(optional)
+ */
+
+exports.spawnRunner = function(runnerID) {
+  if (runnerID) {
+    exports.removeRunner(runnerID);
+  } else {
+    runnerID = generateID();
+  }
+  var currMachine = exports.nodeRunnerBalancer.nextMachine();
+  //Connect via SSH to the bare metal machine and start the runner
+  var ssh = new SSHClient(currMachine.ip, currMachine.username, currMachine.password);
+  //Feed the ip of the orchestrator server, the port to run on, and the id of the runner to the runner
+  var sshCommand = "cd " + currMachine.runnerLocation + " && ORCHESTRATOR_IP=http://" + currMachine.ip + ":" + exports.orchestratorPort + " RUNNER_ID=" + runnerID + " PORT=" + currMachine.runnerPort + " node " + currMachine.runnerLocation + "server.js";
+  exports.winston.log('info', 'Executing SSH:' + sshCommand);
+  //Execute the ssh command
+  ssh.exec(sshCommand);
+  //Add this new runner to the existing list of runners
+  exports.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, false);
+  //Increment the roundRobin index to the next bare metal machine
+}
+
+/*
+  Summary:      Generate a random id of letters and numbers that is
+                4 characters long.
+  Returns:      A string id of random letters and numbers
+ */
+
+function generateID() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+};

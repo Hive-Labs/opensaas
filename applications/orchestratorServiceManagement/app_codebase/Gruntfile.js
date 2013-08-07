@@ -42,7 +42,7 @@ module.exports = function(grunt) {
         options: {
           livereload: LIVERELOAD_PORT
         },
-        files: ['<%= yeoman.app %>/{,*/}*.html', '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css', '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js', '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}']
+        files: ['<%= yeoman.app %>/{,*/}*.html', '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css', '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js', '<%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}']
       }
     },
     connect: {
@@ -127,7 +127,7 @@ module.exports = function(grunt) {
     rev: {
       dist: {
         files: {
-          src: ['<%= yeoman.dist %>/scripts/{,*/}*.js', '<%= yeoman.dist %>/styles/{,*/}*.css', '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}', '<%= yeoman.dist %>/styles/fonts/*']
+          src: ['<%= yeoman.dist %>/scripts/{,*/}*.js', '<%= yeoman.dist %>/styles/{,*/}*.css', '<%= yeoman.dist %>/img/{,*/}*.*', '<%= yeoman.dist %>/styles/fonts/*']
         }
       }
     },
@@ -148,9 +148,9 @@ module.exports = function(grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= yeoman.app %>/img',
           src: '{,*/}*.{png,jpg,jpeg}',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= yeoman.dist %>/img'
         }]
       }
     },
@@ -158,9 +158,9 @@ module.exports = function(grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= yeoman.app %>/img',
           src: '{,*/}*.svg',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= yeoman.dist %>/img'
         }]
       }
     },
@@ -206,11 +206,11 @@ module.exports = function(grunt) {
           dot: true,
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
-          src: ['*.{ico,png,txt}', '.htaccess', 'bower_components/**/*', 'images/{,*/}*.{gif,webp}', 'styles/fonts/*']
+          src: ['*.{ico,png,txt}', '.htaccess', 'bower_components/**/*', 'img/{,*/}*.{gif,webp}', 'styles/fonts/*']
         }, {
           expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= yeoman.dist %>/images',
+          cwd: '.tmp/img',
+          dest: '<%= yeoman.dist %>/img',
           src: ['generated/*']
         }]
       }
@@ -224,19 +224,16 @@ module.exports = function(grunt) {
         files: [{
           src: ['../build/**'],
           dest: 'orchestratorServiceManagement/build/',
-          },{
+        }, {
           src: ['../dist/**'],
           dest: 'orchestratorServiceManagement/dist/',
-          },
-          {
+        }, {
           src: ['../node_modules/**'],
           dest: 'orchestratorServiceManagement/node_modules/',
-          },
-          {
+        }, {
           src: ['../*'],
           dest: 'orchestratorServiceManagement/orchestratorServiceManagement/',
-          },
-        ]
+        }, ]
       }
     },
     concurrent: {
@@ -287,5 +284,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'concurrent:dist', 'concat', 'copy', 'cdnify', 'ngmin', 'cssmin', 'uglify', 'rev', 'usemin', 'compress']);
 
-  grunt.registerTask('default', ['jshint', 'test', 'build']);
+  grunt.registerTask('default', ['test', 'build']);
 };
