@@ -22,12 +22,29 @@ exports.init = function(dbServiceIP, nodeRunnerBalancer, orchestratorPort, winst
 
 exports.nodeRunnerBalancer = nodeRunnerBalancer;
 exports.winston = winston;
+
 /*
   Summary:      Get a list of runners (dead or alive)
   Returns:      A list of current runners (dead or alive)
  */
-exports.list = function() {
-  return tempRunnerList;
+exports.list = function(alive) {
+  if (alive == null || alive == false) {
+    return tempRunnerList;
+  } else {
+    var currentList = exports.list();
+    var finalList = [];
+    for (var i = 0; i < currentList.length; i++) {
+      if (currentList[i].alive == true) {
+        var item = {
+          host: currentList[i].machine.ip,
+          port: currentList[i].machine.runnerPort,
+          appName: currentList[i].appName
+        }
+        finalList.push(item);
+      }
+    }
+    return finalList;
+  }
 };
 
 /*
@@ -38,7 +55,7 @@ exports.getRunnerByID = function(runnerID) {
   var currentList = exports.list();
   for (var i = 0; i < currentList.length; i++) {
     if (currentList[i].id == runnerID) {
-     return currentList[i];
+      return currentList[i];
     }
   }
 };
@@ -67,6 +84,7 @@ exports.ping = function(runnerID) {
                 alive - the status to set on its alive property
  */
 exports.setAlive = function(runnerID, alive) {
+  exports.winston.log('info', 'Setting runner ' + runnerID + ' as alive=' + alive);
   var currentList = exports.list();
   var updatedRunner;
   for (var i = 0; i < tempRunnerList.length; i++) {
@@ -95,7 +113,7 @@ exports.add = function(runnerID, runnerName, runnerIP, currMachine) {
     ping: new Date(),
     alive: false,
     appName: null,
-    machine: currMachine
+    machine: {ip: currMachine.ip, runnerPort: currMachine.runnerPort}
   }
   console.log("New runner has been added, but will be marked as dead. I will wait for the runner to ping back.");
   console.log(JSON.stringify(runner));
@@ -158,19 +176,18 @@ exports.updateRunner = function(runnerID, newRunner) {
 exports.removeRunner = function(runnerID) {
   for (var i = 0; i < tempRunnerList.length; i++) {
     if (tempRunnerList[i].id == runnerID) {
-      console.log('killing' +  tempRunnerList[i].ip);
+      console.log('killing' + tempRunnerList[i].ip);
       var r = request.post(tempRunnerList[i].ip + "/runner/kill");
       exports.setAlive(runnerID, false);
-     // tempRunnerList.splice(i, 1);
       break;
     }
   }
 }
 
-exports.log = function(runnerID, callback){
+exports.log = function(runnerID, callback) {
   for (var i = 0; i < tempRunnerList.length; i++) {
     if (tempRunnerList[i].id == runnerID) {
-      request.get(tempRunnerList[i].ip + "/runner/log", function (error, response, body) {
+      request.get(tempRunnerList[i].ip + "/runner/log", function(error, response, body) {
         callback(response);
       });
       break;
@@ -200,8 +217,10 @@ exports.spawnRunner = function(runnerID) {
   exports.winston.log('info', 'Executing SSH:' + sshCommand);
   //Execute the ssh command
   ssh.exec(sshCommand);
+  console.log('===========');
+  console.log(currMachine);
   //Add this new runner to the existing list of runners
-  exports.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, false);
+  exports.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, currMachine);
   //Increment the roundRobin index to the next bare metal machine
 }
 

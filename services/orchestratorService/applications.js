@@ -30,33 +30,59 @@ exports.list = function() {
 };
 
 /*
+  Summary:      Get a list of apps currently deployed or waiting 
+  				to be deployed on runners.
+  Returns: 		A list of apps as javascript array
+ */
+exports.listAll = function(callback) {
+	fs.readdir('./apps', function(err, files){
+		var finalResult = [];
+		for(var i = 0; i< files.length; i++){
+			files[i] = files[i].replace('.tar.gz', '');
+			if (files[i].indexOf('.') != 0)
+			finalResult.push(files[i]);
+		}
+		callback(finalResult);
+	});
+};
+
+/*
   Summary:      Add a new app to the list to be queued.
   				Then, try to deploy it.
   Parameters:   appName - the name of the app (case sensitive)
  */
 exports.add = function(appName) {
 	var currentList = exports.list();
-	if (currentList.indexOf(appName) == -1) {
-		tempApplicationList.push(appName);
+		var exists = false;
+		for(var i = 0; i< tempApplicationList.length; i++){
+			if(tempApplicationList[i].appName == appName)
+			{
+				exists = true;
+				tempApplicationList[i].count++;	
+			}
+		}
+		if(!exists){
+			tempApplicationList.push({ appName: appName, count: 1});
+		}
 		console.log(tempApplicationList);
 		exports.deployApps(exports.list());
-	}
 };
 
 /*
   Summary:      Deploy a list of apps to available runners. 
   				If a runner is not available, wait until there is one.
 
-  Parameters:   appList - A javascript array of app names to be deployed.
+  Parameters:   appList - A jsavascript array of app names to be deployed.
  */
 
 exports.deployApps = function(appList) {
 	var availableRunner = exports.runners.getAvailableRunner();
 	if (availableRunner) {
 		for (var i = 0; i < appList.length; i++) {
-			if (!exports.runners.getRunnersByApp(appList[i]) || exports.runners.getRunnersByApp(appList[i]).length == 0) {
-				console.log('Deploying ' + appList[i]);
-				exports.deploy(appList[i]);
+			if (!exports.runners.getRunnersByApp(appList[i].appName) || exports.runners.getRunnersByApp(appList[i].appName).length < appList[i].count) {
+				console.log(exports.runners.getRunnersByApp(appList[i].appName).length + " runners and " + appList[i].count + " instances of " + appList[i].appName);
+				console.log('Deploying ' + appList[i].appName);
+				exports.deploy(appList[i].appName);
 			}
 		}
 	}

@@ -23,26 +23,38 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 		});
 	};
 
-	$scope.addRunner = function(){
-		orchestratorRunnersAPI.add(function(data){
-			alert(data);	
+	$scope.deploy = function() {
+		$('#deployRunnerModal').modal('show');
+		$('#deployRunnerModalTerminateButton').click(function() {
+			$('#deployRunnerModal').modal('hide');
+			alert('App has been deployed to a runner. Please wait a few minutes for changes to take effect');
+			orchestratorRunnersAPI.deployApp($('#deployRunnerModalAppName').val(), function callback(data) {
+				
+			});
+
+		});
+	};
+
+	$scope.addRunner = function() {
+		orchestratorRunnersAPI.add(function(data) {
+			alert(data);
 		});
 	};
 
 	$scope.log = function(runner) {
 		$('#logRunnerModal').modal('show');
-			orchestratorRunnersAPI.log(runner.id, function callback(log) {
-				var arrayOfLines = log;
-				$("#logRunnerModalLogText").text('');
-				for (var i = 0; i < arrayOfLines.length; i++) {
-					var color;
-					if (i % 2 == 0) {
-						color = 'blue';
-					} else {
-						color = 'green';
-					}
-					$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + JSON.stringify(JSON.parse(arrayOfLines[i]), null, '<br/>\t') + '</p>');
+		orchestratorRunnersAPI.log(runner.id, function callback(log) {
+			var arrayOfLines = log;
+			$("#logRunnerModalLogText").text('');
+			for (var i = 0; i < arrayOfLines.length; i++) {
+				var color;
+				if (i % 2 == 0) {
+					color = 'blue';
+				} else {
+					color = 'green';
 				}
-			});
+				$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + JSON.stringify(JSON.parse(arrayOfLines[i]), null, '<br/>\t') + '</p>');
+			}
+		});
 	};
 });

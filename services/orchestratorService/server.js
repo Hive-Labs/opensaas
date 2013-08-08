@@ -59,12 +59,14 @@ if ('development' == app.get('env')) {
 //Setup the routes for accessing runner information
 app.get('/', routes.index);
 app.get('/runner/list', runnersRoute.list);
+app.get('/runner/HAList', runnersRoute.HAlist);
 app.post('/runner/spawn', runnersRoute.spawn);
 app.get('/runner/:id/log', runnersRoute.log);
 app.post('/runners/ping', runnersRoute.ping);
 app.post('/runners/add', runnersRoute.add);
 app.del('/runner/:id', runnersRoute.removeRunner);
 app.post('/applications/deploy', applicationsRoute.deploy);
+app.get('/applications/list', applicationsRoute.list);
 
 //Refresh the runner list
 var runnerList;

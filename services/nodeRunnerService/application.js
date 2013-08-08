@@ -10,12 +10,13 @@ var orchestratorIP;
 var runnerID;
 var winston;
 var nodeProcess;
-
+var currentPort;
 
 exports.winston = winston;
 exports.orchestratorIP = orchestratorIP;
 exports.runnerID = runnerID;
 exports.nodeProcess = nodeProcess;
+exports.currentPort = currentPort;
 
 exports.kill = function(){
   exports.winston.log('info', 'node process...' + exports.nodeProcess);
@@ -24,9 +25,10 @@ exports.kill = function(){
     exports.nodeProcess.kill('SIGQUIT');
   }
 }
-exports.init = function(orchestratorIP, runnerID, winston) {
+exports.init = function(orchestratorIP, runnerID, currentPort, winston) {
   this.orchestratorIP = orchestratorIP;
   this.runnerID = runnerID;
+  this.currentPort = currentPort;
   this.winston = winston;
 }
 
@@ -69,6 +71,7 @@ exports.start = function(applicationTar, applicationName) {
       exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
       var envCopy = [];
       envCopy['orchestratorIP']=exports.orchestratorIP;
+      envCopy['SUBPORT'] = (parseInt(exports.currentPort) + 1000);
       exports.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
       //If child app throws an error or console.logs something, display it
       exports.nodeProcess.on('error', function(err) {

@@ -15,4 +15,11 @@ exports.start = function(req, res) {
  res.end('Done deploying application');
 };
 
+/*
+ * GET child app
+ */
+exports.proxy = function(req, res) {
+ res.end('This will proxy to child app');
+};
+
 

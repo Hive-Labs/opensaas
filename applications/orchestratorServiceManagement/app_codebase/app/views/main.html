@@ -1,7 +1,9 @@
 <div class="dashboardDiv">
   <div class="twoColumn">
     <h2>
-      Connected Runners <button class="btn addRunnerBtn" ng-click="addRunner()"><i class="icon-plus"></i></button>
+      Connected Runners <button class="btn addRunnerBtn" ng-click="addRunner()"><i class="icon-plus"></i></button> <button class="btn btn-success" ng-click="deploy();">
+          Deploy App
+        </button>
     </h2>
     <div class="connectedRunnersInner" ng-repeat="runner in runners">
       <h4 style="color:{{ runner.alive && 'green' || !runner.alive && 'red'}}">
@@ -19,7 +21,7 @@
         </li>
       </ul>
       <div class="btn-group runnersBtnGroup">
-        <button class="btn btn-success" ng-click="configure({{ runner.id }});">
+        <button class="btn btn-success" ng-click="">
           Configure
         </button>
         <button class="btn btn-danger" href="#terminateRunnerModal" ng-click="terminate(runner);">Terminate</button>
@@ -112,6 +114,28 @@
       </p>
     </div>
     <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">
+        Close
+      </button>
+    </div>
+  </div>
+  <div id="deployRunnerModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        ×
+      </button>
+      <h3 id="myModalLabel">
+        Configure Runner
+      </h3>
+    </div>
+    <div class="modal-body">
+      Deploy App: <input id="deployRunnerModalAppName" type="text" placeholder="App Name Here"/>
+    </div>
+    <div class="modal-footer">
+      <button id="deployRunnerModalTerminateButton" class="btn btn-success">
+        Save
+      </button>
       <button class="btn" data-dismiss="modal" aria-hidden="true">
         Close
       </button>

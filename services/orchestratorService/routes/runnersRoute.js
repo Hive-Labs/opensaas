@@ -25,6 +25,15 @@ exports.list = function(req, res) {
 };
 
 /*
+  Summary:      Route to GET /runners/HAlist. Returns the list of runners
+                dead or alive.
+ */
+exports.HAlist = function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.send(exports.runners.list(true));
+};
+
+/*
   Summary:      Route to GET /runners/list. Returns the list of runners
                 dead or alive.
  */

@@ -48,7 +48,6 @@ app.get('/', routes.index);
 app.post('/application/start', applicationRoute.start);
 app.get('/runner/log', routes.log);
 app.post('/runner/kill', routes.kill);
-
 runner.init(app.get('runnerID'), winston);
 routes.init(runner, application, winston);
 
@@ -56,7 +55,7 @@ winston.add(winston.transports.File, { filename: 'logs/runner' + app.get('runner
 
 
 //Provide application.js with orchestratorIP and runnerID
-application.init(app.get('orchestratorIP'), app.get('runnerID'), winston)
+application.init(app.get('orchestratorIP'), app.get('runnerID'), app.get('port'), winston)
 //Provide applicationRoute.js with application.js
 applicationRoute.init(application);
 

@@ -26,3 +26,12 @@ exports.deploy = function(req, res) {
 	exports.applications.add(req.body.appName);
   	res.send('App has been queued. If there are no runners yet, this will take up to 4 minutes.');
 };
+
+/*
+  Summary:      List all the apps available to deploy
+ */
+exports.list = function(req, res) {
+  exports.applications.listAll(function(data){
+    res.end(JSON.stringify(data));
+  })
+};

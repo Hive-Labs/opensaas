@@ -30,6 +30,16 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
         callback(data);
       });
     },
+    deployApp: function(appName, callback){
+      $http({
+        method: 'POST',
+        url: 'http://localhost:2000/applications/deploy',
+        data: {appName: appName}
+      }).
+      success(function(data, status, headers, config) {
+        callback(data);
+      });
+    },
     log: function(runnerID, callback){
       $http({
         method: 'GET',
