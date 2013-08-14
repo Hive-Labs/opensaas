@@ -193,7 +193,17 @@ exports.log = function(runnerID, callback) {
       break;
     }
   }
+}
 
+exports.status = function(runnerID, callback) {
+  for (var i = 0; i < tempRunnerList.length; i++) {
+    if (tempRunnerList[i].id == runnerID) {
+      request.get(tempRunnerList[i].ip + "/runner/status", function(error, response, body) {
+        callback(response);
+      });
+      break;
+    }
+  }
 }
 
 /*

@@ -47,9 +47,19 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.post('/application/start', applicationRoute.start);
 app.get('/runner/log', routes.log);
+app.get('/runner/status', routes.status);
 app.post('/runner/kill', routes.kill);
 runner.init(app.get('runnerID'), winston);
 routes.init(runner, application, winston);
+
+function updateStatus(){ 
+  runner.updateStatus();
+  setTimeout(function(){
+  updateStatus();
+  }, 1000);
+};
+
+updateStatus();
 
 winston.add(winston.transports.File, { filename: 'logs/runner' + app.get('runnerID') + '.log', handleExceptions: true});
 

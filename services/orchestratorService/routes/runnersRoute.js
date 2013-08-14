@@ -99,3 +99,16 @@ exports.log= function(req, res) {
 };
 
 
+exports.status= function(req, res) {
+  if (!req.params.id) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.send("You are missing some parameters, you need to specify an id.");
+  } else {
+    var runner = exports.runners.status(req.params.id, function callback(data){
+      res.header("Access-Control-Allow-Origin", "*");
+      res.send(data.body);
+    });
+  }
+};
+
+

@@ -33,3 +33,7 @@ footer{
 .red{
   color:red;
 }
+.cpuGraph{
+  width:300px;
+  height: 100px;
+}

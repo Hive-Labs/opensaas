@@ -53,6 +53,15 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
         callback(data);
       });
     },
+    status: function(runnerID, callback){
+      $http({
+        method: 'GET',
+        url: 'http://localhost:2000/runner/' + runnerID + '/status',
+      }).
+      success(function(data, status, headers, config) {
+        callback(data);
+      });
+    },
     put: function() {}
   };
 }]);

@@ -1,7 +1,7 @@
 <div class="dashboardDiv">
   <div class="twoColumn">
     <h2>
-      Connected Runners <button class="btn addRunnerBtn" ng-click="addRunner()"><i class="icon-plus"></i></button> <button class="btn btn-success" ng-click="deploy();">
+      Connected Runners <button class="btn addRunnerBtn" ng-click="addRunner()">Add Runner</button> <button class="btn btn-success" ng-click="deploy();">
           Deploy App
         </button>
     </h2>
@@ -21,11 +21,12 @@
         </li>
       </ul>
       <div class="btn-group runnersBtnGroup">
-        <button class="btn btn-success" ng-click="">
-          Configure
-        </button>
         <button class="btn btn-danger" href="#terminateRunnerModal" ng-click="terminate(runner);">Terminate</button>
         <button class="btn btn-default" href="#logRunnerModal" ng-click="log(runner);">View Log</button>
+        <button id="toggleGraph{{$index}}" class="btn btn-default" ng-click="toggleGraph(runner, $index);">Disable Graph</button>
+      </div>
+      <div>
+        <div id="cpuGraph{{$index}}" class="cpuGraph"></div>
       </div>
     </div>
   </div>

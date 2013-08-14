@@ -33,4 +33,9 @@ exports.log = function(req, res){
 		res.end(data);
 	});
 }
+exports.status = function(req, res){
+  exports.runner.getStatus(function callback(data){
+    res.end(data);
+  });
+}
 

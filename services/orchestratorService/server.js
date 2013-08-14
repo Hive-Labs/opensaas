@@ -62,6 +62,7 @@ app.get('/runner/list', runnersRoute.list);
 app.get('/runner/HAList', runnersRoute.HAlist);
 app.post('/runner/spawn', runnersRoute.spawn);
 app.get('/runner/:id/log', runnersRoute.log);
+app.get('/runner/:id/status', runnersRoute.status);
 app.post('/runners/ping', runnersRoute.ping);
 app.post('/runners/add', runnersRoute.add);
 app.del('/runner/:id', runnersRoute.removeRunner);
@@ -134,8 +135,8 @@ function parseConfigurationFile(callback) {
                   ask((i + 3) + "d) Where is the nodeRunnerService located in machine " + i + "? (eg. ~/notoja/notoja-saas/services/nodeRunnerService/)", '.', function(runnerLocation) {
                     ask((i + 3) + "e) Where is the start port for machine " + i + "? (eg. 3000)", '.', function(portStart) {
                       ask((i + 3) + "f) Where is the finish port for machine " + i + "? (eg. 3400)", '.', function(portFinish) {
-                        if(runnerLocation.indexOf('/', runnerLocation.length - 1) == -1){
-                            runnerLocation = runnerLocation + "/";
+                        if (runnerLocation.indexOf('/', runnerLocation.length - 1) == -1) {
+                          runnerLocation = runnerLocation + "/";
                         }
                         finalFile.bareMetalMachines.push({
                           "ip": runnerIP,
@@ -178,7 +179,6 @@ function parseConfigurationFile(callback) {
 }
 
 
-
 /*
   Summary:      Loop through every runner in the runnerList using
                 runnerIndex as counter and make sure that it has
@@ -199,7 +199,7 @@ function monitorRunners() {
       //Spin up a new runner with the same id as the old one
       runners.spawnRunner();
       setTimeout(function callback() {
-      applications.deployApps(applications.list());
+        applications.deployApps(applications.list());
       }, 15000);
     }
     if (runnerIndex < runnerList.length - 1) {
@@ -225,7 +225,6 @@ function monitorRunners() {
     }, 30000);
   }
 }
-
 
 
 function ask(question, format, callback) {
