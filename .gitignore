@@ -12,3 +12,4 @@ services/orchestratorService/ServerConfiguration.json
 services/orchestratorService/build/*
 services/orchestratorService/apps/orchestratorServiceManagement.tar.gz
 applications/orchestratorServiceManagement/app_codebase/orchestratorServiceManagement.tar.gz
+applications/orchestratorServiceManagement/dist/*
