@@ -1,6 +1,6 @@
 {
   "name": "notoja-orchestrator_service",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "private": true,
   "scripts": {
     "start": "node server.js"
