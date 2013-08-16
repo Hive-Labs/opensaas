@@ -49,11 +49,11 @@ console.info('Running the Notoja Authentication Server on port ' + settings.serv
 // listening on the specified port
 console.info('Making connection to the database at ' + settings.server.mongooseServer);
 
-mongoose.connect(settings.server.mongooseServer);
+/*mongoose.connect(settings.server.mongooseServer);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
-  console.info('Successfully connected the the databse');
+  console.info('Successfully connected the the databse');*/
 
   /////////////////////////////////  OAP ROUTES  ////////////////////////////////
   
@@ -151,7 +151,13 @@ db.once('open', function callback() {
   ////////////////////////////  Public REST API  ////////////////////////////////////
   app.get('/', function(req, res, next) {
     console.dir(req.session);
-    res.end('home, logged in? ' + !!req.session.user);
+    if(req.session.user){
+      res.end('Welcome '+ req.session.user);
+    }
+    else{
+       res.writeHead(303, {Location: '/login'});
+       res.end();
+    }
   });
   
   // If logged in, redirect to /. 
@@ -173,7 +179,12 @@ db.once('open', function callback() {
   app.post('/login', function(req, res, next) {
     // Check to see if the username and password are valid
     if(req.body.username == 'emarcoux') {
-      res.writeHead(303, {Location: req.body.next || '/'});
+      if(req.body.next.match(/^\s*$/)){
+        res.writeHead(303, {Location: '/'});
+      }
+      else{
+       res.writeHead(303, {Location: req.body.next}); 
+      }
       req.session.user = req.body.username;
       res.end();
     } else { // redirect them back to the login page if their creds are invalid
@@ -204,7 +215,7 @@ db.once('open', function callback() {
  
 
   // Get detailed information on the extras stored in the user
-  app.get('/api/user/get_user_info', function(req, res, next) {
+  app.get('/api/user', function(req, res, next) {
     if(req.session.user) {
       res.end(JSON.stringify({fullName: req.session.user}));
     } else {
@@ -298,7 +309,7 @@ db.once('open', function callback() {
     console.info('Running in plaintext mode');
     http.createServer(app).listen(settings.server.port);
   }
-});
+//});
 
 
 function escapeEntities (s) {

@@ -13,7 +13,7 @@ exports.runners = runners;
 exports.init = function(runners, applications){
   this.runners = runners;
   this.applications = applications;
-}
+};
 
 /*
   Summary:      Route to GET /runners/list. Returns the list of runners
@@ -106,7 +106,12 @@ exports.status= function(req, res) {
   } else {
     var runner = exports.runners.status(req.params.id, function callback(data){
       res.header("Access-Control-Allow-Origin", "*");
-      res.send(data.body);
+      if(data){
+         res.send(data.body);        
+      }
+      else{
+        res.send(JSON.stringify({cpu: 0, memory: 0}));
+      }
     });
   }
 };

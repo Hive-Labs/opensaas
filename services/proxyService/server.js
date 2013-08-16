@@ -38,26 +38,35 @@ orchestrator.init('http://localhost:2000');
 
 app.all('*', function route(req, res) {
 	var appName = req.headers.host.split('.')[0];
-	if (!HAList || HAList.length == 0) {
+	if (!HAList || HAList.length === 0) {
 		res.end('There are no runners in the HA List.');
 	} else if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName)
 	{
-		return proxy.proxyRequest(req, res, {
-					host: HAList[currIndex].host,
-					port: (HAList[currIndex].port + 1000)
-				});
+		var newIndex = currIndex;
 		currIndex  = (currIndex + 1) % HAList.length;
+		console.log('newindex');
+		console.log({
+					host: HAList[newIndex].host,
+					port: (HAList[newIndex].port + 1000)
+				});
+		return proxy.proxyRequest(req, res, {
+					host: HAList[newIndex].host,
+					port: (HAList[newIndex].port + 1000)
+				});
 	}
 	else{
 		var i = (currIndex + 1) % HAList.length;
 		while (i != currIndex) {
-			console.log(HAList[i]);
 			if (HAList && HAList[i] && HAList[i].appName && HAList[i].appName.toLowerCase() == appName) {
-				return proxy.proxyRequest(req, res, {
-					host: HAList[currIndex].host,
-					port: (HAList[currIndex].port + 1000)
+				console.log('currIndex');
+				console.log({
+					host: HAList[i].host,
+					port: (HAList[i].port + 1000)
 				});
-				break;
+				return proxy.proxyRequest(req, res, {
+					host: HAList[i].host,
+					port: (HAList[i].port + 1000)
+				});
 			}
 			i = (i + 1) % HAList.length;
 		}
@@ -67,16 +76,18 @@ app.all('*', function route(req, res) {
 
 function updateHAList() {
 	orchestrator.getHAList(function(data) {
-		HAList = JSON.parse(data);
+		if(data){
+			HAList = JSON.parse(data);	
+		}
 	});
 	setTimeout(updateHAList, 3000);
-};
+}
 
 updateHAList();
 
 
-app.listen(7000);
-console.log('#########\nListening on 7000\n##########');
+app.listen(process.env.PORT || 2002);
+console.log('#########\nListening on ' + (process.env.PORT || 2002) + '\n##########');
 
 
 //

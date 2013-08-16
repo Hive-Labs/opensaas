@@ -4,11 +4,16 @@ var orchestratorIP;
 exports.orchestratorIP  = orchestratorIP;
 
 exports.init  =function(orchestratorIP){
-	this.orchestratorIP = orchestratorIP;
-}
+    this.orchestratorIP = orchestratorIP;
+};
 
 exports.getHAList = function(callback){
-	request.get(exports.orchestratorIP + "/runner/HAList", function (error, response, body) {
-        callback(body);
+    request.get(exports.orchestratorIP + "/runner/HAList", function (error, response, body) {
+        if(body){
+            callback(body);         
+        }
+        else{
+            callback(null);
+        }
     });
-}
+};

@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     hub: {
       all: {
-        src: ['../orchestratorService/gruntfile.js'],
+        src: ['../authService/gruntfile.js','../orchestratorService/gruntfile.js','../proxyService/gruntfile.js'],
         tasks: ['default']
       }
     },

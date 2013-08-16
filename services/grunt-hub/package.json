@@ -2,6 +2,9 @@
   "name": "my-grunt-hub",
   "version": "0.1.0",
   "devDependencies": {
-  	"grunt": "~0.4.1"
+    "grunt": "~0.4.1"
+  },
+  "dependencies": {
+    "grunt-hub": "~0.5.0"
   }
 }

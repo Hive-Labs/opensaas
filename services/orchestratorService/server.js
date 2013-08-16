@@ -14,9 +14,10 @@ var express = require('express'),
   SSHClient = require("NodeSSH"),
   Expect = require('node-expect'),
   winston = require('winston'),
-  nodeRunnerBalancer = require('./loadbalancers/nodeRunners-roundrobin.js')
+  nodeRunnerBalancer = require('./loadbalancers/nodeRunners-roundrobin.js'),
   asciimo = require('asciimo').Figlet,
-  fs = require('fs')
+  pjson = require('./package.json'),
+  fs = require('fs');
 
   var app = express();
 
@@ -79,6 +80,8 @@ var TIMEOUT_TIME = 25 * 1 * 1000; //milliseconds
 parseConfigurationFile(function callback() {
   asciimo.write('Open SAAS', 'Banner', function(result, font) {
     console.log(result);
+    console.log('\n');
+    console.log('Version: ' + pjson.version);
     console.log("\n\n\n\n");
   });
 
@@ -191,7 +194,7 @@ function monitorRunners() {
   //Make sure there is at least 1 runner that is running no apps.
   if (runners.getAvailableRunner()) {
     //Make sure that this runner has pinged the orchestrator TIMEOUT_TIME milliseconds ago
-    if (runnerList[runnerIndex].alive && runnerList[runnerIndex] && (new Date) - runnerList[runnerIndex].ping > TIMEOUT_TIME) {
+    if (runnerList[runnerIndex].alive && runnerList[runnerIndex] && (new Date()) - runnerList[runnerIndex].ping > TIMEOUT_TIME) {
       //If ping time was long ago, complain about it
       winston.log('info', 'runner ' + runnerList[runnerIndex].id + " is dead. Let me spin up another runner now.");
       //Set its status to dead
@@ -211,7 +214,7 @@ function monitorRunners() {
     }
     //Rerun this function again in 5 seconds
     setTimeout(function callback() {
-      setImmediate(monitorRunners)
+      setImmediate(monitorRunners);
     }, 15000);
   } else {
     //If there isn't at least 1 runner that is running no apps, complain

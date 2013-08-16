@@ -18,9 +18,9 @@ exports.runnerID = runnerID;
 exports.nodeProcess = nodeProcess;
 exports.currentPort = currentPort;
 
-exports.kill = function(){
+exports.kill = function() {
   exports.winston.log('info', 'node process...' + exports.nodeProcess);
-  if(exports.nodeProcess){
+  if (exports.nodeProcess) {
     exports.winston.log('info', 'Killing child app');
     exports.nodeProcess.kill('SIGQUIT');
   }
@@ -31,7 +31,6 @@ exports.init = function(orchestratorIP, runnerID, currentPort, winston) {
   this.currentPort = currentPort;
   this.winston = winston;
 }
-
 
 
 /*
@@ -67,39 +66,62 @@ exports.start = function(applicationTar, applicationName) {
 
     //Once tar process finishes, continue...
     tarProcess.on('close', function(code) {
-      //Spawn a new process to run the child node app
-      exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
-      var envCopy = [];
-      envCopy['orchestratorIP']=exports.orchestratorIP;
-      envCopy['SUBPORT'] = (parseInt(exports.currentPort) + 1000);
-      exports.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {env : envCopy});
-      //If child app throws an error or console.logs something, display it
-      exports.nodeProcess.on('error', function(err) {
-        exports.winston.log('info', 'CHILD:' + err);
+
+      var npmProcess = childProcess.spawn('/usr/local/bin/npm', ['install'], {
+        cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
       });
 
-      exports.nodeProcess.stderr.on('data', function(data) {
-        exports.winston.log('info', 'CHILD:' + data);
+      //If there is an error, display it
+      npmProcess.on('error', function(err) {
+        exports.winston.log('info', 'RUNNER:' + err);
       });
 
-      exports.nodeProcess.stdout.on('data', function(data) {
-        exports.winston.log('info', 'CHILD:' + data);
+      //If there is an error, display it
+      npmProcess.stderr.on('data', function(data) {
+        exports.winston.log('info', 'RUNNER:stderr: ' + data);
       });
 
-      }); //tarProcess.on(close)
-    }); //fs.readFile
-  }; //exports.start
-  ////////////////////////INTERNAL METHODS//////////////
-  var deleteFolderRecursive = function(path) {
-      if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function(file, index) {
-          var curPath = path + "/" + file;
-          if (fs.statSync(curPath).isDirectory()) { // recurse
-            deleteFolderRecursive(curPath);
-          } else { // delete file
-            fs.unlinkSync(curPath);
-          }
+      npmProcess.stdout.on('data', function(data) {
+        exports.winston.log('info', 'RUNNER:' + data);
+      });
+
+      npmProcess.on('close', function(code) {
+        //Spawn a new process to run the child node app
+        exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
+        var envCopy = [];
+        envCopy['orchestratorIP'] = exports.orchestratorIP;
+        envCopy['SUBPORT'] = (parseInt(exports.currentPort) + 1000);
+        exports.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {
+          env: envCopy,
+          cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
         });
-        fs.rmdirSync(path);
-      }
-    };
+        //If child app throws an error or console.logs something, display it
+        exports.nodeProcess.on('error', function(err) {
+          exports.winston.log('info', 'CHILD:' + err);
+        });
+
+        exports.nodeProcess.stderr.on('data', function(data) {
+          exports.winston.log('info', 'CHILD:' + data);
+        });
+
+        exports.nodeProcess.stdout.on('data', function(data) {
+          exports.winston.log('info', 'CHILD:' + data);
+        });
+      }); //npmProcess.on(close)
+    }); //tarProcess.on(close)
+  }); //fs.readFile
+}; //exports.start
+////////////////////////INTERNAL METHODS//////////////
+var deleteFolderRecursive = function(path) {
+    if (fs.existsSync(path)) {
+      fs.readdirSync(path).forEach(function(file, index) {
+        var curPath = path + "/" + file;
+        if (fs.statSync(curPath).isDirectory()) { // recurse
+          deleteFolderRecursive(curPath);
+        } else { // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+    }
+  };

@@ -18,7 +18,7 @@ exports.init = function(dbServiceIP, nodeRunnerBalancer, orchestratorPort, winst
   this.nodeRunnerBalancer = nodeRunnerBalancer;
   this.orchestratorPort = orchestratorPort;
   this.winston = winston;
-}
+};
 
 exports.nodeRunnerBalancer = nodeRunnerBalancer;
 exports.winston = winston;
@@ -28,18 +28,18 @@ exports.winston = winston;
   Returns:      A list of current runners (dead or alive)
  */
 exports.list = function(alive) {
-  if (alive == null || alive == false) {
+  if (!alive) {
     return tempRunnerList;
   } else {
     var currentList = exports.list();
     var finalList = [];
     for (var i = 0; i < currentList.length; i++) {
-      if (currentList[i].alive == true) {
+      if (currentList[i].alive === true) {
         var item = {
           host: currentList[i].machine.ip,
           port: currentList[i].machine.runnerPort,
           appName: currentList[i].appName
-        }
+        };
         finalList.push(item);
       }
     }
@@ -94,7 +94,7 @@ exports.setAlive = function(runnerID, alive) {
     }
   }
   exports.updateRunner(runnerID, updatedRunner);
-}
+};
 
 /*
   Summary:      Add a new runner to the list. By default, it will
@@ -113,8 +113,11 @@ exports.add = function(runnerID, runnerName, runnerIP, currMachine) {
     ping: new Date(),
     alive: false,
     appName: null,
-    machine: {ip: currMachine.ip, runnerPort: currMachine.runnerPort}
-  }
+    machine: {
+      ip: currMachine.ip,
+      runnerPort: currMachine.runnerPort
+    }
+  };
   console.log("New runner has been added, but will be marked as dead. I will wait for the runner to ping back.");
   console.log(JSON.stringify(runner));
   tempRunnerList.push(runner);
@@ -131,12 +134,12 @@ exports.getRunnersByApp = function(appName) {
   var currentList = exports.list();
   var returnList = [];
   for (var i = 0; i < currentList.length; i++) {
-    if (currentList[i].alive == true && currentList[i].appName == appName) {
+    if (currentList[i].alive === true && currentList[i].appName == appName) {
       returnList.push(currentList[i]);
     }
   }
   return returnList;
-}
+};
 
 /*
   Summary:      Looks for a runner that is alive and is not running any apps
@@ -145,12 +148,12 @@ exports.getRunnersByApp = function(appName) {
 exports.getAvailableRunner = function() {
   var currentList = exports.list();
   for (var i = 0; i < tempRunnerList.length; i++) {
-    if (currentList[i].alive == true && currentList[i].appName == null) {
+    if (currentList[i].alive === true && currentList[i].appName === null) {
       return currentList[i].id;
     }
   }
   return null;
-}
+};
 
 /*
   Summary:      Update a runner with the given values
@@ -165,7 +168,7 @@ exports.updateRunner = function(runnerID, newRunner) {
       break;
     }
   }
-}
+};
 
 /*
   Summary:      Removes a runner with the given id from table.
@@ -182,29 +185,23 @@ exports.removeRunner = function(runnerID) {
       break;
     }
   }
-}
+};
 
 exports.log = function(runnerID, callback) {
-  for (var i = 0; i < tempRunnerList.length; i++) {
-    if (tempRunnerList[i].id == runnerID) {
-      request.get(tempRunnerList[i].ip + "/runner/log", function(error, response, body) {
-        callback(response);
-      });
-      break;
-    }
-  }
-}
+  var runner = exports.getRunnerByID(runnerID);
+  request.get(runner.ip + "/runner/log", function(error, response, body) {
+    callback(response);
+  });
+};
 
 exports.status = function(runnerID, callback) {
-  for (var i = 0; i < tempRunnerList.length; i++) {
-    if (tempRunnerList[i].id == runnerID) {
-      request.get(tempRunnerList[i].ip + "/runner/status", function(error, response, body) {
+  var runner = exports.getRunnerByID(runnerID);
+  if(runner){
+    request.get(runner.ip + "/runner/status", function(error, response, body) {
         callback(response);
       });
-      break;
-    }
   }
-}
+};
 
 /*
   Summary:      If a runnerID is specified, it will spawn a new runner
@@ -232,7 +229,7 @@ exports.spawnRunner = function(runnerID) {
   //Add this new runner to the existing list of runners
   exports.add(runnerID, "someName", "http://" + currMachine.ip + ":" + currMachine.runnerPort, currMachine);
   //Increment the roundRobin index to the next bare metal machine
-}
+};
 
 /*
   Summary:      Generate a random id of letters and numbers that is
@@ -242,4 +239,4 @@ exports.spawnRunner = function(runnerID) {
 
 function generateID() {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-};
+}

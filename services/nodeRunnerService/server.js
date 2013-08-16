@@ -49,7 +49,7 @@ app.post('/application/start', applicationRoute.start);
 app.get('/runner/log', routes.log);
 app.get('/runner/status', routes.status);
 app.post('/runner/kill', routes.kill);
-runner.init(app.get('runnerID'), winston);
+runner.init(app.get('runnerID'), application, winston);
 routes.init(runner, application, winston);
 
 function updateStatus(){ 
@@ -61,7 +61,7 @@ function updateStatus(){
 
 updateStatus();
 
-winston.add(winston.transports.File, { filename: 'logs/runner' + app.get('runnerID') + '.log', handleExceptions: true});
+//winston.add(winston.transports.File, { filename: 'logs/runner' + app.get('runnerID') + '.log', handleExceptions: true});
 
 
 //Provide application.js with orchestratorIP and runnerID
