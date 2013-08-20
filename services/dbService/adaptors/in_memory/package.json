@@ -1,0 +1,10 @@
+{
+  "name": "in_memory_db_adaptor",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "underscore": "~1.5.1",
+    "node-uuid": "~1.4.0"
+  }
+}

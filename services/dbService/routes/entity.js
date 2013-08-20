@@ -1,7 +1,7 @@
 module.exports.adaptor = null;
 
 module.exports.findAll = function(req, res) {
-  adaptor.find(req.params.application,
+  this.adaptor.find(req.params.application,
             req.params.collection,
             req.params.entity,
             req.query,
@@ -9,7 +9,7 @@ module.exports.findAll = function(req, res) {
 };
 
 module.exports.findById = function(req, res) {
-  adaptor.findById(req.params.application,
+    this.adaptor.findById(req.params.application,
             req.params.collection,
             req.params.entity,
             req.params.id,
@@ -17,7 +17,7 @@ module.exports.findById = function(req, res) {
 };
 
 module.exports.create = function(req, res) {
-  adaptor.create(req.params.application,
+    this.adaptor.create(req.params.application,
             req.params.collection,
             req.params.entity,
             req.body,
@@ -25,7 +25,7 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.update = function(req, res) {
-  adaptor.update(req.params.application,
+    this.adaptor.update(req.params.application,
             req.params.collection,
             req.params.entity,
             req.body,
@@ -33,7 +33,7 @@ module.exports.update = function(req, res) {
 };
 
 module.exports.del = function(req, res) {
-  adaptor.del(req.params.application,
+    this.adaptor.del(req.params.application,
             req.params.collection,
             req.params.entity,
             req.params.id,
@@ -47,7 +47,7 @@ function sendJSONResponse (res, successCode, errorCode) {
     if(!err) {
       res.json(successCode, object);
     } else {
-      res.json(errorCode, err);
+      res.json(errorCode, object);
     }
     res.end();
   };

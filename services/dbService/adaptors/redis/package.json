@@ -1,0 +1,18 @@
+{
+  "name": "redis_adaptor",
+  "version": "0.0.1",
+  "scripts": {},
+  "db_class": [
+    "key_value",
+    "cache"
+  ],
+  "dependencies": {
+    "redis": "~0.8.4",
+    "hiredis": "~0.1.15",
+    "node-uuid": "~1.4.0"
+  },
+  "devDependencies": {
+    "should": "~1.2.2",
+    "mocha": "~1.12.0"
+  }
+}

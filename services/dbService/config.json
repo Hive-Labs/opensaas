@@ -1,0 +1,12 @@
+{
+  "server": {
+    "port": 3000,
+    "adaptor": {
+      "cache":"redis",
+      "persistent": "redis"
+    }
+  },
+  "available_adaptors": {
+
+  }
+}
