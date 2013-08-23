@@ -1,0 +1,48 @@
+.dashboardDiv{
+    padding:60px;
+    overflow:auto;
+}
+.connectedServicesInner{
+  padding-left:45px;
+}
+.connectedRunnersInner{
+  padding-left:45px;
+}
+.connectedServicesDetInner{
+  padding-left:45px;
+}
+footer{
+  text-align: center;
+}
+.runnersBtnGroup{
+  margin-left:25px;
+}
+.terminateRunnerModalRunnerInfo{
+  padding-left:30px;
+}
+.twoColumn{
+    width:50%;
+    float:left;
+}
+.addRunnerBtn{
+  margin-top:-4px;
+}
+.green{
+  color:green;
+}
+.red{
+  color:red;
+}
+.cpuGraph{
+  width:300px;
+  height: 100px;
+}
+#deployRunnerModalAppName{
+  margin-bottom:0px;
+}
+.hidden{
+  display:none;
+}
+.shown{
+  display: block;
+}

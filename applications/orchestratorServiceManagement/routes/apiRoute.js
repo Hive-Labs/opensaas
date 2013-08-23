@@ -2,19 +2,13 @@ var request = require('request');
 
 
 exports.userInfo = function(req, res) {
-	if (req.cookies.access_token) {
-		testToken(req.cookies.access_token, function(valid){
-				if(valid){
-					res.end(JSON.stringify({fullName:"emarcoux"}));
-				}
-				else{
-					res.redirect(301, 'http://localhost:3000/');
-				}
-		});
-	}
-	else{
-		res.render('login');	
-	}
+	testToken(req.cookies.access_token, function(err, user) {
+		if (user) {
+			res.end(JSON.stringify(user));
+		} else {
+			res.redirect(301, 'http://localhost:3000/');
+		}
+	});
 };
 
 exports.logout = function(req, res) {
@@ -34,24 +28,31 @@ function exchangeToken(auth_code, callback) {
 			code: auth_code
 		}
 	}, function(error, response, body) {
-		if(!error && body && response.statusCode != 400){
+		if (!error && body && response.statusCode != 400) {
 			callback(JSON.parse(body).access_token);
-		}
-		else{
+		} else {
 			callback(null);
 		}
 	});
 }
 
-function testToken(auth_token, callback){
-	request.get('http://localhost:4455/api/auth_test?access_token=' + auth_token,
-		function(error, response, body) {
-			if(error || response.statusCode == 400){
-				callback(false);
-			}
-			else{
-				callback(JSON.parse(body).valid);		
+function testToken(auth_token, callback) {
+	if (!auth_token) {
+		request.get('http://localhost:4455/api/user?', function(error, response, body) {
+			if (error || response.statusCode == 401) {
+				callback(null, null);
+			} else {
+				callback(null, JSON.parse(body));
 			}
 		});
-}
+	} else {
+		request.get('http://localhost:4455/api/user?access_token=' + auth_token, function(error, response, body) {
+			if (error || response.statusCode == 401) {
+				callback(null, null);
+			} else {
+				callback(null, JSON.parse(body));
+			}
+		});
+	}
 
+}

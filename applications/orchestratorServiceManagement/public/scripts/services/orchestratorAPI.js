@@ -17,7 +17,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     get: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/list'
+        url: 'http://localhost:2000/runners'
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -26,7 +26,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     listApps: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/applications/list'
+        url: 'http://localhost:2000/applications'
       }).
       success(function(data, status, headers, config) {
         var uniqueNames = [];
@@ -48,17 +48,16 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     add: function(callback) {
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/runner/spawn',
+        url: 'http://localhost:2000/runners',
       }).
       success(function(data, status, headers, config) {
         callback(data);
       });
     },
     deployApp: function(appName, callback) {
-      console.log('Deploying...');
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/applications/deploy',
+        url: 'http://localhost:2000/applications',
         data: {
           appName: appName
         }
@@ -70,7 +69,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     log: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/' + runnerID + '/log',
+        url: 'http://localhost:2000/runners/' + runnerID + '/log',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -79,7 +78,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     status: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/' + runnerID + '/status',
+        url: 'http://localhost:2000/runners/' + runnerID + '/health',
       }).
       success(function(data, status, headers, config) {
         callback(data);

@@ -42,9 +42,9 @@
         <script>
         $('#loginBtn').click(function() {
         var currentLocation = 'http://' + window.location.host;
-        var client_id = 'notoja-frontend';
-        var client_secret = '1secret';
-        window.location = 'http://localhost:4455/oauth/authorize?client_id=' + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + currentLocation;
+        var client_id = 'orchestratorManagement';
+        var client_secret = 'google1';
+        window.location = 'http://localhost:4455/dialog/authorize?response_type=code&client_id=' + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + currentLocation;
         });
         </script>
         <!-- build:js scripts/plugins.js -->

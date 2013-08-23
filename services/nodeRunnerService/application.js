@@ -1,118 +1,102 @@
-/*
- * Module dependencies.
- */
-
 var fs = require('fs'),
   path = require('path'),
   childProcess = require('child_process');
 
-var orchestratorIP;
-var runnerID;
-var winston;
-var nodeProcess;
-var currentPort;
-
-exports.winston = winston;
-exports.orchestratorIP = orchestratorIP;
-exports.runnerID = runnerID;
-exports.nodeProcess = nodeProcess;
-exports.currentPort = currentPort;
-
-exports.kill = function() {
-  exports.winston.log('info', 'node process...' + exports.nodeProcess);
-  if (exports.nodeProcess) {
-    exports.winston.log('info', 'Killing child app');
-    exports.nodeProcess.kill('SIGQUIT');
+module.exports = function(app, logger) {
+  var orchestratorIP = app.get('orchestratorIP');
+  var currentPort = app.get('port');
+  var runnerID = app.get('runnerID');
+  var nodeProcess;
+  exports.nodeProcess = nodeProcess;
+  exports.kill = function(callback) {
+    logger.log('application/kill');
+    if (nodeProcess) {
+      logger.log('info', 'Killing child app');
+      nodeProcess.kill('SIGQUIT');
+    }
+    callback();
   }
-}
-exports.init = function(orchestratorIP, runnerID, currentPort, winston) {
-  this.orchestratorIP = orchestratorIP;
-  this.runnerID = runnerID;
-  this.currentPort = currentPort;
-  this.winston = winston;
-}
 
+  exports.start = function(applicationTar, applicationName, callback) {
+    logger.log('application/start');
+    fs.readFile(applicationTar.path, function(err, data) {
+      //Save the applicationTar to a tar.gz file in the local filesystem
+      var newPath = path.resolve(__dirname, "currentApp");
+      fs.writeFileSync(newPath + "/app.tar.gz", data);
 
-/*
- * Host a new application.
- * applicationTar: The req.file of the request
- * applicationName: The name of the application being uploaded
- */
-exports.start = function(applicationTar, applicationName) {
-  fs.readFile(applicationTar.path, function(err, data) {
-    //Save the applicationTar to a tar.gz file in the local filesystem
-    var newPath = path.resolve(__dirname, "currentApp");
-    fs.writeFileSync(newPath + "/app.tar.gz", data);
+      //Delete any pre-existing version of this app
+      deleteFolderRecursive(newPath + "/" + applicationName);
+      logger.log('info', 'RUNNER:' + path.resolve(__dirname, "currentApp/" + applicationName));
+      //Spawn a process to un-tar this app
+      var tarProcess = childProcess.spawn('tar', ['-xvf', newPath + "/app.tar.gz", '-C', newPath]);
 
-    //Delete any pre-existing version of this app
-    deleteFolderRecursive(newPath + "/" + applicationName);
-    exports.winston.log('info', 'RUNNER:' + path.resolve(__dirname, "currentApp/" + applicationName));
-    //Spawn a process to un-tar this app
-    var tarProcess = childProcess.spawn('tar', ['-xvf', newPath + "/app.tar.gz", '-C', newPath]);
-
-    //If there is an error, display it
-    tarProcess.on('error', function(err) {
-      exports.winston.log('info', 'RUNNER:' + err);
-    });
-
-    //If there is an error, display it
-    tarProcess.stderr.on('data', function(data) {
-      exports.winston.log('info', 'RUNNER:stderr: ' + data);
-    });
-
-    tarProcess.stdout.on('data', function(data) {
-      exports.winston.log('info', 'RUNNER:' + data);
-    });
-
-    //Once tar process finishes, continue...
-    tarProcess.on('close', function(code) {
-
-      var npmProcess = childProcess.spawn('/usr/local/bin/npm', ['install'], {
-        cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
+      //If there is an error, display it
+      tarProcess.on('error', function(err) {
+        logger.log('info', 'Error Untarring:' + err);
       });
 
       //If there is an error, display it
-      npmProcess.on('error', function(err) {
-        exports.winston.log('info', 'RUNNER:' + err);
+      tarProcess.stderr.on('data', function(data) {
+        logger.log('info', 'Error Untarring: ' + data);
       });
 
-      //If there is an error, display it
-      npmProcess.stderr.on('data', function(data) {
-        exports.winston.log('info', 'RUNNER:stderr: ' + data);
+      tarProcess.stdout.on('data', function(data) {
+        logger.log('info', 'RUNNER:' + data);
       });
 
-      npmProcess.stdout.on('data', function(data) {
-        exports.winston.log('info', 'RUNNER:' + data);
-      });
-
-      npmProcess.on('close', function(code) {
-        //Spawn a new process to run the child node app
-        exports.winston.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
-        var envCopy = [];
-        envCopy['orchestratorIP'] = exports.orchestratorIP;
-        envCopy['SUBPORT'] = (parseInt(exports.currentPort) + 1000);
-        exports.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {
-          env: envCopy,
+      //Once tar process finishes, continue...
+      tarProcess.on('close', function(code) {
+        logger.log('info', path.resolve(__dirname, "currentApp/" + applicationName + "/"));
+        var npmProcess = childProcess.spawn('/usr/local/bin/npm', ['install'], {
           cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
         });
-        //If child app throws an error or console.logs something, display it
-        exports.nodeProcess.on('error', function(err) {
-          exports.winston.log('info', 'CHILD:' + err);
+
+        //If there is an error, display it
+        npmProcess.on('error', function(err) {
+          logger.log('info', 'Error npm:' + err);
         });
 
-        exports.nodeProcess.stderr.on('data', function(data) {
-          exports.winston.log('info', 'CHILD:' + data);
+        //If there is an error, display it
+        npmProcess.stderr.on('data', function(data) {
+          logger.log('info', 'Error npm: ' + data);
         });
 
-        exports.nodeProcess.stdout.on('data', function(data) {
-          exports.winston.log('info', 'CHILD:' + data);
+        npmProcess.stdout.on('data', function(data) {
+          logger.log('info', 'RUNNER:' + data);
         });
-      }); //npmProcess.on(close)
-    }); //tarProcess.on(close)
-  }); //fs.readFile
-}; //exports.start
-////////////////////////INTERNAL METHODS//////////////
-var deleteFolderRecursive = function(path) {
+
+        npmProcess.on('close', function(code) {
+          //Spawn a new process to run the child node app
+          logger.log('info', 'RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
+          var envCopy = [];
+          envCopy['orchestratorIP'] = orchestratorIP;
+          envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
+          nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {
+            env: envCopy,
+            cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
+          });
+          //If child app throws an error or console.logs something, display it
+          nodeProcess.on('error', function(err) {
+            logger.log('info', 'Error childapp:' + err);
+          });
+
+          nodeProcess.stderr.on('data', function(data) {
+            logger.log('info', 'Error childapp:' + data);
+          });
+
+          nodeProcess.stdout.on('data', function(data) {
+            logger.log('info', 'CHILD:' + data);
+          });
+          callback(null, {
+            appName: applicationName
+          });
+        }); //npmProcess.on(close)
+      }); //tarProcess.on(close)
+    }); //fs.readFile
+  }; //exports.start
+
+  function deleteFolderRecursive(path) {
+    logger.log('application/deleteFolderRecursive');
     if (fs.existsSync(path)) {
       fs.readdirSync(path).forEach(function(file, index) {
         var curPath = path + "/" + file;
@@ -125,3 +109,6 @@ var deleteFolderRecursive = function(path) {
       fs.rmdirSync(path);
     }
   };
+
+  return exports;
+}

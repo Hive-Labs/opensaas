@@ -1,0 +1,36 @@
+.loginDiv {
+	padding-top: 60px;
+	overflow: auto;
+}
+
+.twoColumn {
+	width: 50%;
+	float: left;
+}
+
+h1 {
+	text-align: center;
+}
+
+.loginBox {
+	width: 500px;
+	height:200px;
+	margin-left:auto;
+	margin-right:auto;
+	border-radius: 15px;
+	background-color:#0ae;
+	margin-bottom:30px;
+}
+
+.loginBtn{
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+	font-size:15pt;
+}
+.hidden{
+  display:none;
+}
+.shown{
+  display: block;
+}

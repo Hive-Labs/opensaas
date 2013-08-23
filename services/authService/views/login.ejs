@@ -1,5 +1,5 @@
 <head>
-<title>Title</title>
+<title>Notoja Login</title>
 <script type="text/javascript" src="javascripts/jquery-latest.js"></script>
 <script type="text/javascript" src="javascripts/jquery-ui.min.js"></script>
 <script type="text/javascript" src="javascripts/bootstrap.js"></script>
@@ -199,9 +199,26 @@ margin-bottom:auto;
   margin-right: auto;
   text-align: center;
 }
+.thirdPartySignin{
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+  cursor: pointer;
+}
+.googleSignInButton{
+  background-image:url('/images/Red-signin-Long-base-44dp.png');
+  height:33px;
+  width:150px;
+  background-size:150px;
+}
+.googleSignInButton:hover{
+  background-image:url('/images/Red-signin-Long-hover-44dp.png');
+}
+.googleSignInButton:active{
+  background-image:url('/images/Red-signin-Long-press-44dp.png');
+}
     </style>
 </head>
-
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top blackBar">
   <div class="blackBar navbar-inner">
@@ -280,8 +297,6 @@ margin-bottom:auto;
 <div id="appContainer" class="appContainer">
   <form method="post" action="/login" class="loginDiv">
     <h1>Login</h1>
-    <input type="hidden" name="next" value="<%=next_url%>
-    ">
     <br/>
     <input type="text" placeholder="Email Address" name="username">
     <br/>
@@ -289,6 +304,8 @@ margin-bottom:auto;
     <br/>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
+  <div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
+  </div>
 </div>
 <!-- Modal -->
 <div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

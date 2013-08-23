@@ -1,41 +1,44 @@
-var runner;
-var application;
-var winston;
+module.exports = function(app, runner, application, logger) {
 
-exports.winston = winston;
+  app.get('/', function(req, res) {
+    logger.log('info', 'GET /');
+    res.end('Node Runner Service: ' + app.get('runnerID'));
+  });
 
-exports.init = function(runner, application, winston){
-	this.runner = runner;
-	this.application = application;
-  this.winston = winston;
-}
+  app.put('/application', function(req, res) {
+    logger.log('info', 'PUT /application');
+    if (!req.files.applicationTar || !req.body.applicationName) {
+      res.send(400);
+      res.end('You need to set parameters "applicationTar" and "applicationName"');
+    } else {
+      application.start(req.files.applicationTar, req.body.applicationName, function(err, appJSON) {
+        res.send(200);
+        res.end(appJSON);
+      });
+    }
+  });
 
-exports.runner = runner;
-exports.application = application;
+  app.delete('/', function(req, res) {
+    logger.log('info', 'DELETE /');
+    res.send(204);
+    logger.log('info', 'Killing app.');
+    application.kill(function(err) {
+      logger.log('info', 'Killing runner.');
+      runner.kill();
+    });
+  });
 
-exports.index = function(req, res) {
-  res.end('hello world! I am the node runner service.')
-};
+  app.get('/log', function(req, res) {
+    logger.log('info', 'GET /log');
+    runner.log(function callback(err, log) {
+      res.end(log);
+    });
+  });
 
-exports.kill = function(req, res) {
-  res.end('Goodbye!');
-  setTimeout(function(){
-    exports.winston.log('info', 'Killing runner.');
-    exports.runner.kill();
-  }, 5000);
-  exports.winston.log('info', 'Killing app...');
-  exports.winston.log('info', exports.application);
-  exports.application.kill();
-};
-
-exports.log = function(req, res){
-	exports.runner.readLog(function callback(data){
-		res.end(data);
-	});
-}
-exports.status = function(req, res){
-  exports.runner.getStatus(function callback(data){
-    res.end(data);
+  app.get('/health', function(req, res) {
+    logger.log('info', 'GET /health');
+    runner.health(function callback(err, health) {
+      res.end(health);
+    });
   });
 }
-

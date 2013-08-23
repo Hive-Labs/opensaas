@@ -1,6 +1,6 @@
 {
   "name": "notoja-auth_service",
-  "version": "0.0.15",
+  "version": "0.0.53",
   "private": true,
   "scripts": {
     "start": "node server.js"
@@ -19,7 +19,18 @@
     "oauth2-provider": "*",
     "ejs-locals": "~1.0.2",
     "grunt-clean": "~0.4.0",
-    "grunt-bump": "0.0.11"
+    "grunt-bump": "0.0.11",
+    "ldapjs": "~0.6.3",
+    "adclient": "~0.9.9",
+    "passport-google": "~0.3.0",
+    "passport": "~0.1.17",
+    "passport-google-oauth": "~0.1.5",
+    "oauth2orize": "~0.1.0",
+    "connect-ensure-login": "~0.1.1",
+    "passport-local": "~0.1.6",
+    "passport-http": "~0.2.2",
+    "passport-oauth2-client-password": "~0.1.1",
+    "passport-http-bearer": "~1.0.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

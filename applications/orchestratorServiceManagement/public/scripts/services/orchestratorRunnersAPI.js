@@ -8,7 +8,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     get: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/list'
+        url: 'http://localhost:2000/runners'
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -26,7 +26,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     add: function(callback){
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/runner/spawn',
+        url: 'http://localhost:2000/runner',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -35,7 +35,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     deployApp: function(appName, callback){
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/applications/deploy',
+        url: 'http://localhost:2000/applications',
         data: {appName: appName}
       }).
       success(function(data, status, headers, config) {
@@ -45,7 +45,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     log: function(runnerID, callback){
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/' + runnerID + '/log',
+        url: 'http://localhost:2000/runners/' + runnerID + '/log',
       }).
       success(function(data, status, headers, config) {
         console.log(data);
@@ -58,7 +58,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     status: function(runnerID, callback){
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/' + runnerID + '/status',
+        url: 'http://localhost:2000/runners/' + runnerID + '/health',
       }).
       success(function(data, status, headers, config) {
         callback(data);

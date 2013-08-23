@@ -1,0 +1,92 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>
+        </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="styles/login.css">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Orchestrator</a>
+                </div>
+            </div>
+        </div>
+    </head>
+    <body ng-app="orchestratorServiceManagementApp">
+        <div class="container" ng-view="">
+            <div class="loginDiv">
+                <div id="notificationBox" class="alert alert-success hidden">
+                    Notification!
+                </div>
+                <h1>
+                Login to Orchestrator Managament
+                </h1>
+                <button id="loginBtn" class="btn btn-success loginBtn">
+                Login with Notoja
+                </button>
+            </div>
+        </div>
+        <script src="bower_components/jquery/jquery.js">
+        
+        </script>
+        <script>
+        $('#loginBtn').click(function() {
+        var currentLocation = 'http://' + window.location.host;
+        var client_id = 'notoja-frontend';
+        var client_secret = '1secret';
+        window.location = 'http://localhost:4455/oauth/authorize?client_id=' + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + currentLocation;
+        });
+        </script>
+        <!-- build:js scripts/plugins.js -->
+        <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-transition.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-button.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-popover.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-typeahead.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-carousel.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js">
+        
+        </script>
+        <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js">
+        
+        </script>
+        <!-- endbuild -->
+    </body>
+</html>

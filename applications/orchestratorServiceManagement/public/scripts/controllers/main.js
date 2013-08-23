@@ -4,7 +4,7 @@
 
 angular.module('orchestratorServiceManagementApp').controller('MainCtrl', function($scope, $timeout, orchestratorRunnersAPI, orchestratorAPI) {
 	orchestratorAPI.userInfo(function(userInfo) {
-		$('#navBarFullName').text(userInfo.fullName);
+		$('#navBarFullName').text(userInfo.displayName);
 	});
 
 	var cancelRefresh = $timeout(function myFunction() {

@@ -1,3 +1,4 @@
+/services/grunt-hub/node_modules/**/*
 /development_scripts/nvm/
 /development_scripts/find-node-or-install
 applications/orchestratorServiceManagement/node_modules/**/*
@@ -9,3 +10,4 @@ services/orchestratorService/node_modules/**/*
 services/orchestratorService/ServerConfiguration.json
 services/orchestratorService/apps/orchestratorServiceManagement.tar.gz
 applications/orchestratorServiceManagement/orchestratorServiceManagement.tar.gz
+/services/grunt-hub/node_mbules/*
