@@ -58,7 +58,6 @@ in the following format
 | collection_add_entity     | collection and entity name | `{"collection_name": "name", "entity_name": "name"}`                                   |
 
 
-___
 
 ## Adaptor
 An adaptor is a module used to interface the db server with the underlying database of choice.  Included by default are MongoDB and an in-memory 

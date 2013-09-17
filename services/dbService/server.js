@@ -52,7 +52,7 @@ if ('development' == nconf.get('server:environment')) {
 }
 
 routes.adaptor = require('./adaptors/' + nconf.get('server:adaptor:persistent'))(nconf.get('server:'));
-
+routes.adaptor = require('./adaptors/' + nconf.get('server:adaptor:cache'))(nconf.get('server:'));
 
 
 // db information routes
