@@ -1,3 +1,7 @@
-exports.db = require('./db');
-exports.schema = require('./schema');
-exports.entity = require('./entity');
+module.exports = function (persistent, cache) {
+  return {
+    entity: require('./entity')(persistent, cache),
+    db: require('./db')(this.entity),
+    schema: require('./schema')(this.entity)
+  };
+}

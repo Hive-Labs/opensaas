@@ -1,0 +1,16 @@
+DB_ENV: development
+
+server:
+  port: 3000
+
+# The database adaptors to use
+# on the server
+selected_adaptors:
+  cache: redis
+  persistent: redis
+
+adaptor_settings:
+  redis:
+    host: localhost
+    port: 6379
+    #password: foobar

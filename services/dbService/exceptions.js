@@ -1,5 +1,8 @@
 module.exports = {
   entity: {
+    createException: function (description) {
+      return { exception: 'EntityCreateException', description: description };
+    },
     notFoundException: function (description) {
       return { exception: 'EntityNotFoundExist', description: description };
     },

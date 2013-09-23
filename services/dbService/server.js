@@ -1,58 +1,40 @@
+#!/usr/bin/env node
 /**
  * Module dependencies.
  */
-
 var express = require('express'),
     nconf   = require('nconf'),
-    routes  = require('./routes'),
     http    = require('http'),
     path    = require('path');
+
+require('js-yaml');
 
 var app = express();
 
 // setup the configs
-nconf.argv()
-     .env()
-     .file({ file: './package.json' });
+nconf.defaults(require('./config.yml'))
+     .argv()
+     .env();
 
-/*
- * DB_ENV controls the verbosity of the logger
- * server controls all server settings
- * 
- * @param server:port               the port the db service will listen on
- * @param server:adaptor:cache      which adaptor to use as a cache
- * @param server:adaptor:persistent which adaptor to use as persistent storage
- * @param available_adaptors        hash of all configured adaptor settings
- */
-nconf.defaults({
-  'DB_ENV': 'development',
-  'server': {
-    'port': 3000,
-    'adaptor': {
-      'cache':'redis',
-      'persistent': 'redis'
-    }
-  },
-  'adaptor_settings': {
-    'redis': {
-
-    }
-  }
-});
 
 // all environments
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
+app.disable('x-powered-by');
+
 
 // development only
-if ('development' == nconf.get('server:environment')) {
+if ('development' == nconf.get('DB_ENV')) {
+  console.log('running in development mode');
   app.use(express.errorHandler());
 }
 
-routes.adaptor = require('./adaptors/' + nconf.get('server:adaptor:persistent'))(nconf.get('server:'));
-routes.adaptor = require('./adaptors/' + nconf.get('server:adaptor:cache'))(nconf.get('server:'));
+var routes  = require('./routes')(
+  require('./adaptors/' + nconf.get('selected_adaptors:persistent'),
+  require('./adaptors/' + nconf.get('selected_adaptors:cache'),
+  nconf.get('adaptor_settings'));
 
 
 // db information routes
@@ -76,5 +58,6 @@ app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 
 http.createServer(app).listen(nconf.get('server:port'), function(){
   console.log('DB Service listening on port: ' + nconf.get('server:port'));
-  console.log('Database Adaptor Selected: ' + app.get('adaptor'));
+  console.log('Database persistent adaptor Selected: ' + nconf.get('selected_adaptors:persistent'));
+  console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache)); 
 });

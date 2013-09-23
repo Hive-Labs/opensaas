@@ -1,7 +1,6 @@
-module.exports.dbInformation = function(req, res) {
-  // stub
-};
-
-module.exports.applicationInformation = function(req, res) {
-  // stub
-};
+module.exports = function(persistent, cache, adaptor_settings) {
+  return {
+    dbInformation: function() {},
+    applicationInformation: function() {}
+  }
+}
