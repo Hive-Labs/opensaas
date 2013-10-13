@@ -17,7 +17,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     remove: function(runnerID, callback){
       $http({
         method: 'DELETE',
-        url: 'http://localhost:2000/runner/' + runnerID,
+        url: 'http://localhost:2000/runners/' + runnerID,
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -26,7 +26,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
     add: function(callback){
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/runner',
+        url: 'http://localhost:2000/runners',
       }).
       success(function(data, status, headers, config) {
         callback(data);

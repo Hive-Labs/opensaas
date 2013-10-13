@@ -152,7 +152,7 @@ module.exports = function(loadBalancer, settings, logger) {
       getRunnerByID(runnerID, function(err, runner) {
         if (runner) {
           logger.log('info', 'killing' + runner.ip);
-          var r = request.delete(runner.ip + "/");
+          var r = request.del(runner.ip + "/");
           setAlive(runnerID, false, function(err) {
             if(callback)
             callback(err);
@@ -169,7 +169,7 @@ module.exports = function(loadBalancer, settings, logger) {
       getRunnerByID(runnerID, function(err, runner) {
         request.get(runner.ip + "/log", function(error, response, body) {
           if(callback)
-          callback(error || err, response);
+          callback(error || err, body);
         });
       });
     };

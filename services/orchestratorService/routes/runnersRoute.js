@@ -28,7 +28,12 @@ module.exports = function(app, runners, applications, logger) {
     logger.log('info', 'GET /runners/' + req.params.id);
     res.header("Access-Control-Allow-Origin", "*");
     runners.getRunnerByID(req.params.id, function(err, runner) {
-      res.end(runner);
+       if(runner && !err){
+        res.end((runner));  
+      }
+      else{
+        res.end('An error Occured');
+      }
     });
   });
 
@@ -36,7 +41,12 @@ module.exports = function(app, runners, applications, logger) {
     logger.log('info', 'GET /runners/' + req.params.id + "/log");
     res.header("Access-Control-Allow-Origin", "*");
     var log = runners.log(req.params.id, function(err, log) {
-      res.end(log);
+      if(log && !err){
+        res.end((log));  
+      }
+      else{
+        res.end('An error Occured');
+      }
     });
   });
 
