@@ -17,7 +17,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     get: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runners'
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners'
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -26,7 +26,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     listApps: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/applications'
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/applications'
       }).
       success(function(data, status, headers, config) {
         var uniqueNames = [];
@@ -39,7 +39,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     remove: function(runnerID, callback) {
       $http({
         method: 'DELETE',
-        url: 'http://localhost:2000/runner/' + runnerID,
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runner/' + runnerID,
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -48,7 +48,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     add: function(callback) {
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/runners',
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -57,7 +57,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     deployApp: function(appName, callback) {
       $http({
         method: 'POST',
-        url: 'http://localhost:2000/applications',
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/applications',
         data: {
           appName: appName
         }
@@ -69,7 +69,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     log: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runners/' + runnerID + '/log',
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners/' + runnerID + '/log',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -78,7 +78,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     status: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runners/' + runnerID + '/health',
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners/' + runnerID + '/health',
       }).
       success(function(data, status, headers, config) {
         callback(data);

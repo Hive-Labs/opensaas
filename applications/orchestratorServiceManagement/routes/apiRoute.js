@@ -6,14 +6,16 @@ exports.userInfo = function(req, res) {
 		if (user) {
 			res.end(JSON.stringify(user));
 		} else {
-			res.redirect(301, 'http://localhost:3000/');
+			var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host;
+			res.redirect(301, req.protocol + "://" + hostname + ':3000/');
 		}
 	});
 };
 
 exports.logout = function(req, res) {
 	res.clearCookie('access_token');
-	res.redirect(301, 'http://localhost:3000/');
+	var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host;
+	res.redirect(301, req.protocol + "://" + hostname + ':3000/');
 };
 
 function exchangeToken(auth_code, callback) {

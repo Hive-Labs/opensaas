@@ -8,7 +8,7 @@ angular.module('orchestratorServiceManagementApp').factory('authAPI', ['$http', 
     get: function(callback) {
       $http({
         method: 'GET',
-        url: 'http://localhost:2000/runner/list'
+        url: window.location.protocol + '//' + window.location.hostname + ':2000/runner/list'
       }).
       success(function(data, status, headers, config) {
         callback(data);
