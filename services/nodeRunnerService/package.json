@@ -11,7 +11,7 @@
     "request": "~2.25.0",
     "winston": "*",
     "ejs-locals": "~1.0.2",
-    "usage": "*",
+    "usage": "*"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
