@@ -22,7 +22,6 @@ function exchangeToken(auth_code, callback) {
 	var client_id = "notoja-frontend";
 	var client_secret = "1secret";
 
-
 	request.post('http://localhost:4455/oauth/access_token', {
 		form: {
 			client_id: client_id,

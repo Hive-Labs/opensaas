@@ -41,8 +41,8 @@ function(username, password, done) {
  */
 
 passport.use(new GoogleStrategy({
-  returnURL: 'http://localhost:4455/auth/google/callback',
-  realm: 'http://localhost:4455/'
+  returnURL: '/auth/google/callback',
+  realm: '/'
 }, function(identifier, profile, done) {
   // asynchronous verification, for effect...
   process.nextTick(function() {
