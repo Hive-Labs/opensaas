@@ -7,6 +7,7 @@ var passport = require('passport'),
   ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
   GoogleStrategy = require('passport-google').Strategy,
   db = require('./db'),
+  configuration = require('./config.json'),
   BearerStrategy = require('passport-http-bearer').Strategy;
 
 
@@ -41,10 +42,10 @@ function(username, password, done) {
  */
 
 passport.use(new GoogleStrategy({
-  returnURL: '/auth/google/callback',
-  realm: '/'
-}, function(identifier, profile, done) {
-  // asynchronous verification, for effect...
+  returnURL: configuration.server.hostname + ':' + configuration.server.port + '/auth/google/callback',
+  realm: configuration.server.hostname + ':' + configuration.server.port + '/'
+}, function(identifier, profile, done) 
+{  // asynchronous verification, for effect...
   process.nextTick(function() {
     db.users.findByEmail(profile.emails[0].value, function(err, user) {
       return done(null, user);
