@@ -1,17 +1,16 @@
 module.exports = function (persistent, cache) {
   return {
+    //XXX should findAll hit the cache if so how can
+    // we garruntee that we hit all the keys
     findAll: function(req, res) {
       persistent.entity.findAll(req.params.application,
               req.params.collection,
               req.params.entity,
               req.query,
               sendJSONResponse(res, 200, 400));
-
     },
     
 
-    //XXX should findAll hit the cache if so how can
-    // we garruntee that we hit all the keys
     findById: function(req, res) {
       // try and hit the cache, if possible,
       // else do a lookup in the persistent store
@@ -33,8 +32,8 @@ module.exports = function (persistent, cache) {
     },
     
     create: function(req, res) {
-      var cTime = getChaceTime(req);
-      if(cTime > 0) {
+      var cTime = getcacheTime(req);
+      if(cTime !== 0) {
         cache.entity.create(req.params.application,
               req.params.collection,
               req.params.entity,
@@ -54,15 +53,24 @@ module.exports = function (persistent, cache) {
               sendJSONResponse(res, 201, 400));
       }
     },
-    
+
+//FINISH    
     update: function(req, res) {
-      var cTime = getChaceTime(req);
+      var cTime = getcacheTime(req);
+      cache.entity.update(req.params.application,
+              req.params.collection,
+              req.params.entity,
+              req.body,
+              function (obj, err) {
+                if(err || !obj) {
+                }
+              });
       this.entity.update(req.params.application,
               req.params.collection,
               req.params.entity,
               req.body,
               sendJSONResponse(res, 202, 400));
-    };
+    },
     
     del: function(req, res) {
       cache.entity.del(req.params.application,

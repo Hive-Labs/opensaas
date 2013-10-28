@@ -32,8 +32,8 @@ if ('development' == nconf.get('DB_ENV')) {
 }
 
 var routes  = require('./routes')(
-  require('./adaptors/' + nconf.get('selected_adaptors:persistent'),
-  require('./adaptors/' + nconf.get('selected_adaptors:cache'),
+  require('./adaptors/' + nconf.get('selected_adaptors:persistent')),
+  require('./adaptors/' + nconf.get('selected_adaptors:cache')),
   nconf.get('adaptor_settings'));
 
 
@@ -59,5 +59,5 @@ app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 http.createServer(app).listen(nconf.get('server:port'), function(){
   console.log('DB Service listening on port: ' + nconf.get('server:port'));
   console.log('Database persistent adaptor Selected: ' + nconf.get('selected_adaptors:persistent'));
-  console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache)); 
+  console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache')); 
 });

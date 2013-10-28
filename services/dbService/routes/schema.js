@@ -1,6 +1,10 @@
-module.exports.get = function(req, res) {
+module.exports = function (req, res) {
+  return {
+    get: function (req, res) {
+
+    },
+    migrate: function (req, res) {
+
+    }
+  }
 };
-
-
-module.exports.migrate = function(req, res) {
-}
