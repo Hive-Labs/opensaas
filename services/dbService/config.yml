@@ -16,20 +16,19 @@ adaptor_settings:
     port: 6379
     #password: foobar
 
+  # really just steals options of cradle
   couchdb:
     # host information
-    host: 'localhost'
+    host: '127.0.0.1'
     port: 5984
     #retries: 3
     #retryTimeout: 30*1000
+    cache: true
+    raw: false
 
     # Authentication Settings
-    #ssl_secure: false;
+    #secure: false;
     #auth:
     #  username: ''
     #  password: ''
-
-    # Plugin Specific Settings
-    cache: true
-    raw: false
 

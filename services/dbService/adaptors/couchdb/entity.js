@@ -4,23 +4,32 @@ var http = require('http');
 // next is always called with the arguments
 // next(err, obj)
 
-// required settings:
-//  hostname
-//  port
-
-module.exports = function (client, settings) {
+module.exports = function (conn, settings) {
   return {
     create: function (application, collection, entity, object, next) {
+      var db = getDb(conn, application);
+      db.save(object, function(err, res) {
+      });
     },
 
     findById: function (application, collection, entity, id, next) {
     },
 
-    // the queryString is a wildcarded glob of the id
     findAll: function (application, collection, entity, queryString, next) {
     },
 
     update: function (application, collection, entity, object, next) {
+      var db = getDb(conn, application);
+      var _id = object._id;
+      delete object._id;
+      db.merge(_id, object, function(err, res) {
+        object._id = _id;
+        if(err) {
+          next(exceptions.entity.updateException(res), object);
+        } else {
+          next(null, object); //XXX should return whole obj? efficiency of that?
+        }
+      });
     },
 
     del: function (application, collection, entity, id, next) {
@@ -28,14 +37,17 @@ module.exports = function (client, settings) {
   };
 };
 
-function httpOptionsBuilder(path, method) {
-  var options = {
-    host: settings.hostname || 'localhost',
-    port: settings.port || 5984,
-    path: path,
-    method: method
-  }
-  return options;
+function getDb(conn, dbNameStr) {
+  var db = conn.database(dbNameStr);
+  db.exists(function (err, exists) {
+    if(err) {//TODO log this
+    } else if(exists) {
+      return db;
+    } else {
+      db.create();
+      return db;
+    }
+  });
 }
 
 function nsBuilder(namespaceElements, numElements) {
