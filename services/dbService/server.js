@@ -32,9 +32,16 @@ if ('development' == nconf.get('DB_ENV')) {
 }
 
 var routes  = require('./routes')(
-  require('./adaptors/' + nconf.get('selected_adaptors:persistent')),
-  require('./adaptors/' + nconf.get('selected_adaptors:cache')),
-  nconf.get('adaptor_settings'));
+  {
+    persistent: 
+      require('./adaptors/' + nconf.get('selected_adaptors:persistent'))(
+        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:persistent') || '')),
+    cache: (nconf.get('selected_adaptors:cache') !== undefined) ?  
+      require('./adaptors/' + nconf.get('selected_adaptors:cache'))(
+        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:cache') || '')) :
+      undefined 
+  }
+);
 
 
 // db information routes

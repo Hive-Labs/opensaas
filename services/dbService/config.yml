@@ -4,13 +4,32 @@ server:
   port: 3000
 
 # The database adaptors to use
-# on the server
 selected_adaptors:
-  cache: redis
-  persistent: redis
+  persistent: couchdb 
+  #cache: redis
 
+
+# Individual Adaptor Settings
 adaptor_settings:
   redis:
-    host: localhost
+    host: 'localhost'
     port: 6379
     #password: foobar
+
+  couchdb:
+    # host information
+    host: 'localhost'
+    port: 5984
+    #retries: 3
+    #retryTimeout: 30*1000
+
+    # Authentication Settings
+    #ssl_secure: false;
+    #auth:
+    #  username: ''
+    #  password: ''
+
+    # Plugin Specific Settings
+    cache: true
+    raw: false
+

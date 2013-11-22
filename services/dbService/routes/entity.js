@@ -1,7 +1,5 @@
 module.exports = function (persistent, cache) {
   return {
-    //XXX should findAll hit the cache if so how can
-    // we garruntee that we hit all the keys
     findAll: function(req, res) {
       persistent.entity.findAll(req.params.application,
               req.params.collection,
@@ -12,72 +10,103 @@ module.exports = function (persistent, cache) {
     
 
     findById: function(req, res) {
-      // try and hit the cache, if possible,
-      // else do a lookup in the persistent store
-      cache.entity.findById(req.params.application,
-        req.params.collection,
-        req.params.entity,
-        req.params.id,
-        function (obj, err) {
-          if(err || !obj) {
-            persistent.entity.findById(req.params.application,
-                 req.params.collection,
-                 req.params.entity,
-                 req.params.id,
-                 sendJSONResponse(res, 200, 400));
-          } else {
-            sendJSONResponse(res, 200, 400)(obj, err);
-          }
-        });
+      if(cache !== undefined) {
+        // try and hit the cache, if possible,
+        // else do a lookup in the persistent store
+        cache.entity.findById(req.params.application,
+          req.params.collection,
+          req.params.entity,
+          req.params.id,
+          function (obj, err) {
+            if(err || !obj) {
+              persistent.entity.findById(req.params.application,
+                req.params.collection,
+                req.params.entity,
+                req.params.id,
+                sendJSONResponse(res, 200, 400));
+            } else {
+              sendJSONResponse(res, 200, 400)(obj, err);
+            }
+          });
+          return;
+        } else {
+          persistent.entity.findById(req.params.application,
+            req.params.collection,
+            req.params.entity,
+            req.params.id,
+            sendJSONResponse(res, 200, 400));
+        }
     },
     
     create: function(req, res) {
-      var cTime = getcacheTime(req);
-      if(cTime !== 0) {
-        cache.entity.create(req.params.application,
-              req.params.collection,
-              req.params.entity,
-              req.body, 
-              function (obj, err) {
-                persistent.entity.create(req.params.application,
-                  req.params.collection,
-                  req.params.entity,
-                  req.body,
-                  sendJSONResponse(res, 201, 400));
-              });
+      if(cache !== undefined) {
+        var cTime = getcacheTime(req);
+        if(cTime !== 0) {
+          cache.entity.create(req.params.application,
+                req.params.collection,
+                req.params.entity,
+                req.body, 
+                function (obj, err) {
+                  persistent.entity.create(req.params.application,
+                    req.params.collection,
+                    req.params.entity,
+                    req.body,
+                    sendJSONResponse(res, 201, 400));
+                });
+          return;
+        } else {
+          persistent.entity.create(req.params.application,
+                req.params.collection,
+                req.params.entity,
+                req.body,
+                sendJSONResponse(res, 201, 400));
+          return;
+        }
       } else {
         persistent.entity.create(req.params.application,
-              req.params.collection,
-              req.params.entity,
-              req.body,
-              sendJSONResponse(res, 201, 400));
+          req.params.collection,
+          req.params.entity,
+          req.body,
+          sendJSONResponse(res, 201, 400));
       }
     },
 
-//FINISH    
+//FINISH cached version  
     update: function(req, res) {
-      var cTime = getcacheTime(req);
-      cache.entity.update(req.params.application,
-              req.params.collection,
-              req.params.entity,
-              req.body,
-              function (obj, err) {
-                if(err || !obj) {
-                }
-              });
-      this.entity.update(req.params.application,
-              req.params.collection,
-              req.params.entity,
-              req.body,
-              sendJSONResponse(res, 202, 400));
+      if(cache !== undefined) {
+        var cTime = getcacheTime(req);
+        cache.entity.update(req.params.application,
+                req.params.collection,
+                req.params.entity,
+                req.body,
+                function (obj, err) {
+                  if(err || !obj) {
+                  this.entity.update(req.params.application,
+                    req.params.collection,
+                    req.params.entity,
+                    req.body,
+                    sendJSONResponse(res, 202, 400));
+                  }
+                });
+          return;
+      } else {
+        this.entity.update(req.params.application,
+          req.params.collection,
+          req.params.entity,
+          req.body,
+          sendJSONResponse(res, 202, 400));
+      }
     },
+
     
     del: function(req, res) {
-      cache.entity.del(req.params.application,
+      if(cache !== undefined) {
+        cache.entity.del(req.params.application,
               req.params.collection,
               req.params.entity,
               req.params.id,
               sendJSONResponse(res, 200, 400));
+      }
 
       persistent.entity.del(req.params.application,
               req.params.collection,
