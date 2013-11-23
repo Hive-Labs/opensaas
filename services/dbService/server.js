@@ -26,8 +26,9 @@ app.disable('x-powered-by');
 
 
 // development only
-if ('development' == nconf.get('DB_ENV')) {
+if('development' == nconf.get('DB_ENV')) {
   console.log('running in development mode');
+  console.log('settings: ' + JSON.stringify(nconf.get().adaptor_settings));
   app.use(express.errorHandler());
 }
 
@@ -66,5 +67,6 @@ app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 http.createServer(app).listen(nconf.get('server:port'), function(){
   console.log('DB Service listening on port: ' + nconf.get('server:port'));
   console.log('Database persistent adaptor Selected: ' + nconf.get('selected_adaptors:persistent'));
-  console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache')); 
+  if(nconf.get('selected_adaptors:cache'))
+    console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache')); 
 });
