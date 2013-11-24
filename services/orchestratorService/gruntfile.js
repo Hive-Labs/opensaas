@@ -4,13 +4,19 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    uglify: {
+    bump: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: 'server.js',
-        dest: 'build/server.min.js'
+        files: ['package.json'],
+        updateConfigs: [],
+        createTag: false,
+        commit: false,
+        push: false
+      }
+    },
+    jshint: {
+      files: ['**/*.js'],
+      options: {
+        ignores: ['node_modules/**/*']
       }
     },
     nodemon: {
@@ -23,7 +29,7 @@ module.exports = function(grunt) {
           debug: true,
           delayTime: 1,
           env: {
-             PORT: '2000'
+            PORT: '2000'
           },
           cwd: '.'
         }
@@ -36,15 +42,15 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
   // Default task(s).
-  grunt.registerTask('default', ['uglify', 'nodemon']);
+  grunt.registerTask('default', ['bump', 'jshint', 'nodemon']);
 
-  /*https://github.com/ChrisWren/grunt-nodemon
-    Used to run node app in a demon using Grunt script  
-  */
+  // This will run linting on the code
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+  // This will run the nodejs app
   grunt.loadNpmTasks('grunt-nodemon');
 
+  // This is the task to increment the build each build
+  grunt.loadNpmTasks('grunt-bump');
 };
