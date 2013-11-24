@@ -1,80 +1,90 @@
-var runners,
-    applications;
-
-exports.runners = runners;
-
-/*
-  Summary:      Expose a method to feed in runners.js reference
-                and applications.js to this file.
-
-  Parameters:   runners - a refrence to require('runners.js')
-                applications - a reference to require('applications.js')
- */
-exports.init = function(runners, applications){
-  this.runners = runners;
-  this.applications = applications;
-}
-
-/*
-  Summary:      Route to GET /runners/list. Returns the list of runners
-                dead or alive.
- */
-exports.list = function(req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send(exports.runners.list());
-};
-
-/*
-  Summary:      Route to POST /runners/ping. 
-  Parameters:   runnerID - the id of the runner to be marked as pinged
-                           at the current time.
- */
-exports.ping = function(req, res) {
-  var runnerID = req.body.runnerID;
-  exports.runners.ping(runnerID);
-  res.send("Runner " + runnerID + " has been pinged");
-};
-
-
-/*
-  Summary:      Route to POST /runners/add. 
-  Parameters:   runnerID - the id of the new runner
-                runnerIP - the ip of the runner to be created.
-                runnerName - the name of the new runner to be created
- */
-exports.add = function(req, res) {
-  if (!req.body.runnerID || !req.body.runnerName || !req.body.runnerIp || !req.body.machine) {
-    res.send("You are missing some parameters, you need to specify a runnerId, runnerName, runnerIp, and machine");
-  } else {
-    var runner = exports.runners.add(req.body.runnerID, req.body.runnerName, req.body.runnerIp, req.body.machine);
-    res.send("Runner has been added with details: " + JSON.stringify(runner));
-  }
-};
-
-/*
-  Summary:      Route to DELETE /runners/runner. This will kill a runner and 
-                remove it from the list.
-  Parameters    id - the id of the runner to be removed.
- */
-exports.removeRunner= function(req, res) {
-  if (!req.params.id) {
+module.exports = function(app, runners, applications, logger) {
+  app.get('/runners', function(req, res) {
+    logger.log('info', 'GET /runners');
     res.header("Access-Control-Allow-Origin", "*");
-    res.send("You are missing some parameters bro, you need to specify a id.");
-  } else {
-    var runner = exports.runners.removeRunner(req.params.id);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.send("Runner has been removed.");
-  }
-};
+    if (!req.query.only_proxy) {
+      runners.list(false, function(err, runnerList) {
+        res.end(JSON.stringify(runnerList));
+      });
+    } else {
+      runners.list(true, function(err, runnerList) {
+        res.end(JSON.stringify(runnerList));
+      });
+    }
+  });
 
-exports.log= function(req, res) {
-  if (!req.params.id) {
+  app.post('/runners', function(req, res) {
+    logger.log('info', 'POST /runners');
     res.header("Access-Control-Allow-Origin", "*");
-    res.send("You are missing some parameters, you need to specify an id.");
-  } else {
-    var runner = exports.runners.log(req.params.id, function callback(data){
-      res.header("Access-Control-Allow-Origin", "*");
-      res.send(data.body);
+    if (!req.body._expand) {
+      runners.spawnRunner(function(err, runner) {
+        res.send(201);
+        res.send(runner);
+      });
+    }
+  });
+
+  app.get('/runners/:id', function(req, res) {
+    logger.log('info', 'GET /runners/' + req.params.id);
+    res.header("Access-Control-Allow-Origin", "*");
+    runners.getRunnerByID(req.params.id, function(err, runner) {
+       if(runner && !err){
+        res.end((runner));  
+      }
+      else{
+        res.end('An error Occured');
+      }
     });
-  }
+  });
+
+  app.get('/runners/:id/log', function(req, res) {
+    logger.log('info', 'GET /runners/' + req.params.id + "/log");
+    res.header("Access-Control-Allow-Origin", "*");
+    var log = runners.log(req.params.id, function(err, log) {
+      if(log && !err){
+        res.end((log));  
+      }
+      else{
+        res.end('An error Occured');
+      }
+    });
+  });
+
+  app.get('/runners/:id/health', function(req, res) {
+    logger.log('info', 'GET /runners/' + req.params.id + "/health");
+    res.header("Access-Control-Allow-Origin", "*");
+    var health = runners.getHealth(req.params.id, function(err, health) {
+      if (err) {
+        res.send(JSON.stringify({
+          cpu: 0,
+          memory: 0
+        }));
+      } else {
+        res.send(health);
+      }
+    });
+  });
+
+  app.put('/runners/:id', function(req, res) {
+    logger.log('info', 'PUT /runners/' + req.params.id);
+    runners.ping(req.params.id, function(err) {
+      runners.getRunnerByID(req.params.id, function(err, runner) {
+        if (runner) {
+          res.send(200);
+          res.end(JSON.stringify(runner));
+        } else {
+          res.send(400);
+          res.end([]);
+        }
+      });
+    });
+  });
+
+  app.delete('/runners/:id', function(req, res) {
+    logger.log('info', 'DELETE /runners/' + req.params.id);
+    var runner = runners.removeRunner(req.params.id, function(err) {
+      res.send(204);
+      res.end('The runner was removed successfully.');
+    });
+  });
 };

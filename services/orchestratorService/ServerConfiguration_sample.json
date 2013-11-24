@@ -1,19 +1,13 @@
 {
-	"dbService": "localhost:2001",
-	"bareMetalMachines": [
-		{
-			"ip": "localhost",
-			"username": "rohit",
-			"password": "COMPUTER_PASSWORD",
-			"runnerLocation" : "~/notoja/notoja-saas/services/nodeRunnerService/server.js",
-			"runnerPort" : "3001"
-		},
-		{
-			"ip": "localhost",
-			"username": "rohit",
-			"password": "COMPUTER_PASSWORD",
-			"runnerLocation" : "~/notoja/notoja-saas/services/nodeRunnerService/server.js",
-			"runnerPort" : "3002"
-		}
-	]
+    "bareMetalMachines": [
+        {
+            "ip": "localhost",
+            "username": "steve",
+            "password": "",
+            "runnerLocation": "~/notoja/notoja-saas/services/nodeRunnerService/",
+            "portStart": "3002",
+            "portFinish": "3400"
+        }
+    ],
+    "dbService": "localhost:2001"
 }

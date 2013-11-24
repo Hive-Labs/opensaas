@@ -1,74 +1,82 @@
-/*
- * Module dependencies.
- */
-
 var express = require('express'),
-  routes = require('./routes'),
-  applicationRoute = require('./routes/applicationRoute'),
   dbService = require('dbService'),
-  application = require('./application'),
   http = require('http'),
   path = require('path'),
   fs = require('fs'),
   winston = require('winston'),
-  request = require('request'),
-  runner = require('./runner');
-
+  request = require('request');
+  
 var app = express();
-app.set('port', process.env.PORT || 3001);
-app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || 'http://localhost:2000');
-app.set('runnerID', process.env.RUNNER_ID || 'ID');
-app.set('views', __dirname + '/views');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
 
-try{
-  fs.mkdirSync(path.resolve(__dirname, "currentApp/"));
-  console.log('Creating currentApp directory because it doesn\'t exist.');
-}
-catch(e){
-}
-
-//Provide application.js with orchestratorIP and runnerID
-application.init(app.get('orchestratorIP'), app.get('runnerID'), winston);
-//Provide applicationRoute.js with application.js
-applicationRoute.init(application);
+app.configure(function() {
+  app.set('port', process.env.PORT || 3001);
+  app.set('orchestratorIP', process.env.ORCHESTRATOR_IP || 'http://localhost:2000');
+  app.set('runnerID', process.env.RUNNER_ID || 'ID');
+  app.set('views', __dirname + '/views');
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+});
 
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.post('/application/start', applicationRoute.start);
-app.get('/runner/log', routes.log);
-app.post('/runner/kill', routes.kill);
+try{
+  fs.mkdirSync(path.resolve(__dirname, "currentApp/"));
+}
+catch(e){}
 
-runner.init(app.get('runnerID'));
-routes.init(runner);
+try{
+  fs.mkdirSync(path.resolve(__dirname, "logs/"));
+}
+catch(e){}
+
+var logger = new(winston.Logger)({
+  transports: [
+  new(winston.transports.Console)({
+    handleExceptions: true
+  }), new(winston.transports.File)({
+    filename: 'logs/runner' + app.get('runnerID') + '.log',
+    handleExceptions: true
+  })]
+});
+
+var application = require('./application')(app, logger);
+var runner = require('./runner')(app, application, logger);
+require('./routes')(app, runner, application, logger);
+runner.updateStatus();
+
+
 
 http.createServer(app).listen(app.get('port'), function() {
   winston.log('info', 'RUNNER: Node Runner Service listening on port ' + app.get('port'));
 });
 
-winston.add(winston.transports.File, { filename: 'runner' + app.get('runnerID') + '.log', handleExceptions: true});
 
-
-var TIMEOUT_TIME = 1 * 60 * 1000; /* ms */
+var TIMEOUT_TIME = 15 * 1 * 1000; /* ms */
 var lastPing = new Date() - TIMEOUT_TIME - 1000;
 pingOrchestrator();
 
 function pingOrchestrator() {
   if ((new Date) - lastPing > TIMEOUT_TIME) {
+    var newPing = new Date();
     winston.log('info', 'RUNNER: pinging orchestrator at ' + app.get('orchestratorIP'));
-    request.post(app.get('orchestratorIP') + "/runners/ping", {
+    request.put(app.get('orchestratorIP') + "/runners/" + app.get('runnerID'), {
       form: {
-        runnerID: app.get('runnerID')
+        ping: newPing
       }
-    })
-    lastPing = new Date();
+    }, function(error, response, body){
+      if(error){
+        logger.log('info', 'Cannot connect to orchestrator at ' + app.get('orchestratorIP'));
+      }
+      else{
+        lastPing = newPing;
+      }
+    });
+    
   }
   setTimeout(function callback() {
     setImmediate(pingOrchestrator)
