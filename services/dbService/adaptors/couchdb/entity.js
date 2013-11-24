@@ -4,7 +4,7 @@ var http = require('http');
 // next is always called with the arguments
 // next(err, obj)
 
-module.exports = function (conn, settings) {
+module.exports = function (conn, settings, logger) {
   return {
     create: function (application, collection, entity, object, next) {
       var db = getDb(conn, application);
@@ -41,6 +41,7 @@ function getDb(conn, dbNameStr) {
   var db = conn.database(dbNameStr);
   db.exists(function (err, exists) {
     if(err) {//TODO log this
+      logger.warn('couch error: ', err);
     } else if(exists) {
       return db;
     } else {

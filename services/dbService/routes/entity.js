@@ -7,7 +7,7 @@ module.exports = function (persistent, cache) {
               req.query,
               sendJSONResponse(res, 200, 400));
     },
-    
+
 
     findById: function(req, res) {
       if(cache !== undefined) {
@@ -71,7 +71,7 @@ module.exports = function (persistent, cache) {
       }
     },
 
-//FINISH cached version  
+//TODO FINISH cached version  
     update: function(req, res) {
       if(cache !== undefined) {
         var cTime = getcacheTime(req);

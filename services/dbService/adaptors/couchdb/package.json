@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {},
   "db_class": [
-    "key_value"
+    "key_value",
+    "schemaless"
   ],
   "dependencies": {
     "node-uuid": "~1.4.0",

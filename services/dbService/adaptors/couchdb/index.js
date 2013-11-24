@@ -1,9 +1,9 @@
-module.exports = function (settings) {
+module.exports = function (settings, logger) {
   var cradle = require('cradle');
   cradle.setup(settings);
 
   return {
-    entity: require('./entity')(new(cradle.Connection), settings),
-    schema: require('./schema')(this.entity, settings)
+    entity: require('./entity')(new(cradle.Connection), settings, logger),
+    schema: undefined
   };
 };

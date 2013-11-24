@@ -10,5 +10,6 @@
     "underscore": "1.5.1",
     "nconf": "~0.6.7",
     "js-yaml": "~2.1.0",
+    "winston": "~0.7.2"
   }
 }

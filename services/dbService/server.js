@@ -5,7 +5,8 @@
 var express = require('express'),
     nconf   = require('nconf'),
     http    = require('http'),
-    path    = require('path');
+    path    = require('path'),
+    winston = require('winston');
 
 require('js-yaml');
 
@@ -16,6 +17,16 @@ nconf.defaults(require('./config.yml'))
      .argv()
      .env();
 
+// setup the logger
+var logger = new winston.Logger({
+  transports: [
+    new (winston.transports.Console)({
+      handleExceptions: true
+    })
+  ],
+  exitOnError: false
+});
+logger.cli();
 
 // all environments
 app.use(express.logger('dev'));
@@ -27,19 +38,18 @@ app.disable('x-powered-by');
 
 // development only
 if('development' == nconf.get('DB_ENV')) {
-  console.log('running in development mode');
-  console.log('settings: ' + JSON.stringify(nconf.get().adaptor_settings));
+  logger.info('Running in development mode');
   app.use(express.errorHandler());
 }
 
 var routes  = require('./routes')(
   {
-    persistent: 
+    persistent:
       require('./adaptors/' + nconf.get('selected_adaptors:persistent'))(
-        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:persistent') || '')),
+        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:persistent') || ''), logger),
     cache: (nconf.get('selected_adaptors:cache') !== undefined) ?  
       require('./adaptors/' + nconf.get('selected_adaptors:cache'))(
-        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:cache') || '')) :
+        nconf.get('adaptor_settings:' + nconf.get('selected_adaptors:cache') || ''), logger) :
       undefined 
   }
 );
@@ -64,9 +74,12 @@ app.post('/entity/:application/:collection/:entity/:id', routes.entity.update);
 app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 
 
-http.createServer(app).listen(nconf.get('server:port'), function(){
-  console.log('DB Service listening on port: ' + nconf.get('server:port'));
-  console.log('Database persistent adaptor Selected: ' + nconf.get('selected_adaptors:persistent'));
-  if(nconf.get('selected_adaptors:cache'))
-    console.log('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache')); 
+http.createServer(app).listen(nconf.get().server.port, function(){
+  logger.info('DB Service listening on port: ' + nconf.get().server.port);
+  logger.info('Database persistent adaptor Selected: ' + nconf.get('selected_adaptors:persistent'));
+  logger.info('  ', nconf.get('adaptor_settings:' + nconf.get().selected_adaptors.persistent)); 
+  if(nconf.get('selected_adaptors:cache')) {
+    logger.info('Database caching adaptor selected: ' + nconf.get('selected_adaptors:cache')); 
+    logger.info('  ', nconf.get('adaptor_settings:' + nconf.get().selected_adaptors.cache)); 
+  }
 });
