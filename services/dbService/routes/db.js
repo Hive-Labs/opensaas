@@ -1,4 +1,4 @@
-module.exports = function(persistent, cache, adaptor_settings) {
+module.exports = function(persistent, cache) {
   return {
     dbInformation: function(req, res) {
       var db_info = {};
