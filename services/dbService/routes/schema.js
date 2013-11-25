@@ -3,7 +3,6 @@ module.exports = function (req, res) {
     get: function (req, res) {
     },
     migrate: function (req, res) {
-
     }
   }
 };
