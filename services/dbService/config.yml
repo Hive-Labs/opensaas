@@ -19,7 +19,7 @@ adaptor_settings:
   # really just steals options of cradle
   couchdb:
     # host information
-    host: '127.0.0.1'
+    host: 'couchdb.notoja.com'
     port: 5984
     #retries: 3
     #retryTimeout: 30*1000

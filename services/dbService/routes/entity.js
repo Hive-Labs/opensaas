@@ -105,7 +105,7 @@ module.exports = function (persistent, cache) {
               req.params.collection,
               req.params.entity,
               req.params.id,
-              sendJSONResponse(res, 200, 400));
+              sendJSONResponse(res, 202, 400));
       }
 
       persistent.entity.del(req.params.application,
