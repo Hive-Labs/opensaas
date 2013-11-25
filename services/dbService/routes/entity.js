@@ -46,7 +46,7 @@ module.exports = function (persistent, cache) {
                 req.params.collection,
                 req.params.entity,
                 req.body, 
-                jfunction (obj, err) {
+                function (obj, err) {
                   persistent.entity.create(req.params.application,
                     req.params.collection,
                     req.params.entity,
