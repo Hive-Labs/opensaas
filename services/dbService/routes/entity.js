@@ -17,7 +17,7 @@ module.exports = function (persistent, cache) {
           req.params.collection,
           req.params.entity,
           req.params.id,
-          function (obj, err) {
+          function (err, obj) {
             if(err || !obj) {
               persistent.entity.findById(req.params.application,
                 req.params.collection,
@@ -25,7 +25,7 @@ module.exports = function (persistent, cache) {
                 req.params.id,
                 sendJSONResponse(res, 200, 400));
             } else {
-              sendJSONResponse(res, 200, 400)(obj, err);
+              sendJSONResponse(res, 200, 400)(err, obj);
             }
           });
           return;
@@ -79,7 +79,7 @@ module.exports = function (persistent, cache) {
                 req.params.collection,
                 req.params.entity,
                 req.body,
-                function (obj, err) {
+                function (err, obj) {
                   if(err || !obj) {
                   this.entity.update(req.params.application,
                     req.params.collection,
@@ -117,11 +117,8 @@ module.exports = function (persistent, cache) {
   };
 }
 
-
-
-// sends a JSON formatted response
 function sendJSONResponse (res, successCode, errorCode) {
-  return function(obj, err) {
+  return function(err, obj) {
     if(!err) {
       res.json(successCode, obj);
     } else {

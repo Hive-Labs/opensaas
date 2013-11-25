@@ -1,4 +1,4 @@
-module.exports = function (req, res) {
+module.exports = function (persistent, cache) {
   return {
     get: function (req, res) {
     },
