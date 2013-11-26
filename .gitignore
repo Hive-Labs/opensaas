@@ -1,4 +1,4 @@
-applications/orchestratorServiceManagement/node_modules
+applications/orchestratorServiceManagement/node_modules/*
 applications/orchestratorServiceManagement/app_codebase/node_modules
 applications/orchestratorServiceManagement/app_codebase/node_modules
 applications/orchestratorServiceManagement/dist/*
