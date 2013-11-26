@@ -2,6 +2,7 @@
 /development_scripts/nvm/
 /development_scripts/find-node-or-install
 applications/orchestratorServiceManagement/node_modules/**/*
+applications/orchestratorServiceManagement/public/**/*
 /applications/orchestratorServiceManagement/dist/*
 notoja_modules/dbService/node_modules
 services/nodeRunnerService/node_modules/**/*
