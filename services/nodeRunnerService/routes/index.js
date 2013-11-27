@@ -31,7 +31,7 @@ module.exports = function(app, runner, application, logger) {
   app.get('/log', function(req, res) {
     logger.log('info', 'GET /log');
     runner.log(function callback(err, log) {
-      res.end(log);
+      res.JSON(log);
     });
   });
 

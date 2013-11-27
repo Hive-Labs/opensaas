@@ -14,7 +14,7 @@ module.exports = function(app, application, logger) {
       for (var i = 0; i < arrayOfLines.length; i++) {
         finalAry.push(arrayOfLines[i]);
       }
-      callback(null, JSON.stringify(finalAry));
+      callback(null, finalAry);
     });
   }
 
