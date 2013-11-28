@@ -16,11 +16,11 @@ module.exports = function(app, runners, applications, logger) {
     logger.log('info', 'GET /applications');
     if (req.query.only_deployed) {
       applications.listDeployed(function(err, data) {
-        res.end(JSON.stringify(data));
+        res.json(data);
       });
     } else {
       applications.listAvailable(function(err, data) {
-        res.end(JSON.stringify(data));
+        res.json(data);
       });
     }
   });

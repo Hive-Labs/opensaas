@@ -4,7 +4,7 @@ var request = require('request');
 exports.userInfo = function(req, res) {
 	testToken(req.cookies.access_token, function(err, user) {
 		if (user) {
-			res.end(JSON.stringify(user));
+			res.json(user);
 		} else {
 			var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host;
 			res.redirect(301, req.protocol + "://" + hostname + ':3000/');

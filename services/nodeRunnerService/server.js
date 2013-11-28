@@ -40,7 +40,8 @@ var logger = new(winston.Logger)({
     handleExceptions: true
   }), new(winston.transports.File)({
     filename: 'logs/runner' + app.get('runnerID') + '.log',
-    handleExceptions: true
+    handleExceptions: true,
+    json: true
   })]
 });
 

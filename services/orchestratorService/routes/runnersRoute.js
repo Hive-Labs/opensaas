@@ -4,11 +4,11 @@ module.exports = function(app, runners, applications, logger) {
     res.header("Access-Control-Allow-Origin", "*");
     if (!req.query.only_proxy) {
       runners.list(false, function(err, runnerList) {
-        res.end(JSON.stringify(runnerList));
+        res.json(runnerList);
       });
     } else {
       runners.list(true, function(err, runnerList) {
-        res.end(JSON.stringify(runnerList));
+        res.json(runnerList);
       });
     }
   });
@@ -55,10 +55,10 @@ module.exports = function(app, runners, applications, logger) {
     res.header("Access-Control-Allow-Origin", "*");
     var health = runners.getHealth(req.params.id, function(err, health) {
       if (err) {
-        res.send(JSON.stringify({
+        res.json({
           cpu: 0,
           memory: 0
-        }));
+        });
       } else {
         res.send(health);
       }
@@ -71,7 +71,7 @@ module.exports = function(app, runners, applications, logger) {
       runners.getRunnerByID(req.params.id, function(err, runner) {
         if (runner) {
           res.send(200);
-          res.end(JSON.stringify(runner));
+          res.json(runner);
         } else {
           res.send(400);
           res.end([]);

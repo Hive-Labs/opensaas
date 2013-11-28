@@ -12,7 +12,7 @@ module.exports = function(app, application, logger) {
       var arrayOfLines = data.match(/[^\r\n]+/g);
       var finalAry = [];
       for (var i = 0; i < arrayOfLines.length; i++) {
-        finalAry.push(arrayOfLines[i]);
+        finalAry.push(JSON.parse(arrayOfLines[i]));
       }
       callback(null, finalAry);
     });
@@ -20,7 +20,7 @@ module.exports = function(app, application, logger) {
 
   exports.health = function(callback) {
     logger.log('runner/health');
-    callback(null, JSON.stringify(processStatus));
+    callback(null, processStatus);
   }
 
   exports.kill = function() {

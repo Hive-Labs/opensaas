@@ -196,9 +196,9 @@ db.once('open', function callback() {
   // Validates that the user did login for testing purposes
   app.get('/api/auth_test', function(req, res, next) {
     if(req.session.user) {
-      res.end(JSON.stringify({valid: true}));
+      res.json({valid: true});
     } else {
-      res.end(JSON.stringify({valid: false}));
+      res.json({valid: false});
     }
   });
  
@@ -206,7 +206,7 @@ db.once('open', function callback() {
   // Get detailed information on the extras stored in the user
   app.get('/api/user/get_user_info', function(req, res, next) {
     if(req.session.user) {
-      res.end(JSON.stringify({fullName: req.session.user}));
+      res.json({fullName: req.session.user});
     } else {
       res.writeHead(403);
     }
@@ -235,7 +235,7 @@ db.once('open', function callback() {
  // Invalidates the user's session (does not destroy their login tokens)
   app.get('/api/logout', function(req, res, next) {
     req.session.destroy(function(err) {
-      res.end(JSON.stringify({success: true}));
+      res.json({success: true});
     });
   });
  

@@ -38,7 +38,7 @@ module.exports = function(app, runner, application, logger) {
   app.get('/health', function(req, res) {
     logger.log('info', 'GET /health');
     runner.health(function callback(err, health) {
-      res.end(health);
+      res.json(health);
     });
   });
 }
