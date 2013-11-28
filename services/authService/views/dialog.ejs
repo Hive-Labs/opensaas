@@ -1,5 +1,5 @@
 <head>
-<title>Title</title>
+<title>Approve Application</title>
 <script type="text/javascript" src="../javascripts/jquery-latest.js"></script>
 <script type="text/javascript" src="../javascripts/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../javascripts/bootstrap.js"></script>
@@ -278,11 +278,15 @@ margin-bottom:auto;
 </div>
 
 <div id="appContainer" class="appContainer">
-    <form method="post" action="<%=authorize_url%>
-        " class="authorize-div">
-        <h1>Authorize App</h1>
-        <button class="btn btn-primary" name="allow">Allow</button>
-        <button class="btn btn-primary" name="deny">Deny</button>
+    <p>Hi <%= user.displayName %>!</p>
+    <p><b><%= client.name %></b> is requesting access to your account.</p>
+    <p>Do you approve?</p>
+    <form action="/dialog/authorize/decision" method="post">
+        <input name="transaction_id" type="hidden" value="<%= transactionID %>">
+        <div>
+            <input type="submit" value="Allow" id="allow">
+            <input type="submit" value="Deny" name="cancel" id="deny">
+        </div>
     </form>
 </div>
 <!-- Modal -->

@@ -1,11 +1,11 @@
 {
   "server": {
+    "hostname": "http://localhost",
     "port": 4455,
     "mongooseServer": "mongodb://localhost/backend",
     "activationEmail": "default",
     "activationSubject": "Welcome to <company name>"
   },
-
 
   "security": {
     "sessionPassword": "superNinjaMonkeyPower",
@@ -38,5 +38,17 @@
     },
 
     "emailTemplateFolder": "./email_templates/"
-  }
+  },
+
+  "providers": [{
+    "name": "notoja auth",
+    "type": "activeDirectory",
+    "settings": {
+      "url": "ldap://10.0.0.12:389",
+      "masterDn": "cn=Notoja Auth,ou=Administrators,dc=notoja,dc=com",
+      "masterPw": "Google1",
+      "groupSearchDN": "cn=Administrators,cn=Builtin,dc=notoja,dc=com"
+    }
+  }]
+
 }
