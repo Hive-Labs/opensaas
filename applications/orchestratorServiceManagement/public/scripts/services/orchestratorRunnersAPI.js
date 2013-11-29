@@ -49,9 +49,6 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersA
       }).
       success(function(data, status, headers, config) {
         console.log(data);
-        console.log(status);
-        console.log(headers);
-        console.log(config);
         callback(data);
       });
     },

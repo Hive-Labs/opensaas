@@ -15,7 +15,7 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 					if (!$scope.cpuGraphs || !$scope.cpuGraphs[i] || !$scope.cpuGraphs[i].enabled) {
 						$('#toggleGraph' + i).text('Enable Graph');
 					} else {
-						refreshGraph($index);
+						refreshGraph(i);
 					}
 				}
 			}, 30);
@@ -55,6 +55,10 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 	$scope.addRunner = function() {
 		orchestratorRunnersAPI.add(function(data) {
 			notify(data);
+			$('.addRunnerBtn').attr('disabled','disabled');
+			setTimeout(function(){
+				$('.addRunnerBtn').removeAttr('disabled');
+			},2000);
 		});
 	};
 
@@ -70,7 +74,7 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 				} else {
 					color = 'green';
 				}
-				$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + JSON.stringify(JSON.parse(arrayOfLines[i]), null, '<br/>\t') + '</p>');
+				$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + JSON.stringify(arrayOfLines[i], null, '<br/>\t') + '</p>');
 			}
 		});
 	};
@@ -108,7 +112,6 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 	var refreshGraph = function(graphIndex) {
 			if ($scope.cpuGraphs[graphIndex].enabled) {
 				if ($('#cpuGraph' + graphIndex + " > canvas").length === 0) {
-					console.log('adasd');
 					$('#toggleGraph' + graphIndex).text('Disable Graph');
 					var plot = $.plot("#cpuGraph" + graphIndex, [$scope.cpuGraphs[graphIndex].data], {
 						series: {

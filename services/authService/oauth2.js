@@ -49,7 +49,7 @@ server.deserializeClient(function(id, done) {
 // values, and will be exchanged for an access token.
 server.grant(oauth2orize.grant.code(function(client, redirectURI, user, ares, done) {
   var code = utils.uid(16);
-  db.authorizationCodes.save(code, client.id, redirectURI, user.id, function(err) {
+  db.authorizationCodes.save(code, client.id, client.redirectURI, user.id, function(err) {
     if (err) {
       return done(err);
     }
@@ -84,10 +84,6 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, do
     }
     if (client.id !== authCode.clientID) {
       console.log('authCode');
-      return done(null, false);
-    }
-    if (redirectURI !== authCode.redirectURI) {
-      console.log('redirectURI');
       return done(null, false);
     }
 
@@ -194,7 +190,7 @@ ensureLoggedIn('/login'), server.authorization(function(clientID, redirectURI, d
     //          redirectURI provided by the client matches one registered with
     //          the server.  For simplicity, this example does not.  You have
     //          been warned.
-    return done(null, client, redirectURI);
+    return done(null, client, client.redirectURI);
   });
 }), function(req, res) {
   res.render('dialog', {

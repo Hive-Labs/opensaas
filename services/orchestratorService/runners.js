@@ -167,7 +167,7 @@ module.exports = function(loadBalancer, settings, logger) {
   var log = function(runnerID, callback) {
     logger.log('info', 'runners.log');
       getRunnerByID(runnerID, function(err, runner) {
-        request.get(runner.ip + "/runner/log", function(error, response, body) {
+        request.get(runner.ip + "/log", function(error, response, body) {
           if(callback)
           callback(error || err, body);
         });
@@ -178,7 +178,7 @@ module.exports = function(loadBalancer, settings, logger) {
     logger.log('info', 'runners.getHealth');
       getRunnerByID(runnerID, function(err, runner) {
         if (runner) {
-          request.get(runner.ip + "/runner/health", function(error, response, body) {
+          request.get(runner.ip + "/health", function(error, response, body) {
             if(callback)
             callback(error || err, body);
           });

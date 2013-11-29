@@ -1,6 +1,5 @@
 var clients = [
-    { id: '1', name: 'Orchestrator Service Management', clientId: 'orchestratorManagement', clientSecret: 'google1' },
-    { id: '2', name: 'Samplr2', clientId: 'xyz123', clientSecret: 'ssh-password' }
+    { id: '1', name: 'Orchestrator Service Management', clientId: 'orchestratorManagement', clientSecret: 'google1' , redirectURI: 'http://lvho.st:2002/app/orchestratorServiceManagement'},
 ];
 
 

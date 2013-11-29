@@ -1,0 +1,165 @@
+var httpProxy = require('http-proxy'),
+	express = require('express'),
+	orchestrator = require('./orchestrator'),
+	servConf = require('nconf'),
+	winston = require('winston'),
+	proxy = new httpProxy.RoutingProxy();
+
+require('js-yaml');
+
+// setup the configs
+servConf.defaults(require('./config.yml'))
+	.argv()
+	.env();
+global.servConf = servConf;
+
+
+// setup the logger
+global.logger = new winston.Logger({
+	transports: [
+		new(winston.transports.Console)({
+			handleExceptions: true
+		})
+	],
+	exitOnError: false
+});
+logger.cli();
+
+var app = express();
+app.use(express.cookieParser());
+app.use(express.session({
+	secret: '1234567890QWERTY'
+}));
+app.use(express.errorHandler({
+	dumpExceptions: true,
+	showStack: true
+}));
+
+var HAList = [];
+var currIndex = 0;
+
+var allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Referer, User-Agent, Content-Type, Authorization, X-Mindflash-SessionID');
+
+	// intercept OPTIONS method
+	if ('OPTIONS' == req.method) {
+		res.send(200);
+	} else {
+		next();
+	}
+};
+
+app.configure(function() {
+	app.use(allowCrossDomain);
+});
+
+orchestrator.init(servConf.get().services.orchestrator.host);
+
+app.all('*', function route(req, res) {
+	var appName;
+	if (servConf.get().server.subdomain_mode) {
+		appName = req.headers.host.split('.')[0];
+		logger.info("Searching for app: " + appName);
+		getNextMachine(appName, function(err, machine) {
+			if (err) {
+				res.statusCode = 404;
+				res.end('There are no runners running this app');
+			} else {
+				return proxy.proxyRequest(req, res, machine);
+			}
+		});
+	} else {
+		//Split the url into slashes
+		var urlArray = req.url.split('/');
+		//Get the /app part of the url
+		var param2 = urlArray[1];
+		logger.info(urlArray);
+		if(param2 == 'app'){
+			//Get the appName part of the url
+			appName = urlArray[2];
+			//Preserve the url parameters in case the url contains any
+			var urlParams = '';
+			if(appName.split('?').length > 0){
+				urlParams = (appName.split('?')[1]);
+				appName = appName.split('?')[0];
+			}
+
+			//Get rid of the /app/:appNam
+			urlArray.splice(1, 1);
+			urlArray.splice(1, 1);
+			//Reconstruct the url without /app/:appName
+			req.url = urlArray.join('/') + "?" + urlParams;
+			//Save this to session so we know next time which app you were on
+			req.session.appName = appName;
+			res.redirect(req.url);
+		}
+		else if (req.session.appName) {
+			appName = req.session.appName;
+			logger.info("Found header: " + appName);
+			getNextMachine(appName, function(err, machine) {
+				if (err) {
+					res.statusCode = 404;
+					res.end(err);
+				} else {
+					logger.info("Searching for app: " + appName);
+					return proxy.proxyRequest(req, res, machine);
+				}
+			});
+		}
+		else{
+			res.statusCode = 404;
+			res.end('invalid url. Try: /app/:appname');
+		}
+	}
+});
+
+function updateHAList() {
+	orchestrator.getHAList(function(err, data) {
+		if (!err && data) {
+			HAList = JSON.parse(data);
+		}
+	});
+}
+
+function getNextMachine(appName, callback) {
+	if (!HAList || HAList.length === 0) { //There are no runners available
+		callback({error: "There are no runners available."}); //return error
+	} else if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) { //The machine at the current index is what you want
+		var oldIndex = currIndex;
+		currIndex = (currIndex + 1) % HAList.length;
+		var newMachine = {
+			host: HAList[oldIndex].host,
+			port: (HAList[oldIndex].port + 1000)
+		};
+		callback(null, newMachine);
+	} else { //The machine at the current index is not what you want
+		var start = currIndex;
+		var newMachine;
+		for (var i = 0; i < HAList.length; i++) { //loop through all the machines and check
+			currIndex = (i + start) % HAList.length;
+			if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) {
+				newMachine = {
+					host: HAList[currIndex].host,
+					port: (HAList[currIndex].port + 1000)
+				};
+				break;
+			}
+		}
+		if (newMachine) {
+			callback(null, newMachine);
+		} else {
+			callback({error: "There are no machines running app: " + appName}); //return error
+		}
+	}
+}
+
+setInterval(updateHAList, servConf.get().server.update_interval);
+app.listen(process.env.PORT || servConf.get().server.port);
+logger.info('Listening on port ' + (process.env.PORT || servConf.get().server.port));
+
+
+//
+// Addresses to use in the round robin proxy
+//

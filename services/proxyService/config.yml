@@ -1,0 +1,12 @@
+server:
+  port: 2002
+
+# orchestratorservicemanagement.lvho.st:2002 or http://lvho.st:2002/orchestratorServiceManagement
+  subdomain_mode: false
+
+# Time between contacting orchestrator to fetch new list
+  update_interval: 2000
+
+services:
+  orchestrator:
+    host: 'http://localhost:2000'

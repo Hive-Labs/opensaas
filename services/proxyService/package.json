@@ -1,0 +1,23 @@
+{
+  "name": "notoja-orchestrator_service",
+  "version": "0.0.77",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "http-proxy": "~0.10.3",
+    "express": "~3.3.4",
+    "request": "~2.26.0",
+    "grunt-bump": "0.0.11"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-nodemon": "0.0.8",
+    "nconf": "~0.6.8",
+    "winston": "~0.7.2",
+    "js-yaml": "~2.1.3"
+  }
+}
