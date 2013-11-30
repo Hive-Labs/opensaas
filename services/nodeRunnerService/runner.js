@@ -6,7 +6,7 @@ module.exports = function(app, application, logger) {
   var runnerID = app.get('runnerID');
 
   exports.log = function(callback) {
-    logger.log('runner/log');
+    logger.info('runner/log');
     fs.readFile('logs/runner' + runnerID + '.log', 'utf8', function(err, data) {
       if (err) throw err;
       var arrayOfLines = data.match(/[^\r\n]+/g);
@@ -19,27 +19,30 @@ module.exports = function(app, application, logger) {
   }
 
   exports.health = function(callback) {
-    logger.log('runner/health');
+    logger.info('runner/health');
     callback(null, processStatus);
   }
 
   exports.kill = function() {
-    logger.log('runner/kill');
-    logger.log('info', 'Killing self.');
+    logger.info('runner/kill');
+    logger.info('info', 'Killing self.');
     process.exit(0);
   }
 
   exports.updateStatus = function() {
-    logger.log('info', 'runner/updateStatus');
+    logger.info('info', 'runner/updateStatus');
     var runnerPid = process.pid;
     var options = {
       keepHistory: true
     }
-    if (application.nodeProcess) {
-      var applicationPid = application.nodeProcess.pid;
+    logger.info(application.getNodeProcess());
+    if (application.getNodeProcess()) {
+      logger.info("Getting cpu of node proceess + application");
+      var applicationPid = application.getNodeProcess().pid;
       usage.lookup(runnerPid, options, function(err1, result1) {
         usage.lookup(applicationPid, options, function(err2, result2) {
           if (!result2) {
+            logger.error("Could not lookup pid of sub-application.");
             result2 = {
               cpu: 0,
               memory: 0
@@ -52,6 +55,7 @@ module.exports = function(app, application, logger) {
         });
       });
     } else {
+      logger.info("Getting cpu of node proceess");
       usage.lookup(runnerPid, options, function(err1, result1) {
         if (result1) {
           processStatus = {

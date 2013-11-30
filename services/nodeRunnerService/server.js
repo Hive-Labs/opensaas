@@ -45,6 +45,8 @@ var logger = new(winston.Logger)({
   })]
 });
 
+logger.cli();
+
 var application = require('./application')(app, logger);
 var runner = require('./runner')(app, application, logger);
 require('./routes')(app, runner, application, logger);

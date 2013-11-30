@@ -27,6 +27,7 @@ logger.cli();
 
 var app = express();
 app.use(express.cookieParser());
+app.use(express.logger('dev'));
 app.use(express.session({
 	secret: '1234567890QWERTY'
 }));
@@ -61,7 +62,6 @@ app.all('*', function route(req, res) {
 	var appName;
 	if (servConf.get().server.subdomain_mode) {
 		appName = req.headers.host.split('.')[0];
-		logger.info("Searching for app: " + appName);
 		getNextMachine(appName, function(err, machine) {
 			if (err) {
 				res.statusCode = 404;
@@ -75,9 +75,12 @@ app.all('*', function route(req, res) {
 		var urlArray = req.url.split('/');
 		//Get the /app part of the url
 		var param2 = urlArray[1];
-		logger.info(urlArray);
 		if(param2 == 'app'){
-			//Get the appName part of the url
+			if(urlArray.length == 3 && urlArray[urlArray.length - 1] != ''){
+				res.redirect(req.url + '/');
+			}
+			else{
+				//Get the appName part of the url
 			appName = urlArray[2];
 			//Preserve the url parameters in case the url contains any
 			var urlParams = '';
@@ -90,25 +93,42 @@ app.all('*', function route(req, res) {
 			urlArray.splice(1, 1);
 			urlArray.splice(1, 1);
 			//Reconstruct the url without /app/:appName
-			req.url = urlArray.join('/') + "?" + urlParams;
+			if(urlArray.length > 1 && urlParams){
+				req.url = urlArray.join('/') + "?" + urlParams;	
+			}
+			else if(urlArray.length > 1){
+				req.url = urlArray.join('/');
+			}
+			else{
+				req.url = '/';
+			}
 			//Save this to session so we know next time which app you were on
 			req.session.appName = appName;
-			res.redirect(req.url);
-		}
-		else if (req.session.appName) {
-			appName = req.session.appName;
-			logger.info("Found header: " + appName);
 			getNextMachine(appName, function(err, machine) {
 				if (err) {
 					res.statusCode = 404;
 					res.end(err);
 				} else {
-					logger.info("Searching for app: " + appName);
+					logger.info(machine);
+					return proxy.proxyRequest(req, res, machine);
+				}
+			});
+			}
+		}
+		else if (req.session.appName) {
+			appName = req.session.appName;
+			getNextMachine(appName, function(err, machine) {
+				if (err) {
+					res.statusCode = 404;
+					res.end(err);
+				} else {
+					logger.info(machine);
 					return proxy.proxyRequest(req, res, machine);
 				}
 			});
 		}
 		else{
+			logger.info("Invalid url.");
 			res.statusCode = 404;
 			res.end('invalid url. Try: /app/:appname');
 		}
@@ -137,7 +157,7 @@ function getNextMachine(appName, callback) {
 	} else { //The machine at the current index is not what you want
 		var start = currIndex;
 		var newMachine;
-		for (var i = 0; i < HAList.length; i++) { //loop through all the machines and check
+		for (var i = 1; i < HAList.length; i++) { //loop through all the machines and check
 			currIndex = (i + start) % HAList.length;
 			if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) {
 				newMachine = {
@@ -148,6 +168,7 @@ function getNextMachine(appName, callback) {
 			}
 		}
 		if (newMachine) {
+			currIndex = (currIndex + 1) % HAList.length;
 			callback(null, newMachine);
 		} else {
 			callback({error: "There are no machines running app: " + appName}); //return error
@@ -158,8 +179,3 @@ function getNextMachine(appName, callback) {
 setInterval(updateHAList, servConf.get().server.update_interval);
 app.listen(process.env.PORT || servConf.get().server.port);
 logger.info('Listening on port ' + (process.env.PORT || servConf.get().server.port));
-
-
-//
-// Addresses to use in the round robin proxy
-//
