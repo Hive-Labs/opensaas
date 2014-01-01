@@ -122,7 +122,7 @@ function sendJSONResponse (res, successCode, errorCode) {
     if(!err) {
       res.json(successCode, obj);
     } else {
-      res.json(errorCode, obj);
+      res.json(errorCode, err);
     }
     res.end();
   };

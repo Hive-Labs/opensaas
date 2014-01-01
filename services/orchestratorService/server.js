@@ -57,6 +57,7 @@ var applications = require('./applications')(runners, settings, logger);
 require('./routes/applicationsRoute')(app, runners, applications, logger);
 require('./routes/runnersRoute')(app, runners, applications, logger);
 
+
 asciimo.write('Open SAAS', 'Banner', function(result, font) {
   console.log(result);
   console.log('\n');

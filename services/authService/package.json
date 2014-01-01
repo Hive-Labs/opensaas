@@ -30,7 +30,9 @@
     "passport-local": "~0.1.6",
     "passport-http": "~0.2.2",
     "passport-oauth2-client-password": "~0.1.1",
-    "passport-http-bearer": "~1.0.1"
+    "passport-http-bearer": "~1.0.1",
+    "winston": "~0.7.2",
+    "crypto": "0.0.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -6,7 +6,8 @@ var express = require('express'),
   routes = require('./routes'),
   apiRoute = require('./routes/apiRoute.js'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  dbService = require('dbService');
 
 var app = express();
 
@@ -30,6 +31,10 @@ app.configure('development', function() {
 app.get('/', routes.index);
 app.get('/api/logout', apiRoute.logout);
 app.get('/api/user', apiRoute.userInfo);
+
+dbService.init("localhost", "orchestratorServiceManagement");
+
+
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));

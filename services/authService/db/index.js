@@ -1,5 +1,8 @@
-exports.users = require('./users');
-exports.clients = require('./clients');
-exports.accessTokens = require('./accesstokens');
-exports.authorizationCodes = require('./authorizationcodes');
-
+module.exports = function(dbService, logger){
+	var returnObj = {};
+	returnObj.users = require('./users')(dbService, logger);
+	returnObj.clients = require('./clients');
+	returnObj.accessTokens = require('./accesstokens');
+	returnObj.authorizationCodes = require('./authorizationcodes');	
+	return returnObj;
+}

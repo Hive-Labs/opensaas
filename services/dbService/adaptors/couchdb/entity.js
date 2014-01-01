@@ -17,11 +17,12 @@ module.exports = function(conn, settings) {
           db.save(viewName, {
             views: {
               all: {
-                map: "function(doc) {if(doc._view == '" + viewName + "'){emit(doc);}}"
+                map: "function(doc) {if(doc.view == '" + viewName + "'){emit(doc);}}"
               }
             }
           });
-          object._view = viewName;
+          delete object._id;
+          object.view = viewName;
           db.save(object, function(err, res) {
             if (err) {
               logger.error("db.save error:");
@@ -43,7 +44,7 @@ module.exports = function(conn, settings) {
           logger.info("Searching for id: " + id);
           db.get(id, function(err, res) {
             console.log(res);
-            delete res._view;
+            delete res.view;
             next(err, res);
           });
         }
@@ -59,11 +60,16 @@ module.exports = function(conn, settings) {
           var viewName = nsBuilder([collection, entity], 2) + "/all";
           logger.info("Searching for view: " + viewName);
           db.view(viewName, function(err, res) {
-            if (err) {
-              next(err, []);
-            } else {
-              next(err, res);
-            }
+              if(res == null || err){
+                res = [];  
+              }
+              else{
+                for(var i = 0; i < res.length; i++){
+                  res[i] = res[i].key;
+                  delete res[i].view;
+                }
+              }
+              next(err, res || []);
           });
         }
       });
@@ -114,7 +120,6 @@ function getDb(conn, dbNameStr, next) {
     } else if (!exists) {
       logger.info("Creating new database: " + dbNameStr);
       db.create(function(err, obj) {
-        logger.info(obj);
         next(err, db);
       });
     } else {
