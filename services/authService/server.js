@@ -5,7 +5,6 @@ var engine = require('ejs-locals'),
   fs = require('fs'),
   http = require('http'),
   https = require('https'),
-  oauth2 = require('./oauth2'),
   MemoryStore = express.session.MemoryStore,
   mongoose = require('mongoose'),
   passport = require('passport'),
@@ -63,7 +62,7 @@ var db = require("./db")(dbService, logger);
 db.users.init(function() {
   require('./auth')(dbService, db);
   var site = require('./site')(db);
-
+  var oauth2 = require('./oauth2')(dbService, db);
   app.get('/', ensureAuthenticated, site.index);
   app.get('/login', site.loginForm);
   app.get('/users', ensureAuthenticated, site.usersForm);

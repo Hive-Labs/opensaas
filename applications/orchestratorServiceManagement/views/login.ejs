@@ -1,5 +1,3 @@
-<!doctype html>
-<html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -22,7 +20,7 @@
             </div>
         </div>
     </head>
-    <body ng-app="orchestratorServiceManagementApp">
+    <body>
         <div class="container" ng-view="">
             <div class="loginDiv">
                 <div id="notificationBox" class="alert alert-success hidden">
@@ -32,7 +30,7 @@
                 Login to Orchestrator Managament
                 </h1>
                 <button id="loginBtn" class="btn btn-success loginBtn">
-                Login with Notoja
+                Login with Hive
                 </button>
             </div>
         </div>
@@ -42,10 +40,8 @@
         <script>
         $('#loginBtn').click(function() {
         var currentLocation = 'http://' + window.location.host;
-        var client_id = 'orchestratorManagement';
-        var client_secret = 'google1';
 
-        window.location = window.location.protocol + '//' + window.location.hostname +':4455/dialog/authorize?response_type=code&client_id=' + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + currentLocation;
+        window.location = window.location.protocol + '//' + window.location.hostname +':4455/dialog/authorize?response_type=code&client_id=<%= client_id %>&client_secret=<%= client_secret %>&redirect_uri=' + currentLocation;
         });
         </script>
         <!-- build:js scripts/plugins.js -->
@@ -90,4 +86,3 @@
         </script>
         <!-- endbuild -->
     </body>
-</html>
