@@ -1,0 +1,144 @@
+@import "icomoon.scss";
+@import "formattingBar";
+@import "ruler";
+
+
+/* Put your CSS here */
+html, body {
+    background-image:url('/images/brushed.png');
+    overflow-x: hidden;
+}
+
+.navbar{
+	border-radius: 0px;
+	margin-bottom: 0px;
+	overflow-x:hidden;
+	overflow-y:hidden;
+	height:50px;
+	min-height:0px !important;
+}
+
+.navbar-brand{
+        font-size:20pt;
+        font-family: 'Lily Script One', cursive; 
+      }
+.navbar-inverse{
+	background-color: #022449;
+}
+
+.navbar-inverse .navbar-nav  .active a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+	background-color: #0B3563;
+}
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+	background-color: #0B3563;
+}
+
+.notebook{
+	float:left;
+	margin-left:20px;
+	position: relative;
+	left:0px;
+	top:0px;
+	width: -moz-calc(100% - 280px - 50px);
+    width: -webkit-calc(100% - 280px - 50px);
+    width: calc(100% - 280px - 50px);
+    outline: none;
+}
+
+.notebookTitle{
+	width:200px;
+	float:left;
+	margin-bottom:10px;
+	background-color:transparent;
+	border:none;
+	outline : 0px;	
+	font-size:12pt;
+}
+
+.notebookTextArea{
+	background-color:white;
+	box-shadow: 0px 0px 5px #888888;
+	float:left;
+	height:1066px;
+	width: 100%;
+	padding-bottom:15px;
+}
+
+.suggestions{
+	float:right;
+	width:280px;
+	background-color:#C8C9CC;
+	box-shadow: 0px 0px 5px #888888;
+	color:white;	
+	position: relative;
+}
+
+h1{
+	 font-size:20pt;
+     text-align:center;
+     font-family: 'Roboto Slab', serif;
+}
+.footer{
+	float:left;
+	text-align:center;
+	background-color: #022449;
+	color:white;
+	width:100%;
+	margin-top:10px;
+}
+.profileBox{
+	padding-top:10px !important;
+	padding-bottom:10px !important;
+	margin:0px !important;
+}
+
+.notebookEditableArea{
+	width:100%;
+	height:100%;
+	outline:none;
+	overflow-y:scroll;
+}
+
+
+.hive_scrollbar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+.hive_scrollbar::-webkit-scrollbar-track {
+	background-color: rgba(113,112,107,0.1);
+	-webkit-border-radius: 5px;
+}
+.hive_scrollbar::-webkit-scrollbar-thumb:vertical {
+	background-color: rgba(0,0,0,.2);
+	-webkit-border-radius: 6px;
+}
+.hive_scrollbar::-webkit-scrollbar-thumb:vertical:hover,
+.hive_scrollbar::-webkit-scrollbar-thumb:horizontal:hover {
+	background: rgba(241, 204, 17, 0.73);
+}
+.hive_scrollbar::-webkit-scrollbar-thumb:horizontal {
+	background-color: rgba(0,0,0,.2);
+	-webkit-border-radius: 6px;
+}
+
+.footer{
+	background-color: #0B3563;
+	color:white;
+	text-align:center;
+	width:100%;
+}
+
+.saveStatus{
+	float:right;
+	margin-bottom:10px;
+	margin-top:-10px;
+}
+.saveStatus span{
+	float:left;
+	
+}
+.saveStatus p{
+	padding-left:20px;
+	margin-bottom:0;
+}

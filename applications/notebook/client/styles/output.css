@@ -1,0 +1,406 @@
+@font-face {
+  font-family: 'icomoon';
+  src: url("/fonts/icomoon.eot");
+  src: url("/fonts/icomoon.eot?#iefix") format("embedded-opentype"), url("/fonts/icomoon.woff") format("woff"), url("/fonts/icomoon.ttf") format("truetype"), url("/fonts/icomoon.svg#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+  font-family: 'icomoon';
+  content: attr(data-icon);
+  speak: none;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="icon-"] {
+*/
+.icon-copy, .icon-numbered-list, .icon-scissors, .icon-paint-format, .icon-list, .icon-copy-2, .icon-bold, .icon-italic, .icon-underline, .icon-strikethrough, .icon-arrow-up-right, .icon-arrow-down-right {
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased; }
+
+.icon-copy:before {
+  content: "\e000"; }
+
+.icon-numbered-list:before {
+  content: "\e002"; }
+
+.icon-scissors:before {
+  content: "\e003"; }
+
+.icon-paint-format:before {
+  content: "\e004"; }
+
+.icon-list:before {
+  content: "\e005"; }
+
+.icon-copy-2:before {
+  content: "\e001"; }
+
+.icon-bold:before {
+  content: "\e006"; }
+
+.icon-italic:before {
+  content: "\e007"; }
+
+.icon-underline:before {
+  content: "\e008"; }
+
+.icon-strikethrough:before {
+  content: "\e009"; }
+
+.icon-arrow-up-right:before {
+  content: "\e00a"; }
+
+.icon-arrow-down-right:before {
+  content: "\e00b"; }
+
+.clipboardPanel {
+  height: 73px;
+  width: 141px;
+  float: left;
+  margin-left: 5px;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #9c9797; }
+
+.formattingBar {
+  padding-top: 10px;
+  padding-left: 15px;
+  display: inline-block;
+  width: 100%; }
+
+.btnPaste {
+  height: 72px;
+  float: left; }
+
+.btnBold {
+  margin-right: 5.6px; }
+
+.btnItalic {
+  margin-right: 5.6px; }
+
+.btnUnderline {
+  margin-right: 5.6px; }
+
+.btnStrikethrough {
+  margin-right: 5.6px; }
+
+.btnSubscript {
+  margin-right: 5.4px; }
+
+.btnCut {
+  width: 83px; }
+
+.btnCopy {
+  width: 83px; }
+
+.btnFormat {
+  width: 83px; }
+
+.imageButton {
+  padding: 4px 6px;
+  float: left; }
+
+.panelTitle {
+  width: 100%; }
+
+.tab-content {
+  margin-bottom: 20px;
+  height: 55px; }
+
+.fontPanel {
+  float: left;
+  height: 73px;
+  width: 202px;
+  padding-right: 5px;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: #9c9797;
+  margin-left: 5px; }
+
+.paragraphPanel {
+  float: left;
+  height: 73px;
+  width: 196px;
+  margin-left: 5px;
+  padding-left: 5px; }
+
+.fontPanelFontSizeSelect {
+  width: 42px;
+  border-radius: 4px;
+  border-color: #adadad;
+  color: #333333;
+  background-color: white;
+  float: right; }
+
+.fontPanelfontPanelFontSelect {
+  width: 150px;
+  border-radius: 4px;
+  color: #333333;
+  border-color: #adadad;
+  border-width: 5px;
+  background-color: white;
+  float: left; }
+
+.paragraphPanelAlignment button {
+  padding-top: 1px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 1px; }
+
+.btnBullet {
+  padding: 6px 6px;
+  margin-bottom: 3px; }
+
+.btnNumber {
+  padding: 6px 6px;
+  margin-bottom: 3px; }
+
+.fontPanelFontColorSelect {
+  margin-top: 3px;
+  width: 30px;
+  padding: 0px;
+  float: Left;
+  margin-left: 10px; }
+
+.txtChooseFontColor {
+  float: left;
+  margin-top: 5px; }
+
+.fontPanelFontSelect {
+  position: relative;
+  height: 20px;
+  cursor: pointer;
+  margin-bottom: 1px;
+  float: left;
+  width: 150px;
+  background-image: -webkit-linear-gradient(top, #f9f9f9, #f0f0f0);
+  background-image: -moz-linear-gradient(top, #f9f9f9, #f0f0f0);
+  background-image: -o-linear-gradient(top, #f9f9f9, #f0f0f0);
+  background-image: -ms-linear-gradient(top, #f9f9f9, #f0f0f0);
+  background-image: linear-gradient(top, #f9f9f9, #f0f0f0);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='$from', EndColorStr='$to');
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #cecece; }
+
+.fontPanelFontSelect span {
+  overflow: hidden;
+  margin-left: 5px; }
+
+.fontPanelFontSelect .arrow-down {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  border-left: 6px solid white;
+  border-right: 6px solid white;
+  border-top: 6px solid #AAA; }
+
+.fontPanelFontSelectUl {
+  list-style: none;
+  width: 200px;
+  background: white;
+  position: absolute;
+  left: 0;
+  top: 35px; }
+
+.fontPanelFontSelectUl li {
+  height: 24px;
+  line-height: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 14px;
+  border-left: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0; }
+
+.fontPanelFontSelectUl li:last-child {
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  border-bottom: 1px solid #EEEEEE; }
+
+.fontPanelFontSelectUl li:hover {
+  background: #DDD; }
+
+.fontPanelFontChoose {
+  height: 20px;
+  width: 100%;
+  margin-bottom: 2px; }
+
+.ruler {
+  width: 100%;
+  height: 15px;
+  background-color: #CBD1E4;
+  position: relative; }
+
+.rulerArrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #5E5E5E;
+  font-size: 0;
+  line-height: 0; }
+
+.rulerBox {
+  margin-bottom: 1px;
+  background-color: #5E5E5E;
+  height: 3px; }
+
+.rulerMargin {
+  position: absolute;
+  top: 6px; }
+
+.rulerMarginDarkArea {
+  background-color: rgba(76, 167, 228, 0.31);
+  height: 15px;
+  position: absolute; }
+
+#rulerMarginDarkAreaRight {
+  float: right;
+  right: 0px; }
+
+#rulerMarginDarkAreaLeft {
+  float: left;
+  left: 0px; }
+
+/* Put your CSS here */
+html, body {
+  background-image: url("/images/brushed.png");
+  overflow-x: hidden; }
+
+.navbar {
+  border-radius: 0px;
+  margin-bottom: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 50px;
+  min-height: 0px !important; }
+
+.navbar-brand {
+  font-size: 20pt;
+  font-family: 'Lily Script One', cursive; }
+
+.navbar-inverse {
+  background-color: #022449; }
+
+.navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+  background-color: #0B3563; }
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+  background-color: #0B3563; }
+
+.notebook {
+  float: left;
+  margin-left: 20px;
+  position: relative;
+  left: 0px;
+  top: 0px;
+  width: -moz-calc(100% - 280px - 50px);
+  width: -webkit-calc(100% - 280px - 50px);
+  width: calc(100% - 280px - 50px);
+  outline: none; }
+
+.notebookTitle {
+  width: 200px;
+  float: left;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border: none;
+  outline: 0px;
+  font-size: 12pt; }
+
+.notebookTextArea {
+  background-color: white;
+  box-shadow: 0px 0px 5px #888888;
+  float: left;
+  height: 1066px;
+  width: 100%;
+  padding-bottom: 15px; }
+
+.suggestions {
+  float: right;
+  width: 280px;
+  background-color: #C8C9CC;
+  box-shadow: 0px 0px 5px #888888;
+  color: white;
+  position: relative; }
+
+h1 {
+  font-size: 20pt;
+  text-align: center;
+  font-family: 'Roboto Slab', serif; }
+
+.footer {
+  float: left;
+  text-align: center;
+  background-color: #022449;
+  color: white;
+  width: 100%;
+  margin-top: 10px; }
+
+.profileBox {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  margin: 0px !important; }
+
+.notebookEditableArea {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  overflow-y: scroll; }
+
+.hive_scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px; }
+
+.hive_scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(113, 112, 107, 0.1);
+  -webkit-border-radius: 5px; }
+
+.hive_scrollbar::-webkit-scrollbar-thumb:vertical {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 6px; }
+
+.hive_scrollbar::-webkit-scrollbar-thumb:vertical:hover,
+.hive_scrollbar::-webkit-scrollbar-thumb:horizontal:hover {
+  background: rgba(241, 204, 17, 0.73); }
+
+.hive_scrollbar::-webkit-scrollbar-thumb:horizontal {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 6px; }
+
+.footer {
+  background-color: #0B3563;
+  color: white;
+  text-align: center;
+  width: 100%; }
+
+.saveStatus {
+  float: right;
+  margin-bottom: 10px;
+  margin-top: -10px; }
+
+.saveStatus span {
+  float: left; }
+
+.saveStatus p {
+  padding-left: 20px;
+  margin-bottom: 0; }

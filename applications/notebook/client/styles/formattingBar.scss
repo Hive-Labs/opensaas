@@ -1,0 +1,212 @@
+.clipboardPanel{
+	height:73px;
+	width:141px;
+	float:left;
+	margin-left:5px;
+	border-right-style: solid;
+	border-right-width:1px;
+	border-right-color:rgb(156, 151, 151);
+}
+
+.formattingBar{
+	padding-top:10px;
+	padding-left:15px;
+	display:inline-block;
+	width:100%;
+}
+
+.btnPaste{
+	height: 72px;
+	float:left;
+}
+
+.btnBold{
+	margin-right:5.6px;
+}
+
+.btnItalic{
+	margin-right:5.6px;
+}
+
+.btnUnderline{
+	margin-right:5.6px;
+}
+
+.btnStrikethrough{
+	margin-right:5.6px;
+}
+
+.btnSubscript{
+	margin-right:5.4px;
+}
+
+.btnCut{
+	width:83px;
+}
+
+.btnCopy{
+	width: 83px;
+}
+
+.btnFormat{
+	width: 83px;
+}
+
+.imageButton{
+	padding:4px 6px;
+	float:left;
+}
+
+.panelTitle{
+	width:100%;
+}
+
+.tab-content{
+	margin-bottom:20px;
+	height:55px;
+}
+
+.fontPanel{
+	float:left;
+	height:73px;
+	width:202px;
+	padding-right:5px;
+	border-right-width:1px;
+	border-right-style: solid;
+	border-right-color:rgb(156, 151, 151);
+	margin-left:5px;
+}
+
+.paragraphPanel{
+	float:left;
+	height:73px;
+	width:196px;
+	margin-left:5px;
+	padding-left:5px;
+}
+
+.fontPanelFontSizeSelect{
+	width:42px;
+	border-radius:4px;
+	border-color:#adadad;
+	color: #333333;
+	background-color:white;
+	float:right;
+}
+
+.fontPanelfontPanelFontSelect{
+	width:150px;
+	border-radius:4px;
+	color: #333333;
+	border-color:#adadad;
+	border-width:5px;
+	background-color:white;
+	float:left;
+}
+
+
+
+.paragraphPanelAlignment button{
+	padding-top:1px;
+	padding-left:6px;
+	padding-right:6px;
+	padding-bottom:1px;
+}
+
+.btnBullet{
+	padding: 6px 6px;
+	margin-bottom:3px;
+}
+
+.btnNumber{
+	padding: 6px 6px;
+	margin-bottom:3px;
+}
+
+.fontPanelFontColorSelect{
+	margin-top:3px;
+	width: 30px;
+	padding: 0px;
+	float:Left;
+	margin-left:10px;
+}
+
+.txtChooseFontColor{
+	float:left;
+	margin-top:5px;
+}
+
+.fontPanelFontSelect {
+        position: relative;
+        height: 20px;
+        cursor: pointer;
+        margin-bottom:1px;
+        float:left;
+        width: 150px;
+
+        background-image: -webkit-linear-gradient(top, #f9f9f9, #f0f0f0);
+        background-image: -moz-linear-gradient(top, #f9f9f9, #f0f0f0);
+        background-image: -o-linear-gradient(top, #f9f9f9, #f0f0f0);
+        background-image: -ms-linear-gradient(top, #f9f9f9, #f0f0f0);
+        background-image: linear-gradient(top, #f9f9f9, #f0f0f0);
+        filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='$from', EndColorStr='$to');
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        border: 1px solid #cecece;
+}
+
+.fontPanelFontSelect span {
+        overflow: hidden;
+        margin-left:5px;
+}
+
+.fontPanelFontSelect .arrow-down {
+        position: absolute;
+        right: 10px;
+        top: 7px;
+        border-left: 6px solid white;
+        border-right: 6px solid white;
+
+        border-top: 6px solid #AAA;
+}
+
+.fontPanelFontSelectUl {
+        list-style: none;
+        width: 200px;
+        background: white;
+        position: absolute;
+        left: 0;
+        top: 35px;
+}
+
+.fontPanelFontSelectUl li {
+        height: 24px;
+        line-height: 24px;
+        overflow: hidden;
+        cursor: pointer;
+        padding: 0 10px;
+
+        font-size: 14px;
+
+        border-left: 1px solid #f0f0f0;
+        border-right: 1px solid #f0f0f0;
+}
+
+.fontPanelFontSelectUl li:last-child {
+        -webkit-border-radius: 0 0 4px 4px;
+        -moz-border-radius: 0 0 4px 4px;
+        border-radius: 0 0 4px 4px;
+
+        border-bottom: 1px solid #EEEEEE;
+}
+
+.fontPanelFontSelectUl li:hover {
+        background: #DDD;
+}
+
+.fontPanelFontChoose{
+	height:20px;
+	width:100%;
+	margin-bottom:2px;
+}
