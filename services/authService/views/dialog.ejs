@@ -1,219 +1,228 @@
 <head>
-<title>Approve Application</title>
+<title>OpenSAAS - Login</title>
 <script type="text/javascript" src="../javascripts/jquery-latest.js"></script>
 <script type="text/javascript" src="../javascripts/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../javascripts/bootstrap.js"></script>
-<link rel="stylesheet" type="text/css" href="../stylesheets/modifiedBootstrap.css">
+<link rel="stylesheet" type="text/css" href="../stylesheets/bootstrap.min.css">
 <style type="text/css">
-                body
-                {
-                padding-left:30px;
-                padding-right:30px;
-                padding-top: 60px;
-                padding-bottom: 40px;
-                  background-size: 50px
-                50px;
-                background-color: #33B5E5;
-                background-image:
-                -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
-                transparent 25%,
-                transparent 50%, rgba(255, 255, 255, .2) 50%,
-                rgba(255, 255, 255, .2) 75%,
-                transparent 75%, transparent);
-                background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2)
-                25%, transparent
-                25%,
-                transparent 50%, rgba(255, 255, 255, .2) 50%,
-                rgba(255, 255, 255, .2) 75%,
-                transparent 75%, transparent);
-                background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
-                transparent 25%,
-                transparent 50%, rgba(255, 255, 255, .2) 50%,
-                rgba(255, 255, 255, .2)
-                75%,
-                transparent 75%, transparent);
-                -pie-background: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
-                transparent 25%,
-                transparent 50%, rgba(255, 255, 255, .2) 50%,
-                rgba(255, 255, 255, .2)
-                75%,
-                transparent 75%, transparent) 0 0 / 50px
-                50px #33B5E5;
-                behavior: url(/pie/PIE.htc);
-                }
-                .nameField
-                {
-                float:left;
-                margin:0px;
-                margin-right:10px;
-                }
-                .ddBoxTop
-                {
-                height:25px;
-                width:250px;
-                background: -moz-linear-gradient(top, rgba(255,255,255,0.65) 0%,
-                rgba(244,244,244,0.83) 34%, rgba(244,244,244,1) 66%); /* FF3.6+ */
-                background: -webkit-gradient(linear, left top, left bottom,
-                color-stop(0%,rgba(255,255,255,0.65)),
-                color-stop(34%,rgba(244,244,244,0.83)),
-                color-stop(66%,rgba(244,244,244,1))); /* Chrome,Safari4+ */
-                background: -webkit-linear-gradient(top, rgba(255,255,255,0.65)
-                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /*
-                Chrome10+,Safari5.1+ */
-                background: -o-linear-gradient(top,
-                rgba(255,255,255,0.65)
-                0%,rgba(244,244,244,0.83)
-                34%,rgba(244,244,244,1) 66%); /* Opera 
-                11.10+ */
-                background:
-                -ms-linear-gradient(top, rgba(255,255,255,0.65)
-                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* IE10+ */
-                background: linear-gradient(to bottom, rgba(255,255,255,0.65)
-                0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* W3C */
-                filter: progid:DXImageTransform.Microsoft.gradient(
-                startColorstr='#a6ffffff', endColorstr='#f4f4f4',GradientType=0 ); /*
-                IE6-9 */
-                }
-                .ddBoxBottom
-                {
-                height:15px;
-                width:230px;
-                padding-left:10px;
-                padding-right:10px;
-                padding-top:4px;
-                }
-                .hLine
-                {
-                height:1px;
-                width:250px;
-                background: -moz-linear-gradient(top, rgba(160,160,160,0.73) 0%,
-                rgba(67,67,67,0.73) 58%, rgba(0,0,0,0) 100%); /* FF3.6+ */
-                background:
-                -webkit-gradient(linear, left top, left bottom,
-                color-stop(0%,rgba(160,160,160,0.73)),
-                color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
-                /* Chrome,Safari4+ */
-                background: -webkit-linear-gradient(top,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /*
-                Chrome10+,Safari5.1+ */
-                background: -o-linear-gradient(top,
-                rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
-                58%,rgba(0,0,0,0) 100%);
-                /* Opera 11.10+ */
-                background: -ms-linear-gradient(top,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /* IE10+ */
-                background: linear-gradient(to bottom,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /* W3C */
-                filter: progid:DXImageTransform.Microsoft.gradient(
-                startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
-                /* IE6-9 */
-                }
-                .topLeftDiv
-                {
-                float:left;
-                padding-left:10px;
-                width:114px;
-                text-align:center;
-                color: #989898 ;
-                font-family:'Trebuchet MS';
-                text-shadow: 1px 1px 0px #FFFFFF;
-                }
-                .topMiddleDiv
-                {
-                float:left;
-                width:1px;
-                height:100%;
-                background: -moz-linear-gradient(top,
-                rgba(160,160,160,0.73) 0%,
-                rgba(67,67,67,0.73) 58%, rgba(0,0,0,0)
-                100%); /* FF3.6+ */
-                background: -webkit-gradient(linear, left top, left
-                bottom,
-                color-stop(0%,rgba(160,160,160,0.73)),
-                color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
-                /* Chrome,Safari4+ */
-                background: -webkit-linear-gradient(top,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /*
-                Chrome10+,Safari5.1+ */
-                background: -o-linear-gradient(top,
-                rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
-                58%,rgba(0,0,0,0) 100%);
-                /* Opera 11.10+ */
-                background: -ms-linear-gradient(top,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /* IE10+ */
-                background: linear-gradient(to bottom,
-                rgba(160,160,160,0.73)
-                0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
-                /* W3C */
-                filter: progid:DXImageTransform.Microsoft.gradient(
-                startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
-                /* IE6-9 */
-                }
-                .topRightDiv
-                {
-                float:right;
-                padding-right:10px;
-                width:115px;
-                text-align:center;
-                color: #344251;
-                color: #989898 ;
-                font-family:'Trebuchet MS';
-                text-shadow: 1px 1px 0px #FFFFFF;
-                }
-.notificationItem
-{
-height: 25px; 
-background-color: rgb(198, 198, 255); 
-border: 1px none; 
-padding: 10px; 
-width: 230px;
+body{
+    padding-left:30px;
+    padding-right:30px;
+    padding-top: 60px;
+    padding-bottom: 40px;
+    background-size: 50px  50px;
+    background-color: #33B5E5;
+    background-image:
+    -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2)
+    25%, transparent
+    25%,
+    transparent 50%, rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2)
+    75%,
+    transparent 75%, transparent);
+    -pie-background: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2)
+    75%,
+    transparent 75%, transparent) 0 0 / 50px
+    50px #33B5E5;
+    behavior: url(/pie/PIE.htc);
 }
-.notificationIcon
-{
-margin-top:auto;
-margin-bottom:auto;
+.nameField{
+    float:left;
+    margin:0px;
+    margin-right:10px;
+}
+.ddBoxTop{
+    height:25px;
+    width:250px;
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.65) 0%,
+    rgba(244,244,244,0.83) 34%, rgba(244,244,244,1) 66%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom,
+    color-stop(0%,rgba(255,255,255,0.65)),
+    color-stop(34%,rgba(244,244,244,0.83)),
+    color-stop(66%,rgba(244,244,244,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0.65)
+    0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /*
+    Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,
+    rgba(255,255,255,0.65)
+    0%,rgba(244,244,244,0.83)
+    34%,rgba(244,244,244,1) 66%); /* Opera 
+    11.10+ */
+    background:
+    -ms-linear-gradient(top, rgba(255,255,255,0.65)
+    0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.65)
+    0%,rgba(244,244,244,0.83) 34%,rgba(244,244,244,1) 66%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(
+    startColorstr='#a6ffffff', endColorstr='#f4f4f4',GradientType=0 ); /*
+    IE6-9 */
+}
+.ddBoxBottom{
+    height:15px;
+    width:230px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:4px;
+}
+.hLine{
+    height:1px;
+    width:250px;
+    background: -moz-linear-gradient(top, rgba(160,160,160,0.73) 0%,
+    rgba(67,67,67,0.73) 58%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+    background:
+    -webkit-gradient(linear, left top, left bottom,
+    color-stop(0%,rgba(160,160,160,0.73)),
+    color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /*
+    Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,
+    rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
+    58%,rgba(0,0,0,0) 100%);
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /* IE10+ */
+    background: linear-gradient(to bottom,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(
+    startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
+    /* IE6-9 */
+}
+.topLeftDiv{
+    float:left;
+    padding-left:10px;
+    width:114px;
+    text-align:center;
+    color: #989898 ;
+    font-family:'Trebuchet MS';
+    text-shadow: 1px 1px 0px #FFFFFF;
+}
+.topMiddleDiv{
+    float:left;
+    width:1px;
+    height:100%;
+    background: -moz-linear-gradient(top,
+    rgba(160,160,160,0.73) 0%,
+    rgba(67,67,67,0.73) 58%, rgba(0,0,0,0)
+    100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left
+    bottom,
+    color-stop(0%,rgba(160,160,160,0.73)),
+    color-stop(58%,rgba(67,67,67,0.73)), color-stop(100%,rgba(0,0,0,0)));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /*
+    Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,
+    rgba(160,160,160,0.73) 0%,rgba(67,67,67,0.73)
+    58%,rgba(0,0,0,0) 100%);
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /* IE10+ */
+    background: linear-gradient(to bottom,
+    rgba(160,160,160,0.73)
+    0%,rgba(67,67,67,0.73) 58%,rgba(0,0,0,0) 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(
+    startColorstr='#baa0a0a0', endColorstr='#00000000',GradientType=0 );
+    /* IE6-9 */
+}
+.topRightDiv{
+    float:right;
+    padding-right:10px;
+    width:115px;
+    text-align:center;
+    color: #344251;
+    color: #989898 ;
+    font-family:'Trebuchet MS';
+    text-shadow: 1px 1px 0px #FFFFFF;
+}
+.notificationItem{
+    height: 25px; 
+    background-color: rgb(198, 198, 255); 
+    border: 1px none; 
+    padding: 10px; 
+    width: 230px;
+}
+.notificationIcon{
+    margin-top:auto;
+    margin-bottom:auto;
 }
 .modal-body{
     font-size:12pt;
 }
 .appContainer{
-      margin-left:auto;
-        margin-right: auto;
-        background-color:white;
-        border-radius:5px;
-        padding:10px;
-        min-height:500px;
+    margin-left:auto;
+    margin-right: auto;
+    background-color:white;
+    border-radius:5px;
+    padding:10px;
+    min-height:500px;
 }
-.authorize-div{
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+.loginDiv{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
-    </style>
+.thirdPartySignin{
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    cursor: pointer;
+}
+.googleSignInButton{
+    background-image:url('/images/Red-signin-Long-base-44dp.png');
+    height:33px;
+    width:150px;
+    background-size:150px;
+}
+.googleSignInButton:hover{
+    background-image:url('/images/Red-signin-Long-hover-44dp.png');
+}
+.googleSignInButton:active{
+    background-image:url('/images/Red-signin-Long-press-44dp.png');
+}
+.navbar-collapse{
+    padding-right:30px !important;
+}
+</style>
 </head>
-
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top blackBar">
-    <div class="blackBar navbar-inner">
-        <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-header">
+         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="/">Notoja</a>
-            <div class="nav-collapse collapse pull-right">
-                <ul class="nav">
+            <a class="navbar-brand" href="#">Hive</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="/">Home</a>
                     </li>
@@ -266,6 +275,7 @@ margin-bottom:auto;
                                     <i class="icon-off icon-black"></i>
                                 </a>
                             </div>
+        <inpu
                         </ul>
                     </li>
                     <li>
@@ -273,8 +283,6 @@ margin-bottom:auto;
                     </li>
                 </ul>
             </div>
-            <!--/.nav-collapse --> </div>
-    </div>
 </div>
 
 <div id="appContainer" class="appContainer">
@@ -284,8 +292,8 @@ margin-bottom:auto;
     <form action="/dialog/authorize/decision" method="post">
         <input name="transaction_id" type="hidden" value="<%= transactionID %>">
         <div>
-            <input type="submit" value="Allow" id="allow">
-            <input type="submit" value="Deny" name="cancel" id="deny">
+            <input type="submit" class="btn btn-success" value="Allow" id="allow">
+            <input type="submit" class="btn btn-danger" value="Deny" name="cancel" id="deny">
         </div>
     </form>
 </div>
