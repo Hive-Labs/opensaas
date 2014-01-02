@@ -1,5 +1,5 @@
 var clients = [
-    { _id: '1', name: 'Orchestrator Service Management', clientId: 'orchestratorManagement', clientSecret: 'google1' , redirectURI: 'http://heartbeat.notoja.com'},
+    { _id: '1', name: 'Orchestrator Service Management', clientId: 'orchestratorManagement', clientSecret: 'google1' , redirectURI: 'http://heartbeat.hivelabs.it'},
     { _id: '2', name: 'Orchestrator Service Management', clientId: 'orchestratorManagementLocal', clientSecret: 'google1' , redirectURI: 'http://localhost:3005'}
 ];
 
