@@ -3,6 +3,7 @@
 }());
 
 angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['$http', function($http) {
+  var orchestratorUrl = "http://orchestrator.hivelabs.it";
   // Public API here
   return {
     userInfo: function(callback) {
@@ -17,7 +18,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     get: function(callback) {
       $http({
         method: 'GET',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners'
+        url: orchestratorUrl + '/runners'
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -26,7 +27,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     listApps: function(callback) {
       $http({
         method: 'GET',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/applications'
+        url: orchestratorUrl + '/applications'
       }).
       success(function(data, status, headers, config) {
         var uniqueNames = [];
@@ -39,7 +40,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     remove: function(runnerID, callback) {
       $http({
         method: 'DELETE',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/runner/' + runnerID,
+        url: orchestratorUrl + '/runner/' + runnerID,
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -48,7 +49,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     add: function(callback) {
       $http({
         method: 'POST',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners',
+        url: orchestratorUrl + '/runners',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -57,7 +58,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     deployApp: function(appName, callback) {
       $http({
         method: 'POST',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/applications',
+        url: orchestratorUrl + '/applications',
         data: {
           appName: appName
         }
@@ -69,7 +70,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     log: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners/' + runnerID + '/log',
+        url: orchestratorUrl + '/runners/' + runnerID + '/log',
       }).
       success(function(data, status, headers, config) {
         callback(data);
@@ -78,7 +79,7 @@ angular.module('orchestratorServiceManagementApp').factory('orchestratorAPI', ['
     status: function(runnerID, callback) {
       $http({
         method: 'GET',
-        url: window.location.protocol + '//' + window.location.hostname + ':2000/runners/' + runnerID + '/health',
+        url: orchestratorUrl + '/runners/' + runnerID + '/health',
       }).
       success(function(data, status, headers, config) {
         callback(data);
