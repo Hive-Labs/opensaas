@@ -65,7 +65,7 @@ module.exports = function(dbService, db) {
   // values.
   server.grant(oauth2orize.grant.token(function(client, user, ares, done) {
     var token = utils.uid(256);
-    db.accessTokens.save(token, user.id, client.clientId, function(err) {
+    db.accessTokens.save(token, user._id, client.clientId, function(err) {
       if (err) {
         return done(err);
       }
@@ -83,7 +83,7 @@ module.exports = function(dbService, db) {
       if (err) {
         return done(err);
       }
-      if (client.id !== authCode.clientID) {
+      if (client._id !== authCode.clientID) {
         console.log('authCode');
         return done(null, false);
       }
