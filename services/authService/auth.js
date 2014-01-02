@@ -45,8 +45,8 @@ module.exports = function(dbService, db) {
    */
 
   passport.use(new GoogleStrategy({
-    returnURL: configuration.server.hostname + ':' + configuration.server.port + '/auth/google/callback',
-    realm: configuration.server.hostname + ':' + configuration.server.port + '/'
+    returnURL: configuration.server.hostname + '/auth/google/callback',
+    realm: configuration.server.hostname  + '/'
   }, function(identifier, profile, done) { // asynchronous verification, for effect...
     process.nextTick(function() {
       db.users.findByEmail(profile.emails[0].value, function(err, user) {
