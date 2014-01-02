@@ -41,7 +41,7 @@
         $('#loginBtn').click(function() {
         var currentLocation = 'http://' + window.location.host;
 
-        window.location = window.location.protocol + '//' + window.location.hostname +':4455/dialog/authorize?response_type=code&client_id=<%= client_id %>&client_secret=<%= client_secret %>&redirect_uri=' + currentLocation;
+        window.location = '<%= authServerHostname %>/dialog/authorize?response_type=code&client_id=<%= client_id %>&client_secret=<%= client_secret %>&redirect_uri=' + currentLocation;
         });
         </script>
         <!-- build:js scripts/plugins.js -->

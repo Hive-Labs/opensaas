@@ -19,7 +19,8 @@ module.exports = function(servConf, dbService) {
 						logger.info(servConf.get().server.oAuthClientID);
 						res.render('login', {
 							client_id: servConf.get().server.oAuthClientID,
-							client_secret: servConf.get().server.oAuthClientSecret
+							client_secret: servConf.get().server.oAuthClientSecret,
+							authServerHostname: servConf.get().server.authServerHostname
 						});
 					}
 				});
@@ -34,7 +35,8 @@ module.exports = function(servConf, dbService) {
 					logger.info(servConf.get().server.oAuthClientID);
 					res.render('login', {
 							client_id: servConf.get().server.oAuthClientID,
-							client_secret: servConf.get().server.oAuthClientSecret
+							client_secret: servConf.get().server.oAuthClientSecret,
+							authServerHostname: servConf.get().server.authServerHostname
 					});
 				}
 			});
