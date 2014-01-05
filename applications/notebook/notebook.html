@@ -4,10 +4,12 @@
 
 <body>
 	{{> header}}
-	{{> editor}}
+	{{> innerFragment}}
 	{{> footer}}
 </body>
-
+<template name="innerFragment">
+    {{{dynamicTemplate}}}
+</template>
 <template name="header">
 <nav class="navbar navbar-inverse" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->

@@ -1,6 +1,6 @@
 {
   "server": {
-    "hostname": "http://localhost",
+    "hostname": "http://localhost:4455",
     "port": 4455,
     "mongooseServer": "mongodb://localhost/backend",
     "activationEmail": "default",
