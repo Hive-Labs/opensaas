@@ -5,8 +5,9 @@ Template.innerFragment.helpers({
     dynamicTemplate: function() {
         login_dep.depend();
         if(currentTemplate == null){
+            console.log("NULLTHING");
             init();
-            return Template.login();
+            return Template.loading();
         }else{
 
             return currentTemplate;    
@@ -24,7 +25,7 @@ function init(){
                 console.log("LOGIN2!");
                 currentTemplate = loadLoginPage();
                 login_dep.changed();
-                setTimeout(loadLoginPage, 2000);
+                setTimeout(loadLoginPage, 50);
             }
         });
     } else if (getCookie("hive_auth_token")) {
@@ -36,13 +37,17 @@ function init(){
             } else {
                 currentTemplate = Template.login();
                 login_dep.changed();
-                setTimeout(loadLoginPage, 500);
+                setTimeout(loadLoginPage, 50);
             }
         });
     } else {
-        currentTemplate = Template.login();
-        login_dep.changed();
-        setTimeout(loadLoginPage, 500);
+        //If this delay isn't there, there is some funky text on the screen
+        setTimeout(function(){
+            currentTemplate = Template.login();
+            login_dep.changed();
+            setTimeout(loadLoginPage, 500);
+            console.log("HAHAHA");
+        }, 50);
     }
 }
     
@@ -53,7 +58,6 @@ function loadLoginPage() {
             window.location = config.authServerHost + '/dialog/authorize?response_type=code&client_id=' + config.authClientID;
         });
     });
-    return Template.login();
 };
 
 function loadEditorPage() {

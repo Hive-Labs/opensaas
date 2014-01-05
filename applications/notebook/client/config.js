@@ -1,4 +1,5 @@
 config = {
-	authServerHost: "http://auth.hivelabs.it",
-	authClientID: "notebook"
+	//authServerHost: "http://auth.hivelabs.it",
+	authServerHost: "http://localhost:4455",
+	authClientID: "notebookLocal"
 };
