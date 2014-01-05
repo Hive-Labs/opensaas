@@ -1,6 +1,6 @@
 config = {
 	authServerHost: "http://localhost:4455",
-	authClientID: "notebookLocal",
+	authClientID: "notebook",
 	authClientSecret: "google1",
-	authRedirectURI: "http://localhost:5000"
+	authRedirectURI: "http://notebook.hivelabs.it"
 };
