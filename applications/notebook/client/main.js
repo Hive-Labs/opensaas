@@ -36,12 +36,13 @@ function init(){
             } else {
                 currentTemplate = Template.login();
                 login_dep.changed();
-                setTimeout(loadLoginPage, 2000);
+                setTimeout(loadLoginPage, 500);
             }
         });
     } else {
         currentTemplate = Template.login();
         login_dep.changed();
+        setTimeout(loadLoginPage, 500);
     }
 }
     
