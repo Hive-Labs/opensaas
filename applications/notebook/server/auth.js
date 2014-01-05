@@ -13,7 +13,6 @@ Meteor.methods({
       }
     });
     if (result.data) {
-      console.log(result.data.access_token);
         return result.data.access_token;
     } else {
         return (new AuthError("Bad Code"));
@@ -24,6 +23,19 @@ Meteor.methods({
       var result = Meteor.http.get(config.authServerHost + '/api/user?access_token=' + token);
       if (result.statusCode == 200 && result.data) {
         return true;
+      } else {
+        return AuthError(result.content);
+      }  
+    }
+    catch(e){
+      return AuthError("Bad Token");
+    }
+  },
+  auth_loadUser: function (token) {
+    try{
+      var result = Meteor.http.get(config.authServerHost + '/api/user?access_token=' + token);
+      if (result.statusCode == 200 && result.data) {
+        return result.data;
       } else {
         return AuthError(result.content);
       }  

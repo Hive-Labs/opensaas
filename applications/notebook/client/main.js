@@ -5,7 +5,6 @@ Template.innerFragment.helpers({
     dynamicTemplate: function() {
         login_dep.depend();
         if(currentTemplate == null){
-            console.log("NULLTHING");
             init();
             return Template.loading();
         }else{
@@ -22,7 +21,6 @@ function init(){
             if (result == true) {
                 window.location = '/';
             } else {
-                console.log("LOGIN2!");
                 currentTemplate = loadLoginPage();
                 login_dep.changed();
                 setTimeout(loadLoginPage, 50);
@@ -31,9 +29,12 @@ function init(){
     } else if (getCookie("hive_auth_token")) {
         auth_testToken(getCookie("hive_auth_token"), function(result) {
             if (result == true) {
-                currentTemplate = Template.editor();
-                login_dep.changed();
-                setTimeout(loadEditorPage, 50);
+                auth_loadUser(getCookie("hive_auth_token"),function(result){
+                    currentTemplate = Template.editor();
+                    login_dep.changed();
+                    $("#fullName").text(result.displayName);
+                    setTimeout(loadEditorPage, 50);
+                });
             } else {
                 currentTemplate = Template.login();
                 login_dep.changed();
@@ -45,8 +46,7 @@ function init(){
         setTimeout(function(){
             currentTemplate = Template.login();
             login_dep.changed();
-            setTimeout(loadLoginPage, 500);
-            console.log("HAHAHA");
+            setTimeout(loadLoginPage, 50);
         }, 50);
     }
 }
@@ -117,6 +117,10 @@ function loadEditorPage() {
         setInterval(function() {
             saveLocalStorage();
         }, 500);
+
+        setInterval(function() {
+            saveRemoteStorage();
+        }, 5000);        
 
         setTimeout(function() {
             hideNavBar();

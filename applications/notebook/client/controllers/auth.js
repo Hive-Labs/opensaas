@@ -22,3 +22,9 @@ auth_testToken = function(token, next){
 		}	
 	});
 };
+
+auth_loadUser = function(token, next){
+	Meteor.call('auth_loadUser', token, function(error, result){
+		next(result);
+	});
+};

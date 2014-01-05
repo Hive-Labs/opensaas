@@ -33,6 +33,10 @@ saveLocalStorage = function(){
   	}
 }
 
+saveRemoteStorage = function(){
+  
+}
+
 loadLocalStorage = function(){
 	if(typeof(Storage)!=="undefined")
   	{
