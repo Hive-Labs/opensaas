@@ -360,7 +360,14 @@ h1 {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
   margin: 0px !important;
-  display: inline; }
+  display: inline-block; }
+
+.profileBox a {
+  line-height: 30px; }
+
+.profileBox img {
+  float: left;
+  padding-right: 10px; }
 
 .notebookEditableArea {
   width: 100%;

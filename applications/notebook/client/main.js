@@ -4,18 +4,18 @@ var login_dep = new Deps.Dependency();
 Template.innerFragment.helpers({
     dynamicTemplate: function() {
         login_dep.depend();
-        if(currentTemplate == null){
+        if (currentTemplate == null) {
             init();
             return Template.loading();
-        }else{
-
-            return currentTemplate;    
+        } else {
+            console.log("HI");
+            return currentTemplate;
         }
-        
+
     }
 });
 
-function init(){
+function init() {
     if (getParameterByName("code")) {
         auth_tradeCode(getParameterByName("code"), function(result) {
             if (result == true) {
@@ -29,10 +29,12 @@ function init(){
     } else if (getCookie("hive_auth_token")) {
         auth_testToken(getCookie("hive_auth_token"), function(result) {
             if (result == true) {
-                auth_loadUser(getCookie("hive_auth_token"),function(result){
+                console.log("!!!H");
+                auth_loadUser(getCookie("hive_auth_token"), function(result) {
+                    console.log("!!!H");
                     currentTemplate = Template.editor();
                     login_dep.changed();
-                    $("#fullName").text(result.displayName);
+                    //$("#fullName").text(result.displayName);
                     setTimeout(loadEditorPage, 50);
                 });
             } else {
@@ -43,14 +45,14 @@ function init(){
         });
     } else {
         //If this delay isn't there, there is some funky text on the screen
-        setTimeout(function(){
+        setTimeout(function() {
             currentTemplate = Template.login();
             login_dep.changed();
             setTimeout(loadLoginPage, 50);
         }, 50);
     }
 }
-    
+
 
 function loadLoginPage() {
     $(document).ready(function() {
@@ -118,19 +120,32 @@ function loadEditorPage() {
             saveLocalStorage();
         }, 500);
 
-        setInterval(function() {
-            saveRemoteStorage();
-        }, 5000);        
+        /* setInterval(function() {
+            // saveRemoteStorage();
+        }, 5000);*/
+
+        api_getAllDocuments(getCookie("hive_auth_token"), function(err, result) {
+            console.log(err);
+            console.log(result);
+        });
 
         setTimeout(function() {
             hideNavBar();
         }, 1500);
 
-        $("nav").mouseleave(function() {
-            hideNavBar();
+        var cancelHide = false;
+        $("#navBarMain").mouseleave(function() {
+            cancelHide = false;
+            setTimeout(function() {
+                console.log(cancelHide);
+                if (!cancelHide) {
+                    hideNavBar();
+                }
+            }, 2000);
         });
 
-        $("nav").mouseover(function() {
+        $("#navBarMain").mouseover(function() {
+            cancelHide = true;
             showNavBar();
         });
     });

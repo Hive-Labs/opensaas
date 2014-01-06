@@ -1,7 +1,14 @@
 config = {
-	authServerHost: "http://localhost:4455",
-	authClientID: "notebookLocal",
-	authClientSecret: "google1",
-	//authRedirectURI: "http://notebook.hivelabs.it"
-	authRedirectURI: "http://localhost:5000"
+    dbAppName: "notebook",
+    dbRoutes: {
+        notes: "notes"
+    },
+    dbServerHost: "http://localhost",
+    dbServerPort: "3000",
+    authServerHost: "http://localhost",
+    authServerPort: "4455",
+    authClientID: "notebookLocal",
+    authClientSecret: "google1",
+    //authRedirectURI: "http://notebook.hivelabs.it"
+    authRedirectURI: "http://localhost:5000"
 };

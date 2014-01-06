@@ -11,7 +11,7 @@
     {{{dynamicTemplate}}}
 </template>
 <template name="header">
-<nav class="navbar navbar-inverse" role="navigation">
+<nav id="navBarMain" class="navbar navbar-inverse" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -39,7 +39,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle profileBox" data-toggle="dropdown"><img src="http://placehold.it/30x30"/><p id="fullName">John Doe</p><b class="caret"></b></a>
+                <span class="dropdown-toggle profileBox" data-toggle="dropdown"><img src="http://placehold.it/30x30"/><a id="fullName"></a><b class="caret"></b></span>
                 <ul class="dropdown-menu">
                     <li>
                         <a href="#">Action</a>
