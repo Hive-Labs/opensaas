@@ -13,6 +13,7 @@ Template.innerFragment.helpers({
     }
 });
 
+
 function init() {
     if (getParameterByName("code")) {
         auth_tradeCode(getParameterByName("code"), function(result) {
