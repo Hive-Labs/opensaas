@@ -311,7 +311,7 @@ html, body {
   float: left;
   margin-left: 20px;
   position: relative;
-  left: 0px;
+  left: -2000px;
   top: 0px;
   width: -moz-calc(100% - 280px - 50px);
   width: -webkit-calc(100% - 280px - 50px);
@@ -341,6 +341,7 @@ html, body {
   background-color: #C8C9CC;
   box-shadow: 0px 0px 5px #888888;
   color: white;
+  right: -2000px;
   position: relative; }
 
 h1 {

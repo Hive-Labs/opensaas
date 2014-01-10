@@ -8,10 +8,8 @@ Template.innerFragment.helpers({
             init();
             return Template.loading();
         } else {
-            console.log("HI");
             return currentTemplate;
         }
-
     }
 });
 
@@ -29,12 +27,10 @@ function init() {
     } else if (getCookie("hive_auth_token")) {
         auth_testToken(getCookie("hive_auth_token"), function(result) {
             if (result == true) {
-                console.log("!!!H");
                 auth_loadUser(getCookie("hive_auth_token"), function(result) {
-                    console.log("!!!H");
                     currentTemplate = Template.editor();
                     login_dep.changed();
-                    //$("#fullName").text(result.displayName);
+                    $("#fullName").text(result.displayName);
                     setTimeout(loadEditorPage, 50);
                 });
             } else {
@@ -64,89 +60,51 @@ function loadLoginPage() {
 
 function loadEditorPage() {
     $(document).ready(function() {
-        $('.notebook').css({
-            "left": '-2000px'
-        });
-        $('.suggestions').css({
-            "right": '-2000px'
-        });
-
-        setTimeout(function() {
-            $('.notebook').animate({
-                "left": '+=2000'
-            }, {
-                duration: 750
-            });
-
-            $('.suggestions').animate({
-                "right": '+=2000'
-            }, {
-                duration: 750
-            });
-
-        }, 500);
-
-        $('#fontSelect').fontSelector({
-            'hide_fallbacks': true,
-            'initial': 'Courier New,Courier New,Courier,monospace',
-            'selected': function(style) {
-
-            },
-            'fonts': [
-                'Arial,Arial,Helvetica,sans-serif',
-                'Arial Black,Arial Black,Gadget,sans-serif',
-                'Comic Sans MS,Comic Sans MS,cursive',
-                'Courier New,Courier New,Courier,monospace',
-                'Georgia,Georgia,serif',
-                'Impact,Charcoal,sans-serif',
-                'Lucida Console,Monaco,monospace',
-                'Lucida Sans Unicode,Lucida Grande,sans-serif',
-                'Palatino Linotype,Book Antiqua,Palatino,serif',
-                'Tahoma,Geneva,sans-serif',
-                'Times New Roman,Times,serif',
-                'Trebuchet MS,Helvetica,sans-serif',
-                'Verdana,Geneva,sans-serif',
-                'Gill Sans,Geneva,sans-serif'
-            ]
-        });
+        loadFormattingBar();
 
         setPageSize(8.5, 11);
+        //Start, End, Tick interval, number interval
         generateRuler(0, 8.5, 1 / 8, 1);
-        setMargin(1, 1, true);
-        setSaveStatus(SAVE_STATUS.UNSAVED);
-        loadLocalStorage();
+        //Left margin, Right margin 
+        setMargin(1, 1);
 
+        setSaveStatus(SAVE_STATUS.UNSAVED);
+        //Load the last file from browser storage
+        loadLocalStorage();
+        //Save the file every 500ms
         setInterval(function() {
             saveLocalStorage();
+            //saveRemoteStorage();
         }, 500);
-
-        /* setInterval(function() {
-            // saveRemoteStorage();
-        }, 5000);*/
 
         api_getAllDocuments(getCookie("hive_auth_token"), function(err, result) {
             console.log(err);
             console.log(result);
         });
 
+        //Hide the top bar after 1.5 seconds
         setTimeout(function() {
             hideNavBar();
         }, 1500);
 
+        //Show the navbar when user puts mouse over
+        $("#navBarMain").mouseover(function() {
+            cancelHide = true;
+            showNavBar();
+        });
+
+        //Wait 2 seconds before hiding when the user leaves the mouse, in case they come back.
         var cancelHide = false;
         $("#navBarMain").mouseleave(function() {
             cancelHide = false;
             setTimeout(function() {
-                console.log(cancelHide);
                 if (!cancelHide) {
                     hideNavBar();
                 }
             }, 2000);
         });
 
-        $("#navBarMain").mouseover(function() {
-            cancelHide = true;
-            showNavBar();
-        });
+        animateNotebookLeftToRight();
+        animateSuggestionsRightToLeft();
     });
 };
