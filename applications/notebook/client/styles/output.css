@@ -81,8 +81,7 @@ you can use the generic selector below, but it's slower:
 .formattingBar {
   padding-top: 10px;
   padding-left: 15px;
-  display: inline-block;
-  width: 100%; }
+  display: inline-block; }
 
 .btnPaste {
   height: 72px;
@@ -375,6 +374,9 @@ h1 {
   height: 100%;
   outline: none;
   overflow-y: scroll; }
+
+.notebookEditableArea p {
+  margin: 0px !important; }
 
 .hive_scrollbar::-webkit-scrollbar {
   width: 10px;
