@@ -94,20 +94,24 @@ function loadEditorPage() {
         loadFormattingBar();
 
         setPageSize(8.5, 11);
-        //Start, End, Tick interval, number interval
+        // Start, End, Tick interval, number interval
         generateRuler(0, 8.5, 1 / 8, 1);
-        //Left margin, Right margin 
+        // Left margin, Right margin 
         setMargin(1, 1);
 
         setSaveStatus(SAVE_STATUS.UNSAVED);
-        //Load the last file from browser storage
+        // Load the last file from browser storage
         loadLocalStorage();
-        //Save the file every 500ms
+        // Local save the file every 500ms
         setInterval(function() {
             saveLocalStorage();
         }, 500);
+        // Remote save every 5s.
+        setInterval(function() {
+            saveRemoteStorage();
+        }, 5000);
 
-        //Hide the top bar after 1.5 seconds
+        // Hide the top bar after 1.5 seconds
         setTimeout(function() {
             hideNavBar();
         }, 1500);
