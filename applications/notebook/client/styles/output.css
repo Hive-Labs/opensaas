@@ -119,8 +119,7 @@ you can use the generic selector below, but it's slower:
   width: 100%; }
 
 .tab-content {
-  margin-bottom: 20px;
-  height: 55px; }
+  margin-bottom: 20px; }
 
 .fontPanel {
   float: left;
@@ -279,6 +278,40 @@ you can use the generic selector below, but it's slower:
 #rulerMarginDarkAreaLeft {
   float: left;
   left: 0px; }
+
+.documentItem {
+  width: 150px;
+  height: 150px;
+  margin-left: 20px;
+  margin-top: 20px;
+  padding: 5px;
+  float: left;
+  position: relative; }
+
+.documentItem hr {
+  margin: 0px;
+  padding: 0px;
+  border-top: 1px solid #00B5E2; }
+
+.documentItemPencilIcon {
+  font-size: 80px;
+  text-align: center;
+  width: 100% !important;
+  opacity: 0.4; }
+
+.documentItemPencilIcon:hover {
+  opacity: 1; }
+
+.documentItemTitle {
+  font-family: 'Montserrat Alternates', sans-serif;
+  padding: 0px;
+  margin: 0px; }
+
+.documentItemTimestamp {
+  font-family: 'Montserrat Alternates', sans-serif;
+  margin-top: 10px;
+  font-size: 9pt;
+  text-align: center; }
 
 /* Put your CSS here */
 html, body {

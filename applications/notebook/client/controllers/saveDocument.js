@@ -1,3 +1,6 @@
+var localSaveInterval = null;
+var remoteSaveInterval = null;
+
 saveLocalStorage = function() {
     //Make sure local storage is enabled
     if (typeof(Storage) !== "undefined") {
@@ -11,67 +14,120 @@ saveLocalStorage = function() {
             //check to see if we really need to save
             var docNeedsSave = needsSave(JSON.parse(localStorage.lastDocument), newDocument);
             if (docNeedsSave == true) {
-                setSaveStatus(SAVE_STATUS.SAVING);
+                //setSaveStatus(SAVE_STATUS.SAVING);
                 localStorage.lastDocument = JSON.stringify(newDocument);
-                setSaveStatus(SAVE_STATUS.SUCCESS);
+                //setSaveStatus(SAVE_STATUS.SUCCESS);
             }
         } else {
             var markup = $(".notebookEditableArea").html();
             if (markup != "") {
-                setSaveStatus(SAVE_STATUS.SAVING);
+                //setSaveStatus(SAVE_STATUS.SAVING);
                 var newDocument = {};
                 newDocument.timestamp = new Date();
                 newDocument.markup = markup;
                 newDocument.title = $('.notebookTitle').val();
                 localStorage.lastDocument = JSON.stringify(newDocument);
-                setSaveStatus(SAVE_STATUS.SUCCESS);
+                //setSaveStatus(SAVE_STATUS.SUCCESS);
             }
         }
 
     }
-}
+};
 
 saveRemoteStorage = function() {
-
     // Get the user's temporary login information.
     token = getCookie("hive_auth_token");
-
-    if (token) {
+    // Get the currently loaded document's id.
+    documentID = Session.get('document.currentID');
+    if (token && documentID) {
         var markup = $(".notebookEditableArea").html(); // Markup contains user note-content.
         var newDocument = {};
         newDocument.timestamp = new Date();
         newDocument.markup = markup;
         newDocument.title = $('.notebookTitle').val();
 
+        var previousDocument = Session.get("document.last") || {};
+        //check to see if we really need to save
+        var docNeedsSave = needsSave(previousDocument, newDocument);
+
+        if (docNeedsSave == true) {
+            setSaveStatus(SAVE_STATUS.SAVING);
+            //Create the difference between the last save and the current save
+            var dmp = new diff_match_patch();
+
+            var diff = dmp.diff_main(previousDocument.markup || '', newDocument.markup);
+            console.log("diff!");
+            console.log(diff);
+            //Set the current document to be the last saved document
+            Session.set("document.last", newDocument);
+
+            //Make a new revision for this document
+            var revision = {};
+            revision.diffs = diff;
+            revision.title = $('.notebookTitle').val();
+
+            // Server-side database transaction that saves the revision remotely to the document.
+            Meteor.call('api_saveDocument', token, revision, documentID, function(error, result) {
+                if (error) {
+                    setSaveStatus(SAVE_STATUS.FAILED);
+                    console.log(error);
+                } else {
+                    console.log(result);
+                    setSaveStatus(SAVE_STATUS.SUCCESS);
+                }
+            });
+        }
+    } else if (!token) {
+        // ERROR: Shouldn't get to this point. 
+        window.location.reload();
+    }
+};
+
+createNewDocument = function(next) {
+    // Get the user's temporary login information.
+    token = getCookie("hive_auth_token");
+    if (token) {
+        var revision = {};
+        revision.timestamp = new Date();
+        revision.markup = "";
+        revision.title = $('.notebookTitle').val();
         // Server-side database transaction that saves the document remotely.
-        Meteor.call('api_saveDocument', token, newDocument, function(error, result) {
+        Meteor.call('api_saveDocument', token, revision, function(error, result) {
             if (error) {
-                setSaveStatus(SAVE_STATUS.FAILED);
-                console.log(error);
+                next(error);
             } else {
-                console.log(result);
+                next(null, result.id);
             }
         });
     } else {
         // ERROR: Shouldn't get to this point. 
         window.reload();
     }
+};
 
-}
 
-loadLocalStorage = function() {
-    if (typeof(Storage) !== "undefined") {
-        console.log("loading.");
-        var lastDocument = localStorage.lastDocument;
-        if (lastDocument && IsJsonString(lastDocument)) {
-            var jsonDoc = JSON.parse(lastDocument);
-            $(".notebookEditableArea").html(jsonDoc.markup);
-            $('.notebookTitle').val(jsonDoc.title);
-        }
+startSaveIntervals = function() {
+    clearSaveIntervals();
+    // Local save the file every 500ms
+    localSaveInterval = setInterval(function() {
+        saveLocalStorage();
+    }, 1000);
+    // Remote save every 5s.
+    remoteSaveInterval = setInterval(function() {
+        saveRemoteStorage();
+    }, 500);
+};
+
+clearSaveIntervals = function() {
+    if (localSaveInterval) {
+        clearInterval(localSaveInterval);
     }
-}
+    if (remoteSaveInterval) {
+        clearInterval(remoteSaveInterval);
+    }
+};
 
-function IsJsonString(str) {
+IsJsonString = function(str) {
     try {
         JSON.parse(str);
     } catch (e) {
@@ -80,8 +136,8 @@ function IsJsonString(str) {
     return true;
 }
 
-function needsSave(oldDocument, newDocument) {
-    if (oldDocument.markup != newDocument.markup || oldDocument.title != newDocument.title) {
+needsSave = function(oldDocument, newDocument) {
+    if (!oldDocument || !newDocument || (oldDocument.markup != newDocument.markup || oldDocument.title != newDocument.title)) {
         return true;
     } else {
         return false;

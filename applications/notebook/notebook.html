@@ -33,10 +33,13 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
-            <li class="active">
-                <a href="#">Create</a>
+            <li id="navBtnBinder">
+                <a onclick="showBinder();">Binder</a>
             </li>
-            <li>
+            <li id="navBtnCreate">
+                <a href="#" onclick="showEditor(null, true);">Create</a>
+            </li>
+            <li id="navBtnUpload">
                 <a href="#">Upload</a>
             </li>
         </ul>
@@ -61,7 +64,7 @@
         </ul>
     </div>
     <!-- /.navbar-collapse -->
-    <link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Montserrat+Alternates|Roboto+Slab' rel='stylesheet' type='text/css'>
 </nav>
 </template>
 

@@ -5,131 +5,131 @@ var http = require('http');
 // next(err, obj)
 
 module.exports = function(conn, settings) {
-  return {
-    create: function(application, collection, entity, object, next) {
-      var db = getDb(conn, application, function(err, db) {
-        if (err) {
-          logger.error("getDB error:");
-          logger.error(err);
-          next(err);
-        } else {
-          var viewName = '_design/' + nsBuilder([collection, entity], 2);
-          db.save(viewName, {
-            views: {
-              all: {
-                map: "function(doc) {if(doc.view == '" + viewName + "'){emit(doc);}}"
-              }
-            }
-          });
-          delete object._id;
-          object.view = viewName;
-          db.save(object, function(err, res) {
-            if (err) {
-              logger.error("db.save error:");
-              logger.error(err);
-            }
-            next(err, object);
-          });
-        }
-      });
-    },
-
-    findById: function(application, collection, entity, id, next) {
-      var db = getDb(conn, application, function(err, db) {
-        if (err) {
-          logger.error("getDB error:");
-          logger.error(err);
-          next(err);
-        } else {
-          logger.info("Searching for id: " + id);
-          db.get(id, function(err, res) {
-            console.log(res);
-            delete res.view;
-            next(err, res);
-          });
-        }
-      });
-    },
-    findAll: function(application, collection, entity, queryString, next) {
-      var db = getDb(conn, application, function(err, db) {
-        if (err) {
-          logger.error("getDB error:");
-          logger.error(err);
-          next(err);
-        } else {
-          var viewName = nsBuilder([collection, entity], 2) + "/all";
-          logger.info("Searching for view: " + viewName);
-          db.view(viewName, function(err, res) {
-              if(res == null || err){
-                res = [];  
-              }
-              else{
-                for(var i = 0; i < res.length; i++){
-                  res[i] = res[i].key;
-                  delete res[i].view;
+    return {
+        create: function(application, collection, entity, object, next) {
+            var db = getDb(conn, application, function(err, db) {
+                if (err) {
+                    logger.error("getDB error:");
+                    logger.error(err);
+                    next(err);
+                } else {
+                    var viewName = '_design/' + nsBuilder([collection, entity], 2);
+                    db.save(viewName, {
+                        views: {
+                            all: {
+                                map: "function(doc) {if(doc.view == '" + viewName + "'){emit(doc);}}"
+                            }
+                        }
+                    });
+                    //delete object._id;
+                    object.view = viewName;
+                    db.save(object, function(err, res) {
+                        if (err) {
+                            logger.error("db.save error:");
+                            logger.error(err);
+                        }
+                        object.id = res.id;
+                        next(err, object);
+                    });
                 }
-              }
-              next(err, res || []);
-          });
-        }
-      });
-    },
+            });
+        },
 
-    update: function(application, collection, entity, object, next) {
-      var db = getDb(conn, application, function(err, db) {
-        if (err) {
-          logger.error("getDB error:");
-          logger.error(err);
-          next(err);
-        } else {
-          var _id = object._id;
-          delete object._id;
-          db.merge(_id, object, function(err, res) {
-            object._id = _id;
-            if (err) {
-              next(exceptions.entity.updateException(res), object);
-            } else {
-              next(null, object); //XXX should return whole obj? efficiency of that?
-            }
-          });
-        }
-      });
-    },
+        findById: function(application, collection, entity, id, next) {
+            var db = getDb(conn, application, function(err, db) {
+                if (err) {
+                    logger.error("getDB error:");
+                    logger.error(err);
+                    next(err);
+                } else {
+                    logger.info("Searching for id: " + id);
+                    db.get(id, function(err, res) {
+                        console.log(res);
+                        delete res.view;
+                        next(err, res);
+                    });
+                }
+            });
+        },
+        findAll: function(application, collection, entity, queryString, next) {
+            var db = getDb(conn, application, function(err, db) {
+                if (err) {
+                    logger.error("getDB error:");
+                    logger.error(err);
+                    next(err);
+                } else {
+                    var viewName = nsBuilder([collection, entity], 2) + "/all";
+                    logger.info("Searching for view: " + viewName);
+                    db.view(viewName, function(err, res) {
+                        if (res == null || err) {
+                            res = [];
+                        } else {
+                            for (var i = 0; i < res.length; i++) {
+                                res[i] = res[i].key;
+                                delete res[i].view;
+                            }
+                        }
+                        next(err, res || []);
+                    });
+                }
+            });
+        },
 
-    del: function(application, collection, entity, id, next) {
-      var db = getDb(conn, application, function(err, db) {
-        if (err) {
-          logger.error("getDB error:");
-          logger.error(err);
-          next(err);
-        } else {
-          db.remove(id, function(err, res) {
-            next(err, res);
-          });
+        update: function(application, collection, entity, object, next) {
+            var db = getDb(conn, application, function(err, db) {
+                if (err) {
+                    logger.error("getDB error:");
+                    logger.error(err);
+                    next(err);
+                } else {
+                    var _id = object._id;
+                    //delete object._id;
+                    db.merge(_id, object, function(err, res) {
+                        object._id = _id;
+                        if (err) {
+                            next(exceptions.entity.updateException(res), object);
+                        } else {
+                            next(null, object); //XXX should return whole obj? efficiency of that?
+                        }
+                    });
+                }
+            });
+        },
+
+        del: function(application, collection, entity, id, next) {
+            var db = getDb(conn, application, function(err, db) {
+                if (err) {
+                    logger.error("getDB error:");
+                    logger.error(err);
+                    next(err);
+                } else {
+                    db.remove(id, function(err, res) {
+                        next(err, res);
+                    });
+                }
+            });
         }
-      });
-    }
-  };
+    };
 };
 
 function getDb(conn, dbNameStr, next) {
-  var db = conn.database(dbNameStr);
-  db.exists(function(err, exists) {
-    if (err) { //TODO log this
-      logger.error('couch error: ', err);
-    } else if (!exists) {
-      logger.info("Creating new database: " + dbNameStr);
-      db.create(function(err, obj) {
-        next(err, db);
-      });
-    } else {
-      next(err, db);
-    }
-  });
+    var db = conn.database(dbNameStr);
+    db.exists(function(err, exists) {
+        if (err) { //TODO log this
+            logger.error('couch error: ', err);
+        } else if (!exists) {
+            logger.info("Creating new database: " + dbNameStr);
+            db.create(function(err, obj) {
+                next(err, db);
+            });
+        } else {
+            next(err, db);
+        }
+    });
 }
 
 function nsBuilder(namespaceElements, numElements) {
-  var ns = [].slice.call(namespaceElements);
-  if (numElements) ns = ns.slice(0, numElements);
-  return ns.join(':');
+    var ns = [].slice.call(namespaceElements);
+    if (numElements) ns = ns.slice(0, numElements);
+    return ns.join(':');
 }
