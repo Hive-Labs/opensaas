@@ -569,7 +569,6 @@ you can use the generic selector below, but it's slower:
 
 .historyNotebook {
   width: 80%;
-  text-align: center;
   margin-left: auto;
   margin-right: auto; }
 

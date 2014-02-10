@@ -29,7 +29,23 @@ renderHistoryPage = function(document) {
             formater: function(value) {
                 var markup = rebuildDiffs(document.revisions, Math.round((value / 100) * document.revisions.length));
                 $(".notebookEditableArea").html(markup);
-                return 'Current value: ' + value;
+                var months = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                var date = (new Date(document.revisions[Math.round((value / 100) * document.revisions.length) - 1].modificationTime));
+                var year = date.getFullYear(),
+                    month = months[date.getMonth()],
+                    day = date.getDate();
+                hour = date.getHours();
+                min = date.getMinutes();
+                ampm = (hour > 12) ? "pm" : "am"
+
+                if (day < 10) day = "0" + day;
+                if (hour > 12) hour = hour - 12;
+                if (min < 10) min = "0" + min;
+
+                var properlyFormatted = day + " " + month + " " + year + " at " + hour + ":" + min + " " + ampm;
+                return properlyFormatted;
             }
         });
 
