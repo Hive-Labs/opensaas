@@ -5,7 +5,13 @@ SAVE_STATUS = {
     UNSAVED: 4
 };
 
+var currentSaveStatus;
+getSaveStatus = function() {
+    return currentSaveStatus;
+}
+
 setSaveStatus = function(saveStatus) {
+    currentSaveStatus = saveStatus;
     if (saveStatus == SAVE_STATUS.SUCCESS) {
         $(".saveStatus").removeClass("btn-default").addClass("btn-success");
         $('.saveStatus span').removeClass("glyphicon-thumbs-down glyphicon-time").addClass("glyphicon-thumbs-up");

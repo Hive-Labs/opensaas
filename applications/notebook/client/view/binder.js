@@ -27,21 +27,20 @@ loadDocuments = function(next) {
             }
             document.creationTime = properlyFormatted;
             documents[i] = document;
-            console.log(document);
-
         }
-        console.log("Total documents: " + documents.length);
         Session.set("document.list", documents);
         next();
     });
 };
 
 loadDocument = function(documentID) {
+    showLoadingBox();
     Session.set('document.currentID', documentID);
     loadEditorPage(function(error, document) {
         currentTemplate = Template.editor();
         template_changer.changed();
         setTimeout(function() {
+            hideLoadingBox();
             renderEditorPage(document);
         }, 50);
     });

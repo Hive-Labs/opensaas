@@ -94,6 +94,47 @@ Meteor.methods({
     //This method will be used to get a specific document.
     api_getDocument: function(token, documentID) {
         return api_getDocument(token, documentID);
+    },
+    //This method will be used to delete a specific document.
+    api_deleteDocument: function(token, documentID) {
+        //Everything below will be asyncronous, so we rely on futures to return a value.
+        var fut = new Future();
+
+        //First thing we do is trade the given token for a user_id with the auth server.
+        var userID = Meteor.http.get(config.authServerHost + ':' + config.authServerPort + '/api/user?access_token=' + token).data.user_id;
+
+        if (documentID) {
+            try {
+                //This is the url wehave to post to the dbService, to save the document into the given user
+                var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + userID + "/" + documentID;
+                //We perform the post request to save this new document into the dbService
+                deleteRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
+                    //Check if the callback function gives a connection error
+                    if (err) {
+                        //Tell the future to return an error
+                        fut['return'](DBError(err));
+                    } else {
+                        //Check if the callback function gives a database error
+                        if (userID && result.data.error) {
+                            //Tell the future to return an error
+                            fut['return'](DBError(err));
+                        } else {
+                            //Everything ok, return whatever the database gives (it usually returns OK).
+                            fut['return'](result.data || {});
+                        }
+                    }
+                });
+            } catch (e) {
+                //Something went wrong exchanging the given token for the user_id from the authService
+                fut['return'](AuthError("Bad Token"));
+            }
+
+        } else {
+            fut['return'](ParameterError("DocumentID was null."));
+        }
+
+        //Return whatever the above asyncronous code set in the future
+        return fut.wait();
     }
 });
 
@@ -112,7 +153,7 @@ function api_getDocument(token, documentID) {
             //Check if the callback function gives a connection error
             if (err) {
                 //There are no documents for given user
-                if (result.data.error = "not_found") {
+                if (result.data && result.data.error == "not_found") {
                     //Return null if nothing was found
                     fut['return']({});
                 } else {

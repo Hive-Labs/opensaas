@@ -72,3 +72,14 @@ function init() {
         }, 50);
     }
 }
+
+showLoadingBox = function() {
+    var loadingBox = $('#pleaseWaitDialog');
+    loadingBox.modal("show");
+};
+
+
+hideLoadingBox = function() {
+    var loadingBox = $('#pleaseWaitDialog');
+    loadingBox.modal("hide");
+};

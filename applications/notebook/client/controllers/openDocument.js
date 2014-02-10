@@ -1,12 +1,16 @@
 loadLocalStorage = function() {
     if (typeof(Storage) !== "undefined") {
-        console.log("loading.");
         var lastDocument = localStorage.lastDocument;
-        if (lastDocument && IsJsonString(lastDocument)) {
+        if (lastDocument && IsJsonString(lastDocument) && lastDocument.id == Session.get('document.currentID')) {
             var jsonDoc = JSON.parse(lastDocument);
-            $(".notebookEditableArea").html(jsonDoc.markup);
-            $('.notebookTitle').val(jsonDoc.title);
+            console.log("found a local document.");
+            console.log(jsonDoc);
+            return jsonDoc;
+        } else {
+            return null;
         }
+    } else {
+        return null;
     }
 };
 
@@ -16,13 +20,16 @@ rebuildDiffs = function(revisions) {
     for (var i = 0; i < revisions.length; i++) {
         if (revisions[i].diffs) {
             for (var j = 0; j < revisions[i].diffs.length; j++) {
-                diffs.push(revisions[i].diffs[j]);
+                if (revisions[i].diffs[j][0] != 0) {
+                    diffs.push(revisions[i].diffs[j]);
+                }
             }
         }
     }
     var dmp = new diff_match_patch();
     var patches = dmp.patch_make(diffs);
     var result = dmp.patch_apply(patches, "");
+    console.log(revisions);
     console.log(diffs);
     console.log(result);
     return result[0];

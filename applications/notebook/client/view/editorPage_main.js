@@ -3,6 +3,7 @@ loadEditorPage = function(next) {
     var documentID = Session.get('document.currentID')
     if (!documentID) {
         //There is no document loaded, so make a new one.
+        console.log("Creating a new document.");
         createNewDocument(function(error, documentID) {
             //Return the id of the new document, and save it for future use in the session.
             Session.set('document.currentID', documentID);
@@ -12,10 +13,39 @@ loadEditorPage = function(next) {
         });
     } else {
         //A document is already loaded up, so return the id to that document.
+        console.log("Loading document: " + documentID);
         token = getCookie("hive_auth_token");
-        api_getDocument(token, documentID, function(error, document) {
-            next(error, document);
-        });
+        var localStorageDocument = loadLocalStorage();
+        if (localStorageDocument) {
+            //Ask the user whether they want to load the local copy or the last saved remotely
+            BootstrapDialog.show({
+                message: 'You have a local copy of the document as well as a remotely saved version. Which one would you like to open?',
+                buttons: [{
+                    label: 'Local Copy',
+                    action: function() {
+                        next(null, localStorageDocument);
+                    }
+                }, {
+                    label: 'Remote Copy',
+                    cssClass: 'btn-primary',
+                    action: function() {
+                        api_getDocument(token, documentID, function(error, document) {
+                            var markup = rebuildDiffs(document.revisions);
+                            document.markup = markup;
+                            Session.set("document.last", document);
+                            next(error, document);
+                        });
+                    }
+                }]
+            });
+        } else {
+            api_getDocument(token, documentID, function(error, document) {
+                var markup = rebuildDiffs(document.revisions);
+                document.markup = markup;
+                Session.set("document.last", document);
+                next(error, document);
+            });
+        }
     }
 };
 
@@ -55,11 +85,12 @@ renderEditorPage = function(document) {
         });
 
         if (document) {
-            var markup = rebuildDiffs(document.revisions);
             $('.notebookTitle').val(document.title);
-            $(".notebookEditableArea").html(markup);
+            $(".notebookEditableArea").html(document.markup);
+        } else {
+            $('.notebookTitle').val("");
+            $(".notebookEditableArea").html("");
         }
-        loadLocalStorage();
 
         startSaveIntervals();
 
@@ -69,7 +100,8 @@ renderEditorPage = function(document) {
 };
 
 showEditor = function(user, forceNew) {
-    if (forceNew) {
+    showLoadingBox();
+    if (forceNew == true) {
         Session.set('document.currentID', null);
     }
 
@@ -81,5 +113,6 @@ showEditor = function(user, forceNew) {
             //Set the name at the top right to be the user's name.
             $("#fullName").text(user.displayName);
         }
+        hideLoadingBox();
     });
 }

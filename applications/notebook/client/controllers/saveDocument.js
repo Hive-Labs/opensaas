@@ -11,26 +11,34 @@ saveLocalStorage = function() {
             newDocument.timestamp = new Date();
             newDocument.markup = markup;
             newDocument.title = $('.notebookTitle').val();
+            newDocument.id = Session.get('document.currentID');
+
             //check to see if we really need to save
             var docNeedsSave = needsSave(JSON.parse(localStorage.lastDocument), newDocument);
             if (docNeedsSave == true) {
-                //setSaveStatus(SAVE_STATUS.SAVING);
                 localStorage.lastDocument = JSON.stringify(newDocument);
-                //setSaveStatus(SAVE_STATUS.SUCCESS);
             }
         } else {
             var markup = $(".notebookEditableArea").html();
             if (markup != "") {
-                //setSaveStatus(SAVE_STATUS.SAVING);
                 var newDocument = {};
                 newDocument.timestamp = new Date();
                 newDocument.markup = markup;
                 newDocument.title = $('.notebookTitle').val();
+                newDocument.id = Session.get('document.currentID');
+
                 localStorage.lastDocument = JSON.stringify(newDocument);
-                //setSaveStatus(SAVE_STATUS.SUCCESS);
             }
         }
 
+    }
+};
+
+clearLocalSaves = function() {
+    //Make sure local storage is enabled
+    if (typeof(Storage) !== "undefined") {
+        //if there is a document already there
+        localStorage.lastDocument = null;
     }
 };
 
@@ -39,7 +47,8 @@ saveRemoteStorage = function() {
     token = getCookie("hive_auth_token");
     // Get the currently loaded document's id.
     documentID = Session.get('document.currentID');
-    if (token && documentID) {
+    if (token && documentID && getSaveStatus() != SAVE_STATUS.SAVING) {
+        console.log("saving remote storage.");
         var markup = $(".notebookEditableArea").html(); // Markup contains user note-content.
         var newDocument = {};
         newDocument.timestamp = new Date();
@@ -65,17 +74,8 @@ saveRemoteStorage = function() {
             var revision = {};
             revision.diffs = diff;
             revision.title = $('.notebookTitle').val();
-
             // Server-side database transaction that saves the revision remotely to the document.
-            Meteor.call('api_saveDocument', token, revision, documentID, function(error, result) {
-                if (error) {
-                    setSaveStatus(SAVE_STATUS.FAILED);
-                    console.log(error);
-                } else {
-                    console.log(result);
-                    setSaveStatus(SAVE_STATUS.SUCCESS);
-                }
-            });
+            api_saveDocument(token, revision);
         }
     } else if (!token) {
         // ERROR: Shouldn't get to this point. 
