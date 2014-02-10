@@ -58,7 +58,7 @@ renderEditorPage = function(document) {
         // Start, End, Tick interval, number interval
         generateRuler(0, 8.5, 1 / 8, 1);
         // Left margin, Right margin 
-        setMargin(1, 1);
+        setMargin(1, 1, null, true);
 
         setSaveStatus(SAVE_STATUS.UNSAVED);
 

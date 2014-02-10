@@ -14,10 +14,10 @@ loadLocalStorage = function() {
     }
 };
 
-rebuildDiffs = function(revisions) {
+rebuildDiffs = function(revisions, numberOfRevisions) {
     console.log("Rebuilding diffs");
     var diffs = [];
-    for (var i = 0; i < revisions.length; i++) {
+    for (var i = 0; i < (numberOfRevisions || revisions.length); i++) {
         if (revisions[i].diffs) {
             for (var j = 0; j < revisions[i].diffs.length; j++) {
                 if (revisions[i].diffs[j][0] != 0) {

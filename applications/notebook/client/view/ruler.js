@@ -57,7 +57,7 @@ generateRuler = function(start, end, tickInterval, displayInterval) {
 /*
  * Given a certain number of inches, it will render the margin arrow to that location
  */
-setMargin = function(leftInches, rightInches, setEvents) {
+setMargin = function(leftInches, rightInches, setEvents, setDraggable) {
     var tickWidth = $('.tickSegment').outerWidth();
     var pageWidth = $('.notebookEditableArea').outerWidth();
     var tickSize = 5;
@@ -73,7 +73,7 @@ setMargin = function(leftInches, rightInches, setEvents) {
     $('#rulerMarginDarkAreaLeft').css("width", (leftInches * tickWidth * 8) + "px");
     $('#rulerMarginDarkAreaRight').css("width", (rightInches * tickWidth * 8) + "px");
 
-    if (!setEvents) {
+    if (!setEvents && setDraggable == true) {
         $("#rulerMarginLeft").draggable({
             axis: "x",
             drag: function() {
@@ -82,7 +82,7 @@ setMargin = function(leftInches, rightInches, setEvents) {
             },
             stop: function() {
                 if (leftTick.position().left > pageWidth / 2) {
-                    setMargin(leftInches, rightInches, false);
+                    setMargin(leftInches, rightInches, false, true);
                 } else {
                     $('.notebookEditableArea').css('padding-left', leftTick.position().left + 5 + "px");
                     $('#rulerMarginDarkAreaLeft').css("width", leftTick.position().left + 4 + "px");
@@ -99,7 +99,7 @@ setMargin = function(leftInches, rightInches, setEvents) {
             },
             stop: function() {
                 if (rightTick.position().left < pageWidth / 2) {
-                    setMargin(leftInches, rightInches, false);
+                    setMargin(leftInches, rightInches, false, true);
                 } else {
                     $('.notebookEditableArea').css('padding-right', pageWidth - rightTick.position().left + 5 + "px");
                     $('#rulerMarginDarkAreaRight').css("width", pageWidth - rightTick.position().left - 3 + "px");

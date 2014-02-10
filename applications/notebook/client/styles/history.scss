@@ -1,0 +1,32 @@
+#timeSlider{
+	width:90%;	
+}
+
+#timeSlider .slider-selection{
+	background: #BABABA;
+}
+
+.historyBottomBox{
+	width:100%;
+	text-align: center;
+	position:fixed;
+	bottom: 0px;
+	left: 0px;
+	background-color: rgb(43, 56, 77);
+}
+
+.historyBottomBox p{
+	color:white;
+	margin: 0px;
+}
+
+.historyNotebook{
+	width:80%;
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.historyNotebook .notebookTextArea{
+	float: none;
+}
