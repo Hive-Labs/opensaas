@@ -43,39 +43,51 @@ clearLocalSaves = function() {
 };
 
 saveRemoteStorage = function() {
-    // Get the user's temporary login information.
+    //  Get the user's temporary login information.
     token = getCookie("hive_auth_token");
-    // Get the currently loaded document's id.
+    //  Get the currently loaded document's id.
     documentID = Session.get('document.currentID');
+    /*  Make sure user is logged in, there is a document to save, 
+        and that we aren't currently saving
+    */
     if (token && documentID && getSaveStatus() != SAVE_STATUS.SAVING) {
         console.log("saving remote storage.");
-        var markup = $(".notebookEditableArea").html(); // Markup contains user note-content.
+
+        //  Get the html version of the user's document.
+        var markup = $(".notebookEditableArea").html();
+        //  Make a document out of it and set some properties.
         var newDocument = {};
         newDocument.timestamp = new Date();
         newDocument.markup = markup;
         newDocument.title = $('.notebookTitle').val();
 
-        var previousDocument = Session.get("document.last") || {};
-        //check to see if we really need to save
+        //  Get the last saved document to compare with current.
+        var previousDocument = Session.get("document.last");
+        //  Check to see if we really need to save.
         var docNeedsSave = needsSave(previousDocument, newDocument);
 
         if (docNeedsSave == true) {
             setSaveStatus(SAVE_STATUS.SAVING);
-            //Create the difference between the last save and the current save
-            var dmp = new diff_match_patch();
 
-            var diff = dmp.diff_main(previousDocument.markup || '', newDocument.markup);
-            console.log("diff!");
-            console.log(diff);
+            //  Create list of differences between the last save and the current save.
+            var dmp = new diff_match_patch();
+            var diffs = dmp.diff_main(previousDocument.markup || '', newDocument.markup);
+
             //Set the current document to be the last saved document
             Session.set("document.last", newDocument);
 
             //Make a new revision for this document
             var revision = {};
-            revision.diffs = diff;
+            revision.diffs = diffs;
             revision.title = $('.notebookTitle').val();
             // Server-side database transaction that saves the revision remotely to the document.
-            api_saveDocument(token, revision);
+            api_saveDocument(token, revision, function(error, result) {
+                if (error) {
+                    setSaveStatus(SAVE_STATUS.FAILED);
+                } else {
+                    setSaveStatus(SAVE_STATUS.SUCCESS);
+                }
+            });
         }
     } else if (!token) {
         // ERROR: Shouldn't get to this point. 

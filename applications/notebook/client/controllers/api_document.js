@@ -19,14 +19,8 @@ api_deleteDocument = function(token, documentID, next) {
     });
 };
 
-api_saveDocument = function(token, revision) {
+api_saveDocument = function(token, revision, next) {
     Meteor.call('api_saveDocument', token, revision, documentID, function(error, result) {
-        if (error) {
-            setSaveStatus(SAVE_STATUS.FAILED);
-            console.log(error);
-        } else {
-            console.log(result);
-            setSaveStatus(SAVE_STATUS.SUCCESS);
-        }
+        next(error, result);
     });
 };
