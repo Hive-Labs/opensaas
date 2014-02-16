@@ -22,17 +22,30 @@ loadDocuments = function(next) {
             var months = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
+
+            var today = new Date();
+
             //  Get the date the document was created
             var date = (new Date(document.creationTime));
             //  Extract year, month, and day from the date
             var year = date.getFullYear(),
                 month = months[date.getMonth()],
                 day = date.getDate();
-            //  Prepend a 0 if the day is single digit
-            if (day < 10) day = "0" + day;
 
-            //  Final date is like: 0 December 2000
-            var properlyFormatted = day + " " + month + " " + year;
+            var properlyFormatted;
+            if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate()) {
+                properlyFormatted = "Today";
+            } else if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate() + 1) {
+                properlyFormatted = "Yesterday";
+            } else {
+                //  Prepend a 0 if the day is single digit
+                if (day < 10) day = "0" + day;
+
+                //  Final date is like: 0 December 2000
+                properlyFormatted = day + " " + month + " " + year;
+            }
+
+
 
             //  Get the last revision from the document to get the last title of the document
             var lastRevision = document.revisions[document.revisions.length - 1];
@@ -42,7 +55,17 @@ loadDocuments = function(next) {
             } else {
                 document.title = "Untitled";
             }
-            document.creationTime = properlyFormatted;
+
+            document.formattedCreationTime = properlyFormatted;
+
+            var currentUserID = Session.get("user.current")._id;
+            for (var j = 0; j < document.currentlyWritingUsers.length; j++) {
+                if (document.currentlyWritingUsers[j] != currentUserID) {
+                    document.color = "#159725";
+                }
+            }
+
+
             documents[i] = document;
         }
 
@@ -58,6 +81,7 @@ loadDocuments = function(next) {
     the document to that.
 */
 loadDocument = function(documentID) {
+    clearRefreshInterval();
     //  Before loading the document, we need to show the loading box
     showLoadingBox();
     /*  We are about to open a document, so set session variable document.currentID

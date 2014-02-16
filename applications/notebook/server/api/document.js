@@ -12,6 +12,10 @@ Meteor.methods({
         var document;
         var newDocument = false;
 
+        //  Add some properties to the revision
+        revision.authorID = userID;
+        revision.modificationTime = new Date();
+
         /*  If the user gave us a documentID, then we need to save the revision to that ID.
             Otherwise, we need to make a new document and save the revision to that as the
             first revision. */
@@ -21,13 +25,41 @@ Meteor.methods({
             document.revisions.push(revision);
             //  Set the title of the document to the title of the last revision
             document.title = revision.title;
+
+            /*  We need to go through the list of people editing the document, and
+                remove people that are inactive
+            */
+            var newListOfActiveUsers = [];
+            for (var i = 0; i < document.currentlyWritingUsers.length; i++) {
+                var lastRevision = api_getLastRevisionByUser(document, document.currentlyWritingUsers[i]);
+                var FIVE_MINUTES = 5 * 60 * 1000; /* ms */
+                /*  If the user has made a change within the last five minutes, assume they are also
+                    writing to the document.
+                */
+                console.log((new Date) - new Date(lastRevision.modificationTime));
+                if ((new Date) - new Date(lastRevision.modificationTime) < FIVE_MINUTES) {
+                    newListOfActiveUsers.push(document.currentlyWritingUsers[i]);
+                }
+            }
+
+            document.currentlyWritingUsers = newListOfActiveUsers;
+
+            if (document.currentlyWritingUsers.indexOf(userID) == -1) {
+                document.currentlyWritingUsers.push(userID);
+            }
+
+
         } else {
             //  User didn't give us a document id, so make a new document.
             document = {
                 revisions: [],
                 title: revision.title,
                 creationTime: new Date(),
-                authorID: userID
+                authorID: userID,
+                readAccessUsers: [],
+                writeAccessUsers: [userID],
+                currentlyWritingUsers: [userID],
+                currentlyReadingUsers: []
             };
             //  We need to do some things later since this is a new document.
             newDocument = true;
@@ -129,8 +161,24 @@ Meteor.methods({
                 var user = api_getUserByID(userID);
                 user.privileges.writableDocuments.push(documentID);
                 api_saveUser(user);
-                fut['return']("OK");
 
+                /*  We need to get the document and add this user to the list
+                        of users with permissions for that doc.
+                    */
+                var document = api_getDocument(token, documentID);
+                document.writeAccessUsers.push(user._id);
+
+                //  This is the url we have to post to the database so we can save the existing document.
+                var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + documentID;
+
+                //  We perform the post request to save this new document into the dbService.
+                postRequest(config.dbServerHost, config.dbServerPort, url, document, function(err, result) {
+                    if (!err) {
+                        fut['return']("OK");
+                    } else {
+                        fut['return'](ParameterError("Invalid documentID."));
+                    }
+                });
             } catch (e) {
                 //  Something went wrong exchanging the given token for the user_id from the authService
                 fut['return'](AuthError("Bad Token"));
@@ -185,4 +233,18 @@ function api_getDocument(token, documentID) {
     }
     //  Wait for the asyncronous code to complete, and spit it back to client
     return fut.wait();
+}
+
+/*
+    Given a document (not an ID), and a userID, it will return the
+    last revision made by that given userID.
+*/
+api_getLastRevisionByUser = function(document, userID) {
+    //  We will start from the end of the revision list and work backwards searching for user
+    for (var i = document.revisions.length - 1; i >= 0; i--) {
+        if (document.revisions[i].authorID == userID) {
+            return document.revisions[i];
+        }
+    }
+    return null;
 }

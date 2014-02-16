@@ -195,12 +195,6 @@ needsSave = function(oldDocument, newDocument) {
     if ((!oldDocument && !newDocument) || (!oldDocument && (!newDocument.markup || newDocument.markup == "") && (!newDocument.title || newDocument.title == "")) || (!newDocument && (!oldDocument || oldDocument.markup == "") && (!oldDocument.title || oldDocument.title == "")) || (newDocument.markup != null && oldDocument.markup != null && newDocument.markup == oldDocument.markup && newDocument.title == oldDocument.title)) {
         return false;
     } else {
-        console.log((!oldDocument && !newDocument));
-        console.log((!oldDocument && (!newDocument.markup || newDocument.markup == "") && (!newDocument.title || newDocument.title == "")));
-        console.log((!newDocument && (!oldDocument || oldDocument.markup == "") && (!oldDocument.title || oldDocument.title == "")));
-        console.log((newDocument.markup && oldDocument.markup && newDocument.markup == oldDocument.markup && newDocument.title == oldDocument.title));
-
-        console.log("needs save.");
         return true;
     }
 }

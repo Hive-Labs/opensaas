@@ -1,4 +1,4 @@
-//Load the editor page (the functional part) like the last saved document, etc.
+//  Load the editor page (the functional part) like the last saved document, etc.
 loadEditorPage = function(next) {
     var documentID = Session.get('document.currentID')
     if (!documentID) {
@@ -49,7 +49,7 @@ loadEditorPage = function(next) {
     }
 };
 
-//Load the editor page (the visual part) like the formatting bar, page size, etc.
+//  Load the editor page (the visual part) like the formatting bar, page size, etc.
 renderEditorPage = function(document) {
     $(document).ready(function() {
         loadFormattingBar();
@@ -73,6 +73,12 @@ renderEditorPage = function(document) {
             showNavBar();
         });
 
+        if (document.currentlyWritingUsers.length > 0) {
+            $(".friendsHeader").text("Editors (" + document.currentlyWritingUsers.length + ")");
+        }
+
+        loadFriends(document);
+
         //Wait 2 seconds before hiding when the user leaves the mouse, in case they come back.
         var cancelHide = false;
         $("#navBarMain").mouseleave(function() {
@@ -81,7 +87,7 @@ renderEditorPage = function(document) {
                 if (!cancelHide) {
                     hideNavBar();
                 }
-            }, 5000);
+            }, 10000);
         });
 
         if (document) {
@@ -105,10 +111,14 @@ showEditor = function(user, forceNew) {
         Session.set('document.currentID', null);
     }
 
-    loadEditorPage(function() {
+    loadEditorPage(function(error, result) {
         currentTemplate = Template.editor();
         template_changer.changed();
-        setTimeout(renderEditorPage, 50);
+        //  We need this delay because the app needs some time to render
+        setTimeout(function() {
+            renderEditorPage(result);
+        }, 50)
+
         if (user) {
             //Set the name at the top right to be the user's name.
             $("#fullName").text(user.displayName);

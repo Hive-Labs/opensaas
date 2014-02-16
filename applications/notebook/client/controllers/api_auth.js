@@ -60,3 +60,13 @@ api_getAllUsers = function(token, next) {
         next(error, result);
     });
 };
+
+/*
+    When this function is given an authentication token and a userID, it will
+    ask the server and return more information about given userID.
+*/
+api_getUserByID = function(token, userID, next) {
+    Meteor.call('api_getUserByID', token, userID, function(error, result) {
+        next(error, result);
+    });
+}

@@ -25,6 +25,7 @@
 </template>
 
 <template name="users">
+    <input></input>
     <div id="users">
         {{#each users}} {{> userItem}} {{/each}}
     </div>
@@ -32,10 +33,10 @@
 
 <template name="documentItem">
     <div class="well well-lg documentItem" id="{{_id}}">
-        <marquee behavior="scroll" direction="left" scrollamount="3" class="documentItemTitle">{{title}}</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="3" style="color: {{color}}" class="documentItemTitle">{{title}}</marquee>
         <hr/>
         <p class="glyphicon glyphicon-pencil documentItemPencilIcon" onclick="loadDocument('{{_id}}');" />
-        <p class="documentItemTimestamp">{{creationTime}}</p>
+        <p class="documentItemTimestamp">{{formattedCreationTime}}</p>
         <div class="documentItemBottomPanel">
             <p title="Trash" class="glyphicon glyphicon-trash" onclick="deleteDocument('{{_id}}');" />
             <p title="History" class="glyphicon glyphicon-time" onclick="showHistory('{{_id}}');" />
