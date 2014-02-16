@@ -2,16 +2,15 @@
 	height:73px;
 	width:141px;
 	float:left;
-	margin-left:5px;
 	border-right-style: solid;
 	border-right-width:1px;
 	border-right-color:rgb(156, 151, 151);
 }
 
 .formattingBar{
-	padding-top:10px;
 	padding-left:15px;
-	display:inline-block;
+	display:table-row;
+	height: 73px;
 }
 
 .btnPaste{
@@ -175,7 +174,7 @@
         background: white;
         position: absolute;
         left: 0;
-        top: 35px;
+        top: 54px;
 }
 
 .fontPanelFontSelectUl li {

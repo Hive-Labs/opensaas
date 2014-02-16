@@ -62,10 +62,17 @@ renderEditorPage = function(document) {
 
         setSaveStatus(SAVE_STATUS.UNSAVED);
 
-        // Hide the top bar after 1.5 seconds
-        setTimeout(function() {
-            hideNavBar();
-        }, 1500);
+        //Wait 2 seconds before hiding when the user leaves the mouse, in case they come back.
+        var cancelHide = false;
+        $("#navBarMain").mouseleave(function() {
+            cancelHide = false;
+            setTimeout(function() {
+                if (!cancelHide) {
+                    hideNavBar();
+                }
+            }, 10000);
+        });
+
 
         //Show the navbar when user puts mouse over
         $("#navBarMain").mouseover(function() {
@@ -79,16 +86,6 @@ renderEditorPage = function(document) {
 
         loadFriends(document);
 
-        //Wait 2 seconds before hiding when the user leaves the mouse, in case they come back.
-        var cancelHide = false;
-        $("#navBarMain").mouseleave(function() {
-            cancelHide = false;
-            setTimeout(function() {
-                if (!cancelHide) {
-                    hideNavBar();
-                }
-            }, 10000);
-        });
 
         if (document) {
             $('.notebookTitle').val(document.title);
@@ -107,12 +104,15 @@ renderEditorPage = function(document) {
 
 showEditor = function(user, forceNew) {
     showLoadingBox();
+    Session.set('currentView', "editor");
+    console.log("Current View has been set to: " + Session.get("currentView"));
+    clearRefreshInterval();
     if (forceNew == true) {
         Session.set('document.currentID', null);
     }
 
     loadEditorPage(function(error, result) {
-        currentTemplate = Template.editor();
+        currentTemplate = Template.editor;
         template_changer.changed();
         //  We need this delay because the app needs some time to render
         setTimeout(function() {

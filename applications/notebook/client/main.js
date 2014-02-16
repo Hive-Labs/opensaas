@@ -13,7 +13,7 @@ Template.innerFragment.helpers({
             return Template.loading();
         } else {
             //If load is complete, the init() function would have set what template to load
-            return currentTemplate;
+            return currentTemplate();
         }
     }
 });
@@ -35,7 +35,7 @@ function init() {
                 window.location = '/';
             } else {
                 //Show the login screen
-                currentTemplate = loadLoginPage();
+                currentTemplate = loadLoginPage;
                 template_changer.changed();
                 setTimeout(loadLoginPage, 50);
             }
@@ -54,7 +54,7 @@ function init() {
                 });
             } else {
                 //Show login screen if the cookie token was bad.
-                currentTemplate = Template.login();
+                currentTemplate = Template.login;
                 template_changer.changed();
                 setTimeout(loadLoginPage, 50);
             }
@@ -66,7 +66,7 @@ function init() {
     else {
         //If this delay isn't there, there is some funky text on the screen. Possible bug.
         setTimeout(function() {
-            currentTemplate = Template.login();
+            currentTemplate = Template.login;
             template_changer.changed();
             setTimeout(loadLoginPage, 50);
         }, 50);

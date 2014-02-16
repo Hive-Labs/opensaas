@@ -1,7 +1,8 @@
 showHistory = function(documentID) {
     showLoadingBox();
     loadHistoryPage(documentID, function(error, document) {
-        currentTemplate = Template.history();
+        currentTemplate = Template.history;
+        Session.set('currentView', "history");
         template_changer.changed();
         setTimeout(function() {
             var markup = rebuildDiffs(document.revisions);

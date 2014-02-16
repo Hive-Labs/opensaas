@@ -291,15 +291,14 @@ you can use the generic selector below, but it's slower:
   height: 73px;
   width: 141px;
   float: left;
-  margin-left: 5px;
   border-right-style: solid;
   border-right-width: 1px;
   border-right-color: #9c9797; }
 
 .formattingBar {
-  padding-top: 10px;
   padding-left: 15px;
-  display: inline-block; }
+  display: table-row;
+  height: 73px; }
 
 .btnPaste {
   height: 72px;
@@ -434,7 +433,7 @@ you can use the generic selector below, but it's slower:
   background: white;
   position: absolute;
   left: 0;
-  top: 35px; }
+  top: 54px; }
 
 .fontPanelFontSelectUl li {
   height: 24px;
@@ -461,10 +460,11 @@ you can use the generic selector below, but it's slower:
   margin-bottom: 2px; }
 
 .ruler {
-  width: 100%;
   height: 15px;
   background-color: #CBD1E4;
-  position: relative; }
+  position: relative;
+  display: inline-block;
+  margin-left: 5px; }
 
 .rulerArrow {
   width: 0;
@@ -594,12 +594,16 @@ you can use the generic selector below, but it's slower:
 /* Put your CSS here */
 html, body {
   background-image: url("/images/brushed.png");
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  height: 100%; }
 
 .innerFragmentClass {
   height: 100%;
-  margin-top: -80px;
-  padding-top: 80px; }
+  margin-top: -70px;
+  padding-top: 70px;
+  width: 100%;
+  position: relative;
+  z-index: 9; }
 
 .navbar {
   border-radius: 0px;
@@ -607,7 +611,16 @@ html, body {
   overflow-x: hidden;
   overflow-y: hidden;
   height: 50px;
-  min-height: 0px !important; }
+  min-height: 0px !important;
+  z-index: 10; }
+
+.editorDiv {
+  display: table;
+  width: 100%;
+  padding-right: 280px;
+  padding-left: 10px;
+  height: 100%;
+  margin-top: 10px; }
 
 .navbar-brand {
   font-size: 20pt;
@@ -623,15 +636,10 @@ html, body {
   background-color: #0B3563; }
 
 .notebook {
-  float: left;
-  margin-left: 20px;
-  position: relative;
-  left: -2000px;
-  top: 0px;
-  width: -moz-calc(100% - 280px - 50px);
-  width: -webkit-calc(100% - 280px - 50px);
-  width: calc(100% - 280px - 50px);
-  outline: none; }
+  outline: none;
+  display: table-row;
+  width: 100%;
+  height: 100%; }
 
 .notebookTitle {
   width: 200px;
@@ -643,16 +651,32 @@ html, body {
   font-size: 12pt; }
 
 .notebookTextArea {
-  background-color: white;
-  box-shadow: 0px 0px 5px #888888;
   float: left;
-  height: 1066px;
   width: 100%;
-  padding-bottom: 15px; }
+  padding-bottom: 72px;
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 10px;
+  padding-left: 5px; }
 
 .rightTabs {
   width: 280px;
-  float: right; }
+  float: right;
+  position: absolute;
+  top: 0px;
+  margin-top: 50px;
+  padding-top: 20px;
+  right: 0px;
+  height: 100%;
+  display: table; }
+
+.rightTabs ul {
+  height: 42px;
+  display: table-row; }
+
+.rightTabsContent {
+  height: 100%;
+  display: table-row; }
 
 .suggestions {
   float: right;
@@ -661,7 +685,14 @@ html, body {
   box-shadow: 0px 0px 5px #888888;
   color: white;
   right: -2000px;
-  position: relative; }
+  position: relative;
+  height: 100%; }
+
+#suggestions {
+  height: 100%; }
+
+#friends {
+  height: 100%; }
 
 .friends {
   float: right;
@@ -692,8 +723,7 @@ h1 {
   text-align: center;
   background-color: #022449;
   color: white;
-  width: 100%;
-  margin-top: 10px; }
+  width: 100%; }
 
 .profileBox {
   padding-top: 10px !important;
@@ -710,9 +740,15 @@ h1 {
 
 .notebookEditableArea {
   width: 100%;
-  height: 100%;
   outline: none;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  margin-top: 10px;
+  background-color: white;
+  height: 1066px;
+  box-shadow: 0px 0px 5px #888888; }
+
+.notebookEditableArea::-webkit-scrollbar {
+  display: none; }
 
 .notebookEditableArea p {
   margin: 0px !important; }

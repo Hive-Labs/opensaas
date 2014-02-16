@@ -9,39 +9,48 @@
     account. Then, it will get each document from the server and 
     pass a list of full documents to the callback function.
 */
-api_getAllDocuments = function(token, next) {
+api_getAllDocuments = function(token, maxResults, next) {
+    console.log("Getting " + maxResults + " documents");
     Meteor.call('api_getUser', token, function(error, result) {
         //  This is the list of documents that will be returned.
         documentResults = [];
         if (result != null) {
+            var totalDocuments = result.privileges.readableDocuments.length + result.privileges.writableDocuments.length
             //  Loop through each readable documentID, get it, and add it to the list.
             for (var readableDocumentID in result.privileges.readableDocuments) {
-                //  We need to get the full document from the id.
-                api_getDocument(token, result.privileges.readableDocuments[readableDocumentID],
-                    function(error, result) {
-                        if (!error) {
-                            result.readable = true;
-                            result.writable = false;
-                            documentResults.push(result);
-                        }
-                        next(null, documentResults);
-                    });
+                if (documentResults.length < maxResults) {
+                    //  We need to get the full document from the id.
+                    api_getDocument(token, result.privileges.readableDocuments[readableDocumentID],
+                        function(error, result) {
+                            if (!error) {
+                                result.readable = true;
+                                result.writable = false;
+                                documentResults.push(result);
+                                if (documentResults.length == totalDocuments) {
+                                    next(null, documentResults);
+                                }
+                            }
+                        });
+                }
             }
             //  Loop through each writable documentID, get it, and add it to the list.
             for (var writableDocumentID in result.privileges.writableDocuments) {
-                //  We need to get the full document from the id.
-                api_getDocument(token, result.privileges.writableDocuments[writableDocumentID], function(error, result) {
-                    if (!error) {
-                        result.readable = true;
-                        result.writable = true;
-                        documentResults.push(result);
-                    }
-                    next(null, documentResults);
-                });
+                if (documentResults.length < maxResults) {
+                    //  We need to get the full document from the id.
+                    api_getDocument(token, result.privileges.writableDocuments[writableDocumentID], function(error, result) {
+                        if (!error) {
+                            result.readable = true;
+                            result.writable = true;
+                            documentResults.push(result);
+                            if (documentResults.length == totalDocuments) {
+                                next(null, documentResults);
+                            }
+                        }
+                    });
+                }
             }
         }
     });
-    next(null, []);
 };
 
 /*

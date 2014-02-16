@@ -14,59 +14,61 @@ loadDocuments = function(next) {
     //  If we are trying to get anything from the server, we need to provide the user's auth token.
     token = getCookie("hive_auth_token");
     //  Get a list of documents for that user.
-    api_getAllDocuments(token, function(err, documents) {
+    api_getAllDocuments(token, 20, function(err, documents) {
         //  Loop through each document item and do some sanitizing
         for (var i = 0; i < documents.length; i++) {
-            var document = documents[i];
-            //  Month is usually from 1-12, so we have to associate each with a name
-            var months = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
+            if (Session.get("currentView") == "binder") {
+                var document = documents[i];
+                //  Month is usually from 1-12, so we have to associate each with a name
+                var months = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
 
-            var today = new Date();
+                var today = new Date();
 
-            //  Get the date the document was created
-            var date = (new Date(document.creationTime));
-            //  Extract year, month, and day from the date
-            var year = date.getFullYear(),
-                month = months[date.getMonth()],
-                day = date.getDate();
+                //  Get the date the document was created
+                var date = (new Date(document.creationTime));
+                //  Extract year, month, and day from the date
+                var year = date.getFullYear(),
+                    month = months[date.getMonth()],
+                    day = date.getDate();
 
-            var properlyFormatted;
-            if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate()) {
-                properlyFormatted = "Today";
-            } else if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate() + 1) {
-                properlyFormatted = "Yesterday";
-            } else {
-                //  Prepend a 0 if the day is single digit
-                if (day < 10) day = "0" + day;
+                var properlyFormatted;
+                if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate()) {
+                    properlyFormatted = "Today";
+                } else if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate() + 1) {
+                    properlyFormatted = "Yesterday";
+                } else {
+                    //  Prepend a 0 if the day is single digit
+                    if (day < 10) day = "0" + day;
 
-                //  Final date is like: 0 December 2000
-                properlyFormatted = day + " " + month + " " + year;
-            }
-
-
-
-            //  Get the last revision from the document to get the last title of the document
-            var lastRevision = document.revisions[document.revisions.length - 1];
-            if (lastRevision) {
-                //  If the document doesn't have a title, set it to untitled
-                document.title = lastRevision.title || "Untitled";
-            } else {
-                document.title = "Untitled";
-            }
-
-            document.formattedCreationTime = properlyFormatted;
-
-            var currentUserID = Session.get("user.current")._id;
-            for (var j = 0; j < document.currentlyWritingUsers.length; j++) {
-                if (document.currentlyWritingUsers[j] != currentUserID) {
-                    document.color = "#159725";
+                    //  Final date is like: 0 December 2000
+                    properlyFormatted = day + " " + month + " " + year;
                 }
+
+
+
+                //  Get the last revision from the document to get the last title of the document
+                var lastRevision = document.revisions[document.revisions.length - 1];
+                if (lastRevision) {
+                    //  If the document doesn't have a title, set it to untitled
+                    document.title = lastRevision.title || "Untitled";
+                } else {
+                    document.title = "Untitled";
+                }
+
+                document.formattedCreationTime = properlyFormatted;
+
+                var currentUserID = Session.get("user.current")._id;
+                for (var j = 0; j < document.currentlyWritingUsers.length; j++) {
+                    if (document.currentlyWritingUsers[j] != currentUserID) {
+                        document.color = "#159725";
+                    }
+                }
+
+
+                documents[i] = document;
             }
-
-
-            documents[i] = document;
         }
 
         //  We don't return the list, we just set this in session for other functions to use.
@@ -91,7 +93,7 @@ loadDocument = function(documentID) {
     //  Load the editor page (the functional part)
     loadEditorPage(function(error, document) {
         //  Load the UI part of the editor page 
-        currentTemplate = Template.editor();
+        currentTemplate = Template.editor;
         template_changer.changed();
         setTimeout(function() {
             renderEditorPage(document);

@@ -1,10 +1,12 @@
 setPageSize = function(width, height) {
-    $('.notebookTextArea').width($('.notebookTextArea').outerWidth() - $('.notebookTextArea').outerWidth() % (width * 8));
+    //  We need to add 10 px to accomodate for scrollbar
+    $('.notebookTextArea').width($('.notebookTextArea').outerWidth() - $('.notebookTextArea').outerWidth() % (width * 8) + 10);
     $('.notebookTextArea').css("width", $('.notebookTextArea').css("width") - $('.notebookTextArea').css("width") % (width * 8));
+    $('.ruler').css("width", $('.notebookTextArea').outerWidth() - $('.notebookTextArea').outerWidth() % (width * 8) + "px");
     var pageHeight = height * $(".notebookTextArea").outerWidth() / width;
-    $(".notebookTextArea").height(pageHeight);
-    $(".suggestions").height(pageHeight);
+    $(".notebookEditableArea").height(pageHeight);
     $(".notebook").css("padding-right", ($(".notebook").outerWidth() - $('.notebookTextArea').outerWidth()) + "px");
+    $(".saveStatus").css("margin-right", ($(".notebook").outerWidth() - $('.notebookTextArea').outerWidth()) + "px");
 };
 
 animateNotebookLeftToRight = function() {
@@ -29,6 +31,15 @@ hideNavBar = function() {
             height: '5px',
             width: '50px'
         }, 600);
+        $(".innerFragmentClass").animate({
+            marginTop: '-25px', //5 + 20 for the footer
+            paddingTop: '25px'
+        }, 600);
+        $(".rightTabs").animate({
+            paddingTop: '5px',
+            marginTop: '5px'
+        }, 600);
+
     }
 };
 
@@ -37,6 +48,14 @@ showNavBar = function() {
         $("nav").animate({
             height: '50px',
             width: '100%'
+        }, 600);
+        $(".innerFragmentClass").animate({
+            marginTop: '-70px', //50 + 20 for the footer
+            paddingTop: '70px'
+        }, 600);
+        $(".rightTabs").animate({
+            paddingTop: '20px',
+            marginTop: '50px',
         }, 600);
     }
 };

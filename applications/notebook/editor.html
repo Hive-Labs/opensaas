@@ -1,80 +1,80 @@
 <template name="editor">
-    <div class="formattingBar">
-        <div class="clipboardPanel">
-            <button type="button" class="imageButton icon-copy-2 btnPaste btn btn-default">
-                <br/>Paste
-            </button>
-            <button type="button" class="imageButton icon-scissors btnCut btn btn-default">
-                Cut
-            </button>
-            <button type="button" class="imageButton icon-copy btnCopy btn btn-default">
-                Copy
-            </button>
-            <button type="button" class="imageButton icon-paint-format btnFormat btn btn-default">
-                Format
-            </button>
-        </div>
-        <div class="fontPanel">
-            <div class="fontPanelFontChoose">
-                <div id="fontSelect" class="fontPanelFontSelect">
-                    <div class="arrow-down"></div>
-                </div>
-                <select class="fontPanelFontSizeSelect">
-                </select>
+    <div class="editorDiv">
+        <div class="formattingBar">
+            <div class="clipboardPanel">
+                <button type="button" class="imageButton icon-copy-2 btnPaste btn btn-default">
+                    <br/>Paste
+                </button>
+                <button type="button" class="imageButton icon-scissors btnCut btn btn-default">
+                    Cut
+                </button>
+                <button type="button" class="imageButton icon-copy btnCopy btn btn-default">
+                    Copy
+                </button>
+                <button type="button" class="imageButton icon-paint-format btnFormat btn btn-default">
+                    Format
+                </button>
             </div>
-            <button type="button" class="icon-bold imageButton btnBold btn btn-default">
-            </button>
-            <button type="button" class="imageButton icon-italic btnItalic btn btn-default">
-            </button>
-            <button type="button" class="imageButton icon-underline btnUnderline btn btn-default">
-            </button>
-            <button type="button" class="imageButton icon-strikethrough btnStrikethrough btn btn-default">
-            </button>
-            <button type="button" class="imageButton icon-arrow-down-right btnSubscript btn btn-default">
-            </button>
-            <button type="button" class="imageButton icon-arrow-up-right btnSuperscript btn btn-default">
-            </button>
-            <p class="txtChooseFontColor">Font:</p>
-            <input type="color" class="fontPanelFontColorSelect">
+            <div class="fontPanel">
+                <div class="fontPanelFontChoose">
+                    <div id="fontSelect" class="fontPanelFontSelect">
+                        <div class="arrow-down"></div>
+                    </div>
+                    <select class="fontPanelFontSizeSelect">
+                    </select>
+                </div>
+                <button type="button" class="icon-bold imageButton btnBold btn btn-default">
+                </button>
+                <button type="button" class="imageButton icon-italic btnItalic btn btn-default">
+                </button>
+                <button type="button" class="imageButton icon-underline btnUnderline btn btn-default">
+                </button>
+                <button type="button" class="imageButton icon-strikethrough btnStrikethrough btn btn-default">
+                </button>
+                <button type="button" class="imageButton icon-arrow-down-right btnSubscript btn btn-default">
+                </button>
+                <button type="button" class="imageButton icon-arrow-up-right btnSuperscript btn btn-default">
+                </button>
+                <p class="txtChooseFontColor">Font:</p>
+                <input type="color" class="fontPanelFontColorSelect">
+            </div>
+            <div class="paragraphPanel">
+                <button type="button" class="btnBullet btn btn-default icon-list">
+                </button>
+                <button type="button" class="icon-numbered-list btnNumber btn btn-default">
+                </button>
+                <br/>
+                <div class="btn-toolbar">
+                    <div class="paragraphPanelAlignment btn-group">
+                        <button type="button" class="btn btn-default btnJustifyLeft">
+                            <span class="glyphicon glyphicon-align-left">
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-default btnJustifyCenter">
+                            <span class="glyphicon glyphicon-align-center">
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-default btnJustifyRight">
+                            <span class="glyphicon glyphicon-align-right">
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-default btnJustifyFull">
+                            <span class="glyphicon glyphicon-align-justify">
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="paragraphPanel">
-            <button type="button" class="btnBullet btn btn-default icon-list">
-            </button>
-            <button type="button" class="icon-numbered-list btnNumber btn btn-default">
+        <div class="notebook">
+            <input class="notebookTitle" placeholder="Document Title">
+            </input>
+            <button type="button" class="saveStatus btn btn-success" disabled>
+                <span class="glyphicon glyphicon-thumbs-up">
+                </span>
+                <p id="saveStatusText">Saved!</p>
             </button>
             <br/>
-            <div class="btn-toolbar">
-                <div class="paragraphPanelAlignment btn-group">
-                    <button type="button" class="btn btn-default btnJustifyLeft">
-                        <span class="glyphicon glyphicon-align-left">
-                        </span>
-                    </button>
-                    <button type="button" class="btn btn-default btnJustifyCenter">
-                        <span class="glyphicon glyphicon-align-center">
-                        </span>
-                    </button>
-                    <button type="button" class="btn btn-default btnJustifyRight">
-                        <span class="glyphicon glyphicon-align-right">
-                        </span>
-                    </button>
-                    <button type="button" class="btn btn-default btnJustifyFull">
-                        <span class="glyphicon glyphicon-align-justify">
-                        </span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="notebook">
-        <input class="notebookTitle" placeholder="Document Title">
-        </input>
-        <button type="button" class="saveStatus btn btn-success" disabled>
-            <span class="glyphicon glyphicon-thumbs-up">
-            </span>
-            <p id="saveStatusText">Saved!</p>
-        </button>
-        <br/>
-        <div class="notebookTextArea">
             <div class="ruler">
                 <div id="rulerMarginDarkAreaLeft" class="rulerMarginDarkArea"></div>
                 <div id="rulerMarginDarkAreaRight" class="rulerMarginDarkArea"></div>
@@ -91,7 +91,9 @@
                     </div>
                 </div>
             </div>
-            <div class="notebookEditableArea hive_scrollbar" contenteditable="true">
+            <div class="notebookTextArea hive_scrollbar">
+                <div class="notebookEditableArea" contenteditable="true">
+                </div>
             </div>
         </div>
     </div>
@@ -106,7 +108,7 @@
         </ul>
 
         <!-- Tab panes -->
-        <div class="tab-content">
+        <div class="tab-content rightTabsContent">
             <div class="tab-pane active fade in" id="suggestions">
                 <div class="suggestions">
                     <h1>
@@ -114,7 +116,7 @@
                     </h1>
                 </div>
             </div>
-            <div class="tab-pane active fade in" id="friends">
+            <div class="tab-pane fade in" id="friends">
                 <div class="suggestions">
                     <h1>
                         Editors
@@ -142,7 +144,7 @@
 
 <template name="friendItem">
     <div class="friendItem" onClick="">
-    	<img src="http://placehold.it/30x30/ffffff">
+        <img src="http://placehold.it/30x30/ffffff">
         <p class="friendItemDisplayName" style="color: {{color}}">{{displayName}}</p>
         <br/>
     </div>
