@@ -549,6 +549,22 @@ you can use the generic selector below, but it's slower:
   font-size: 9pt;
   text-align: center; }
 
+.userItemDisplayName {
+  margin: 0px;
+  float: left;
+  font-family: 'Montserrat Alternates', sans-serif; }
+
+.userItemGoIcon {
+  margin: 0px;
+  float: right; }
+
+.userItem {
+  padding: 5px;
+  border-color: black;
+  border-width: 1px;
+  border-bottom-style: solid;
+  margin-bottom: 10px; }
+
 #timeSlider {
   width: 90%; }
 
@@ -579,6 +595,11 @@ you can use the generic selector below, but it's slower:
 html, body {
   background-image: url("/images/brushed.png");
   overflow-x: hidden; }
+
+.innerFragmentClass {
+  height: 100%;
+  margin-top: -80px;
+  padding-top: 80px; }
 
 .navbar {
   border-radius: 0px;

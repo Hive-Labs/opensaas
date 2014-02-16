@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+
 /**
  * Module dependencies.
  */
 var express = require('express'),
-    servConf   = require('nconf'),
-    http    = require('http'),
-    path    = require('path'),
+    servConf = require('nconf'),
+    http = require('http'),
+    path = require('path'),
     winston = require('winston');
 
 require('js-yaml');
@@ -14,19 +15,22 @@ var app = express();
 
 // setup the configs
 servConf.defaults(require('./config.yml'))
-     .argv()
-     .env();
+    .argv()
+    .env();
 global.servConf = servConf;
 
 // setup the logger
 global.logger = new winston.Logger({
-  transports: [
-    new (winston.transports.Console)({
-      handleExceptions: true
-    })
-  ],
-  exitOnError: false
+    transports: [
+        new(winston.transports.Console)({
+            handleExceptions: true
+        })
+    ],
+    exitOnError: false
 });
+
+global.exceptions = require('./exceptions');
+
 logger.cli();
 
 // all environments
@@ -38,22 +42,18 @@ app.disable('x-powered-by');
 
 
 // development only
-if('development' == servConf.get('DB_ENV')) {
-  logger.info('Running in development mode');
-  app.use(express.errorHandler());
+if ('development' == servConf.get('DB_ENV')) {
+    logger.info('Running in development mode');
+    app.use(express.errorHandler());
 }
 
-var routes  = require('./routes')(
-  {
-    persistent:
-      require('./adaptors/' + servConf.get('selected_adaptors:persistent'))(
+var routes = require('./routes')({
+    persistent: require('./adaptors/' + servConf.get('selected_adaptors:persistent'))(
         servConf.get('adaptor_settings:' + servConf.get('selected_adaptors:persistent') || '')),
-    cache: (servConf.get('selected_adaptors:cache') !== undefined) ?  
-      require('./adaptors/' + servConf.get('selected_adaptors:cache'))(
-        servConf.get('adaptor_settings:' + servConf.get('selected_adaptors:cache') || '')) :
-      undefined 
-  }
-);
+    cache: (servConf.get('selected_adaptors:cache') !== undefined) ?
+        require('./adaptors/' + servConf.get('selected_adaptors:cache'))(
+            servConf.get('adaptor_settings:' + servConf.get('selected_adaptors:cache') || '')) : undefined
+});
 
 
 // db information routes
@@ -68,19 +68,19 @@ app.post('/schema/migrate/:application', routes.schema.migrate);
 
 
 // Entity action routes
-app.get('/entity/:application/:collection/:entity', routes.entity.findAll);
 app.get('/entity/:application/:collection/:entity/:id', routes.entity.findById);
+app.get('/entity/:application/:collection/:entity', routes.entity.findAll);
 app.post('/entity/:application/:collection/:entity', routes.entity.create);
 app.post('/entity/:application/:collection/:entity/:id', routes.entity.update);
 app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 
 
-http.createServer(app).listen(servConf.get().server.port, function(){
-  logger.info('DB Service listening on port: ' + servConf.get().server.port);
-  logger.info('Database persistent adaptor Selected: ' + servConf.get('selected_adaptors:persistent'));
-  logger.info('  ', servConf.get('adaptor_settings:' + servConf.get().selected_adaptors.persistent)); 
-  if(servConf.get('selected_adaptors:cache')) {
-    logger.info('Database caching adaptor selected: ' + servConf.get('selected_adaptors:cache')); 
-    logger.info('  ', servConf.get('adaptor_settings:' + servConf.get().selected_adaptors.cache)); 
-  }
+http.createServer(app).listen(servConf.get().server.port, function() {
+    logger.info('DB Service listening on port: ' + servConf.get().server.port);
+    logger.info('Database persistent adaptor Selected: ' + servConf.get('selected_adaptors:persistent'));
+    logger.info('  ', servConf.get('adaptor_settings:' + servConf.get().selected_adaptors.persistent));
+    if (servConf.get('selected_adaptors:cache')) {
+        logger.info('Database caching adaptor selected: ' + servConf.get('selected_adaptors:cache'));
+        logger.info('  ', servConf.get('adaptor_settings:' + servConf.get().selected_adaptors.cache));
+    }
 });

@@ -1,9 +1,12 @@
+/*
+    This function will load the formatting bar.
+*/
 loadFormattingBar = function() {
-    //Fill the dropdown with all the font sizes and styles
+    //  Fill the dropdown with all the font sizes and styles
     populateFontSizes();
     populateFontStyles();
 
-    //When user chooses a new fontsize, change it
+    //  When user chooses a new fontsize, change it
     $(".fontPanelFontSizeSelect").change(function() {
         var rte = $('.notebookEditableArea');
         rte.focus();
@@ -16,7 +19,7 @@ loadFormattingBar = function() {
         }).removeClass(randomCssClass);
     });
 
-    //Bind all the events to the buttons
+    //  Bind all the events to the buttons
     $('.btnPaste').click(function() {
         var rte = $('.notebookEditableArea');
         rte.focus();

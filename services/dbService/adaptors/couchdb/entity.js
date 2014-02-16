@@ -21,7 +21,6 @@ module.exports = function(conn, settings) {
                             }
                         }
                     });
-                    //delete object._id;
                     object.view = viewName;
                     db.save(object, function(err, res) {
                         if (err) {
@@ -44,8 +43,11 @@ module.exports = function(conn, settings) {
                 } else {
                     logger.info("Searching for id: " + id);
                     db.get(id, function(err, res) {
-                        console.log(res);
-                        delete res.view;
+                        if (!err && res != null) {
+                            delete res.view;
+                        } else {
+                            logger.error(err);
+                        }
                         next(err, res);
                     });
                 }
@@ -82,16 +84,24 @@ module.exports = function(conn, settings) {
                     logger.error(err);
                     next(err);
                 } else {
-                    var _id = object._id;
-                    //delete object._id;
-                    db.merge(_id, object, function(err, res) {
-                        object._id = _id;
-                        if (err) {
-                            next(exceptions.entity.updateException(res), object);
-                        } else {
-                            next(null, object); //XXX should return whole obj? efficiency of that?
-                        }
-                    });
+                    if (object == null) {
+                        logger.error("Object was null.");
+                        next(exceptions.entity.updateException("Object cannot be null."), object);
+                    } else if (object._id == null) {
+                        logger.error("The object needs an _id.");
+                        next(exceptions.entity.updateException("The object needs an _id."), object);
+                    } else {
+                        var _id = object._id;
+                        //delete object._id;
+                        db.merge(_id, object, function(err, res) {
+                            object._id = _id;
+                            if (err) {
+                                next(exceptions.entity.updateException(res), object);
+                            } else {
+                                next(null, object); //XXX should return whole obj? efficiency of that?
+                            }
+                        });
+                    }
                 }
             });
         },

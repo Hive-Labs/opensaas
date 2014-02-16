@@ -81,7 +81,7 @@ renderEditorPage = function(document) {
                 if (!cancelHide) {
                     hideNavBar();
                 }
-            }, 2000);
+            }, 5000);
         });
 
         if (document) {

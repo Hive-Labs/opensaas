@@ -23,31 +23,47 @@ loadHistoryPage = function(documentID, next) {
 
 renderHistoryPage = function(document) {
     $(document).ready(function() {
-        $('#timeSlider').slider({
-            min: 1,
-            max: 100,
-            formater: function(value) {
-                var markup = rebuildDiffs(document.revisions, Math.round((value / 100) * document.revisions.length));
-                $(".notebookEditableArea").html(markup);
-                var months = ["January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
-                var date = (new Date(document.revisions[Math.round((value / 100) * document.revisions.length) - 1].modificationTime));
-                var year = date.getFullYear(),
-                    month = months[date.getMonth()],
-                    day = date.getDate();
-                hour = date.getHours();
-                min = date.getMinutes();
-                ampm = (hour > 12) ? "pm" : "am"
-
-                if (day < 10) day = "0" + day;
-                if (hour > 12) hour = hour - 12;
-                if (min < 10) min = "0" + min;
-
-                var properlyFormatted = day + " " + month + " " + year + " at " + hour + ":" + min + " " + ampm;
-                return properlyFormatted;
+        //We only want the revisions that have diffs in the document
+        var diffRevisions = [];
+        for (var i = 0; i < document.revisions.length; i++) {
+            if (document.revisions[i].diffs && document.revisions[i].diffs.length > 0) {
+                diffRevisions.push(document.revisions[i]);
             }
-        });
+        }
+
+        // If there are no revisions to the document or of there is only 1, no need for slider
+        if (diffRevisions.length < 2) {
+            $('.historyBottomBox').hide();
+            var markup = rebuildDiffs(diffRevisions);
+            $(".notebookEditableArea").html(markup);
+        } else {
+            $('#timeSlider').slider({
+                min: 1,
+                max: diffRevisions.length,
+                formater: function(value) {
+                    var markup = rebuildDiffs(diffRevisions, value);
+                    $(".notebookEditableArea").html(markup);
+                    var months = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                    ];
+                    var date = (new Date(diffRevisions[value - 1].modificationTime));
+                    var year = date.getFullYear(),
+                        month = months[date.getMonth()],
+                        day = date.getDate();
+                    hour = date.getHours();
+                    min = date.getMinutes();
+                    ampm = (hour > 12) ? "pm" : "am"
+
+                    if (day < 10) day = "0" + day;
+                    if (hour > 12) hour = hour - 12;
+                    if (min < 10) min = "0" + min;
+
+                    var properlyFormatted = day + " " + month + " " + year + " at " + hour + ":" + min + " " + ampm;
+                    return properlyFormatted;
+                }
+            });
+        }
+
 
         setPageSize(8.5, 11);
         // Start, End, Tick interval, number interval
@@ -58,7 +74,7 @@ renderHistoryPage = function(document) {
         if (document) {
             console.log("DOCUMENT is:");
             console.log(document);
-            $('#historyDocumentTitle').html(document.title);
+            $('#historyDocumentTitle').html("History of: " + document.title);
             $(".notebookEditableArea").html(document.markup);
         } else {
             $('#historyDocumentTitle').html("");

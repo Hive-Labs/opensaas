@@ -12,6 +12,12 @@
 html, body {
     background-image:url('/images/brushed.png');
     overflow-x: hidden;
+    
+}
+.innerFragmentClass{
+	height: 100%;
+	margin-top: -80px;
+	padding-top:80px;
 }
 
 .navbar{

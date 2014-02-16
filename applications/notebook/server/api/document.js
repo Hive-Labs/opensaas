@@ -1,131 +1,110 @@
 Meteor.methods({
-    //This method will be used by the client side to get all documents for a given user.
-    api_getAllDocuments: function(token) {
-        //Everything below will be asyncronous, so we rely on futures to return a value.
-        var fut = new Future();
-        try {
-            //First thing we do is get the user_id using the given token from the authServer.
-            var result = Meteor.http.get(config.authServerHost + ':' + config.authServerPort + '/api/user?access_token=' + token);
-            //This is the url wehave to post to the dbService, to get all documents for a given user
-            var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + result.data.user_id;
-            //We perform the request to get all documents for a given user from dbService
-            getRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
-                //Check if the callback function gives a connection error
-                if (err) {
-                    //There are no documents for given user
-                    if (result.data.error = "not_found") {
-                        //Return null if nothing was found
-                        fut['return']([]);
-                    } else {
-                        //Some other error, so throw that back to client
-                        fut['return'](DBError(err));
-                    }
-                } else {
-                    //Some error, so throw it back to the client
-                    if (result.data && result.data.error) {
-                        fut['return'](DBError(err));
-                    }
-                    fut['return'](result.data || {});
-                }
-            });
-        } catch (e) {
-            //Something went wrong exchanging the given token for the user_id from the authService
-            fut['return'](AuthError("Bad Token"));
-        }
-        //Wait for the asyncronous code to complete, and spit it back to client
-        return fut.wait();
-    },
-    //This method will be used by the client to save an existing document to a user.
+    /*
+        Given an auth token for a user, a revision, and a documentID, save the revision.
+    */
     api_saveDocument: function(token, revision, documentID) {
-        //Everything below will be asyncronous, so we rely on futures to return a value.
+        console.log("Saving Document: " + documentID);
+        //  Everything below will be asyncronous, so we rely on futures to return a value.
         var fut = new Future();
-
-        //First thing we do is trade the given token for a user_id with the auth server.
+        //  We need to get the userID attached with this given token from the auth server.
         var userID = Meteor.http.get(config.authServerHost + ':' + config.authServerPort + '/api/user?access_token=' + token).data.user_id;
 
-        //Sanitize the input revision
-        revision.authorID = userID;
-        revision.modificationTime = new Date();
-
         var document;
+        var newDocument = false;
 
+        /*  If the user gave us a documentID, then we need to save the revision to that ID.
+            Otherwise, we need to make a new document and save the revision to that as the
+            first revision. */
         if (documentID) {
-            //A documentID is given, so append this revision to that document.
+            //  A documentID is given, so append this revision to that document.
             var document = api_getDocument(token, documentID);
             document.revisions.push(revision);
-            document.title = document.revisions[document.revisions.length - 1].title;
+            //  Set the title of the document to the title of the last revision
+            document.title = revision.title;
         } else {
-            //Create a new document
+            //  User didn't give us a document id, so make a new document.
             document = {
                 revisions: [],
                 title: revision.title,
                 creationTime: new Date(),
                 authorID: userID
             };
+            //  We need to do some things later since this is a new document.
+            newDocument = true;
         }
 
         try {
-            //This is the url wehave to post to the dbService, to save the document into the given user
-            var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + userID;
-            //We perform the post request to save this new document into the dbService
+            //  This is the url we have to post to the database so we can save the new document
+            var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes;
+            //  We perform the post request to save this new document into the dbService.
             postRequest(config.dbServerHost, config.dbServerPort, url, document, function(err, result) {
-                //Check if the callback function gives a connection error
+                //  Check if the database transaction gave an error.
                 if (err) {
-                    //Tell the future to return an error
+                    //  return the user.
                     fut['return'](DBError(err));
                 } else {
-                    //Check if the callback function gives a database error
+                    //  Check if the database transaction gave an error.
                     if (userID && result.data.error) {
                         //Tell the future to return an error
                         fut['return'](DBError(err));
                     } else {
-                        //Everything ok, return whatever the database gives (it usually returns OK).
+                        /*  If this document was just created, we need to add it to the allowed
+                            documents the user can access. */
+                        if (newDocument) {
+                            //  Get the user that we want to give access to this document
+                            var user = api_getUser(token);
+                            //  Give that user write privileges to this document
+                            user.privileges.writableDocuments.push(result.data.id);
+                            api_saveUser(user);
+                        }
+                        //  Everything ok, so return whatever the database gives (it usually returns OK).
                         fut['return'](result.data || {});
                     }
                 }
             });
         } catch (e) {
-            //Something went wrong exchanging the given token for the user_id from the authService
+            //  Something went wrong exchanging the given token for the user_id from the authService
             fut['return'](AuthError("Bad Token"));
         }
-        //Return whatever the above asyncronous code set in the future
+        //  Return whatever the above asyncronous code set in the future
         return fut.wait();
     },
-    //This method will be used to get a specific document.
+
+    //  Given a token and a documentID, it will return a document
     api_getDocument: function(token, documentID) {
         return api_getDocument(token, documentID);
     },
-    //This method will be used to delete a specific document.
+
+    //  Given a token and a documentID, it will delete that document.
     api_deleteDocument: function(token, documentID) {
-        //Everything below will be asyncronous, so we rely on futures to return a value.
+        //  Everything below will be asyncronous, so we rely on futures to return a value.
         var fut = new Future();
 
-        //First thing we do is trade the given token for a user_id with the auth server.
+        //  We need to get the userID attached with the given token.
         var userID = Meteor.http.get(config.authServerHost + ':' + config.authServerPort + '/api/user?access_token=' + token).data.user_id;
 
+        //  Check if client gave a documentID to delete.
         if (documentID) {
             try {
-                //This is the url wehave to post to the dbService, to save the document into the given user
-                var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + userID + "/" + documentID;
-                //We perform the post request to save this new document into the dbService
-                deleteRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
-                    //Check if the callback function gives a connection error
-                    if (err) {
-                        //Tell the future to return an error
-                        fut['return'](DBError(err));
-                    } else {
-                        //Check if the callback function gives a database error
-                        if (userID && result.data.error) {
-                            //Tell the future to return an error
-                            fut['return'](DBError(err));
-                        } else {
-                            //Everything ok, return whatever the database gives (it usually returns OK).
-                            fut['return'](result.data || {});
-                        }
-                    }
-                });
+                /*  Rather than deleting the document itself, we are removing it from the user's 
+                    readable and writeable list. */
+                var user = api_getUser(token);
+                //  Remove it from user's readableDocuments list.
+                var pos = user.privileges.readableDocuments.indexOf(documentID);
+                if (~pos) {
+                    user.privileges.readableDocuments.splice(pos, 1);
+                }
+                //  Remove it from the user's writableDocuments list.
+                pos = user.privileges.writableDocuments.indexOf(documentID);
+                if (~pos) {
+                    user.privileges.writableDocuments.splice(pos, 1);
+                }
+                //  Save that modified user to the database.
+                api_saveUser(user);
+                fut['return']("OK");
+
             } catch (e) {
-                //Something went wrong exchanging the given token for the user_id from the authService
+                //  Something went wrong exchanging the given token for the user_id from the authService
                 fut['return'](AuthError("Bad Token"));
             }
 
@@ -133,36 +112,67 @@ Meteor.methods({
             fut['return'](ParameterError("DocumentID was null."));
         }
 
-        //Return whatever the above asyncronous code set in the future
+        //  Return whatever the above asyncronous code set in the future
+        return fut.wait();
+    },
+
+    /*
+        Given a documentID and a userID, it will give the second user write access to the document
+    */
+    api_shareDocument: function(token, documentID, userID) {
+        //  Everything below will be asyncronous, so we rely on futures to return a value.
+        var fut = new Future();
+        //  Check to see if the user gave a documentID
+        if (documentID) {
+            try {
+                //  We will give write access to the second user
+                var user = api_getUserByID(userID);
+                user.privileges.writableDocuments.push(documentID);
+                api_saveUser(user);
+                fut['return']("OK");
+
+            } catch (e) {
+                //  Something went wrong exchanging the given token for the user_id from the authService
+                fut['return'](AuthError("Bad Token"));
+            }
+
+        } else {
+            fut['return'](ParameterError("DocumentID was null."));
+        }
+
+        //  Return whatever the above asyncronous code set in the future
         return fut.wait();
     }
 });
 
+/*
+    Given a documentID, it will return the document.
+*/
 function api_getDocument(token, documentID) {
-    //Everything below will be asyncronous, so we rely on futures to return a value.
+    //  Everything below will be asyncronous, so we rely on futures to return a value.
     var fut = new Future();
     try {
-        //First thing we do is trade the given token for a user_id with the auth server.
+        //  Get the user from the given token.
         var user = Meteor.http.get(config.authServerHost + ':' + config.authServerPort + '/api/user?access_token=' + token);
 
-        //This is the url to get a document for a given user
-        var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + user.data.user_id + "/" + documentID;
+        //  This is the url to get a document given an ID, from the database
+        var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + documentID;
 
-        //We perform the request to get this document from dbService
+        //  We perform the request to get this document from dbService
         getRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
-            //Check if the callback function gives a connection error
+            //  Check if the callback function gives a connection error
             if (err) {
-                //There are no documents for given user
-                if (result.data && result.data.error == "not_found") {
-                    //Return null if nothing was found
+                //  There are no documents for given user
+                if (result != null && result.data.error == "not_found") {
+                    //  Return null if nothing was found
                     fut['return']({});
                 } else {
-                    //Some other error, so throw that back to client
+                    //  Some other error, so throw that back to client
                     fut['return'](DBError(err));
                 }
             } else {
-                //Some error, so throw it back to the client
-                if (result.data && result.data.error) {
+                //  Some error, so throw it back to the client
+                if (result.data != null && result.data.error) {
                     fut['return'](DBError(err));
                 } else {
                     fut['return'](result.data || {});
@@ -170,9 +180,9 @@ function api_getDocument(token, documentID) {
             }
         });
     } catch (e) {
-        //Something went wrong exchanging the given token for the user_id from the authService
+        //  Something went wrong exchanging the given token for the user_id from the authService
         fut['return'](AuthError("Bad Token"));
     }
-    //Wait for the asyncronous code to complete, and spit it back to client
+    //  Wait for the asyncronous code to complete, and spit it back to client
     return fut.wait();
 }

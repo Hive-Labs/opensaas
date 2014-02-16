@@ -4,7 +4,11 @@
 </head>
 
 <body>
-    {{> header}} {{> innerFragment}} {{> footer}} {{> hiddenFragments}}
+    {{> header}} 
+    <div class="innerFragmentClass">
+    {{> innerFragment}} 
+    </div>
+    {{> footer}} {{> hiddenFragments}}
 </body>
 
 
@@ -93,6 +97,6 @@
 
 <template name="footer">
     <div class="footer">
-        Copyright Hive, LLC. 2013
+        Copyright Hive, 2014
     </div>
 </template>

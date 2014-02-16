@@ -1,47 +1,42 @@
 var localSaveInterval = null;
 var remoteSaveInterval = null;
 
+/*
+    This will save the document to local storage.
+*/
 saveLocalStorage = function() {
-    //Make sure local storage is enabled
+    //  Make sure user has local storage enabled.
     if (typeof(Storage) !== "undefined") {
-        //if there is a document already there
-        if (localStorage.lastDocument && IsJsonString(localStorage.lastDocument)) {
-            var markup = $(".notebookEditableArea").html();
+        //  Get the html markup from the page
+        var markup = $(".notebookEditableArea").html();
+        if (markup != "") {
+            //  Make a new document to save to local storage.
             var newDocument = {};
             newDocument.timestamp = new Date();
             newDocument.markup = markup;
             newDocument.title = $('.notebookTitle').val();
             newDocument.id = Session.get('document.currentID');
-
-            //check to see if we really need to save
-            var docNeedsSave = needsSave(JSON.parse(localStorage.lastDocument), newDocument);
-            if (docNeedsSave == true) {
-                localStorage.lastDocument = JSON.stringify(newDocument);
-            }
-        } else {
-            var markup = $(".notebookEditableArea").html();
-            if (markup != "") {
-                var newDocument = {};
-                newDocument.timestamp = new Date();
-                newDocument.markup = markup;
-                newDocument.title = $('.notebookTitle').val();
-                newDocument.id = Session.get('document.currentID');
-
+            //  If the document needs saving, then save it.
+            if (needsSave(localStorage.lastDocument, newDocument)) {
                 localStorage.lastDocument = JSON.stringify(newDocument);
             }
         }
-
     }
 };
 
+/*
+    Clear the local storage document
+*/
 clearLocalSaves = function() {
-    //Make sure local storage is enabled
+    //  Make sure local storage is enabled
     if (typeof(Storage) !== "undefined") {
-        //if there is a document already there
         localStorage.lastDocument = null;
     }
 };
 
+/*
+    Save the document to the server.
+*/
 saveRemoteStorage = function() {
     //  Get the user's temporary login information.
     token = getCookie("hive_auth_token");
@@ -51,8 +46,6 @@ saveRemoteStorage = function() {
         and that we aren't currently saving
     */
     if (token && documentID && getSaveStatus() != SAVE_STATUS.SAVING) {
-        console.log("saving remote storage.");
-
         //  Get the html version of the user's document.
         var markup = $(".notebookEditableArea").html();
         //  Make a document out of it and set some properties.
@@ -62,36 +55,41 @@ saveRemoteStorage = function() {
         newDocument.title = $('.notebookTitle').val();
 
         //  Get the last saved document to compare with current.
-        var previousDocument = Session.get("document.last");
+        var previousDocument = Session.get("document.last") || {};
         //  Check to see if we really need to save.
         var docNeedsSave = needsSave(previousDocument, newDocument);
 
         if (docNeedsSave == true) {
+            //  Show the user that we are currently saving.
             setSaveStatus(SAVE_STATUS.SAVING);
 
             //  Create list of differences between the last save and the current save.
             var dmp = new diff_match_patch();
             var diffs = dmp.diff_main(previousDocument.markup || '', newDocument.markup);
 
-            //Set the current document to be the last saved document
-            Session.set("document.last", newDocument);
-
             //Make a new revision for this document
             var revision = {};
             revision.diffs = diffs;
             revision.title = $('.notebookTitle').val();
-            // Server-side database transaction that saves the revision remotely to the document.
-            api_saveDocument(token, revision, function(error, result) {
+
+            // Server-side database transaction that appends the revision remotely to the document.
+            api_saveDocument(token, revision, documentID, function(error, result) {
                 if (error) {
+                    //  Show the user that something died
                     setSaveStatus(SAVE_STATUS.FAILED);
                 } else {
+                    //  Set the current document to be the last saved document
+                    Session.set("document.last", newDocument);
+                    //  Show the user that save was successful
                     setSaveStatus(SAVE_STATUS.SUCCESS);
                 }
             });
         }
     } else if (!token) {
-        // ERROR: Shouldn't get to this point. 
+        // ERROR: Shouldn't get to this point.
         window.location.reload();
+    } else {
+        console.log("Aborting save because already saving.");
     }
 };
 
@@ -108,6 +106,8 @@ createNewDocument = function(next) {
             if (error) {
                 next(error);
             } else {
+                console.log("Created new document");
+                console.log(result);
                 next(null, result.id);
             }
         });
@@ -117,19 +117,28 @@ createNewDocument = function(next) {
     }
 };
 
-
+/*
+    This will start the interval to save remotely and locally
+    every 500ms. We will eventually adjust this based on the 
+    user's internet speeds.
+*/
 startSaveIntervals = function() {
+    /*  If the intervals have already been set,
+        we don't want to reset them. */
     clearSaveIntervals();
     // Local save the file every 500ms
     localSaveInterval = setInterval(function() {
         saveLocalStorage();
-    }, 1000);
-    // Remote save every 5s.
+    }, 500);
+    // Remote save every 500ms.
     remoteSaveInterval = setInterval(function() {
         saveRemoteStorage();
     }, 500);
 };
 
+/*
+    Stop saving remotely and locally 
+*/
 clearSaveIntervals = function() {
     if (localSaveInterval) {
         clearInterval(localSaveInterval);
@@ -139,6 +148,9 @@ clearSaveIntervals = function() {
     }
 };
 
+/*
+    Check to see if the string given is json
+*/
 IsJsonString = function(str) {
     try {
         JSON.parse(str);
@@ -148,10 +160,47 @@ IsJsonString = function(str) {
     return true;
 }
 
+/*
+    Given two documents, check to see if it needs a save
+*/
 needsSave = function(oldDocument, newDocument) {
-    if (!oldDocument || !newDocument || (oldDocument.markup != newDocument.markup || oldDocument.title != newDocument.title)) {
-        return true;
-    } else {
+    /*  If oldDocument and newDocument are null
+            don't save.
+        If oldDocument is null and newDocument is not null
+            If newDocument.markup is not empty
+                save.
+            Else
+                If newDocument.title is not empty
+                    save.
+                Else
+                    don't save.
+        If oldDocument is not null and newDocument is null
+            If oldDocument.markup is not empty
+                save.
+            Else
+                If newDocument.title is not empty
+                    save.
+                Else
+                    don't save.
+        If oldDocumet and newDocument are not null
+            If oldDocument.markup != newDocument.markup
+                save.
+            Else
+                If newDocument.title is not empty
+                    save.
+                Else
+                    don't save.
+    */
+
+    if ((!oldDocument && !newDocument) || (!oldDocument && (!newDocument.markup || newDocument.markup == "") && (!newDocument.title || newDocument.title == "")) || (!newDocument && (!oldDocument || oldDocument.markup == "") && (!oldDocument.title || oldDocument.title == "")) || (newDocument.markup != null && oldDocument.markup != null && newDocument.markup == oldDocument.markup && newDocument.title == oldDocument.title)) {
         return false;
+    } else {
+        console.log((!oldDocument && !newDocument));
+        console.log((!oldDocument && (!newDocument.markup || newDocument.markup == "") && (!newDocument.title || newDocument.title == "")));
+        console.log((!newDocument && (!oldDocument || oldDocument.markup == "") && (!oldDocument.title || oldDocument.title == "")));
+        console.log((newDocument.markup && oldDocument.markup && newDocument.markup == oldDocument.markup && newDocument.title == oldDocument.title));
+
+        console.log("needs save.");
+        return true;
     }
 }
