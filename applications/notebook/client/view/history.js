@@ -31,6 +31,7 @@ renderHistoryPage = function(document) {
                 diffRevisions.push(document.revisions[i]);
             }
         }
+        $(".ruler").css("width", $('.notebookTextArea').outerWidth() - 30 + "px");
 
         // If there are no revisions to the document or of there is only 1, no need for slider
         if (diffRevisions.length < 2) {

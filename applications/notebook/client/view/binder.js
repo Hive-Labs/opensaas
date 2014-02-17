@@ -83,6 +83,7 @@ loadDocuments = function(next) {
     the document to that.
 */
 loadDocument = function(documentID) {
+    showNavBar();
     clearRefreshInterval();
     //  Before loading the document, we need to show the loading box
     showLoadingBox();
