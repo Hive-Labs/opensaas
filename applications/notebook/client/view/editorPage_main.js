@@ -7,14 +7,13 @@ loadEditorPage = function(next) {
         createNewDocument(function(error, documentID) {
             //Return the id of the new document, and save it for future use in the session.
             Session.set('document.currentID', documentID);
-            api_getDocument(token, documentID, function(error2, document) {
+            api_getDocument(documentID, function(error2, document) {
                 next(error2, document);
             });
         });
     } else {
         //A document is already loaded up, so return the id to that document.
         console.log("Loading document: " + documentID);
-        token = getCookie("hive_auth_token");
         var localStorageDocument = loadLocalStorage();
         if (localStorageDocument) {
             //Ask the user whether they want to load the local copy or the last saved remotely
@@ -29,7 +28,7 @@ loadEditorPage = function(next) {
                     label: 'Remote Copy',
                     cssClass: 'btn-primary',
                     action: function() {
-                        api_getDocument(token, documentID, function(error, document) {
+                        api_getDocument(documentID, function(error, document) {
                             var markup = rebuildDiffs(document.revisions);
                             document.markup = markup;
                             Session.set("document.last", document);
@@ -39,7 +38,7 @@ loadEditorPage = function(next) {
                 }]
             });
         } else {
-            api_getDocument(token, documentID, function(error, document) {
+            api_getDocument(documentID, function(error, document) {
                 var markup = rebuildDiffs(document.revisions);
                 document.markup = markup;
                 Session.set("document.last", document);

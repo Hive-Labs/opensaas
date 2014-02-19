@@ -17,7 +17,7 @@ saveLocalStorage = function() {
             newDocument.title = $('.notebookTitle').val();
             newDocument.id = Session.get('document.currentID');
             //  If the document needs saving, then save it.
-            if (needsSave(localStorage.lastDocument, newDocument)) {
+            if (needsSave(localStorage.lastDocument || {}, newDocument)) {
                 localStorage.lastDocument = JSON.stringify(newDocument);
             }
         }
@@ -73,7 +73,7 @@ saveRemoteStorage = function() {
             revision.title = $('.notebookTitle').val();
 
             // Server-side database transaction that appends the revision remotely to the document.
-            api_saveDocument(token, revision, documentID, function(error, result) {
+            api_saveDocument(revision, documentID, function(error, result) {
                 if (error) {
                     //  Show the user that something died
                     setSaveStatus(SAVE_STATUS.FAILED);
@@ -101,8 +101,9 @@ createNewDocument = function(next) {
         revision.timestamp = new Date();
         revision.markup = "";
         revision.title = $('.notebookTitle').val();
+
         // Server-side database transaction that saves the document remotely.
-        Meteor.call('api_saveDocument', token, revision, function(error, result) {
+        api_saveDocument(revision, null, function(error, result) {
             if (error) {
                 next(error);
             } else {

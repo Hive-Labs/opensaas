@@ -9,7 +9,9 @@
     account. Then, it will get each document from the server and 
     pass a list of full documents to the callback function.
 */
-api_getAllDocuments = function(token, maxResults, next) {
+api_getAllDocuments = function(maxResults, next) {
+    var token = getCookie("hive_auth_token");
+
     console.log("Getting " + maxResults + " documents");
     Meteor.call('api_getUser', token, function(error, result) {
         //  This is the list of documents that will be returned.
@@ -20,7 +22,7 @@ api_getAllDocuments = function(token, maxResults, next) {
             for (var readableDocumentID in result.privileges.readableDocuments) {
                 if (documentResults.length < maxResults) {
                     //  We need to get the full document from the id.
-                    api_getDocument(token, result.privileges.readableDocuments[readableDocumentID],
+                    api_getDocument(result.privileges.readableDocuments[readableDocumentID],
                         function(error, result) {
                             if (!error) {
                                 result.readable = true;
@@ -37,7 +39,7 @@ api_getAllDocuments = function(token, maxResults, next) {
             for (var writableDocumentID in result.privileges.writableDocuments) {
                 if (documentResults.length < maxResults) {
                     //  We need to get the full document from the id.
-                    api_getDocument(token, result.privileges.writableDocuments[writableDocumentID], function(error, result) {
+                    api_getDocument(result.privileges.writableDocuments[writableDocumentID], function(error, result) {
                         if (!error) {
                             result.readable = true;
                             result.writable = true;
@@ -58,7 +60,8 @@ api_getAllDocuments = function(token, maxResults, next) {
     a document id, it will get that document from the server.
     If the user does not have previliges, it will return an error.
 */
-api_getDocument = function(token, documentID, next) {
+api_getDocument = function(documentID, next) {
+    var token = getCookie("hive_auth_token");
     Meteor.call('api_getDocument', token, documentID, function(error, result) {
         next(error, result);
     });
@@ -69,7 +72,8 @@ api_getDocument = function(token, documentID, next) {
     a document id, it will delete that document from the server.
     If the user does not have previliges, it will return an error.
 */
-api_deleteDocument = function(token, documentID, next) {
+api_deleteDocument = function(documentID, next) {
+    var token = getCookie("hive_auth_token");
     Meteor.call('api_deleteDocument', token, documentID, function(error, result) {
         next(error, result);
     });
@@ -81,7 +85,8 @@ api_deleteDocument = function(token, documentID, next) {
     to that document that is owned by the given user. 
     If the user does not have previliges, it will return an error.
 */
-api_saveDocument = function(token, revision, documentID, next) {
+api_saveDocument = function(revision, documentID, next) {
+    var token = getCookie("hive_auth_token");
     console.log(documentID);
     Meteor.call('api_saveDocument', token, revision, documentID, function(error, result) {
         next(error, result);
@@ -94,7 +99,8 @@ api_saveDocument = function(token, revision, documentID, next) {
     document with the given id with another user with the given
     id. If the user does not have previliges, it will return an error.
 */
-api_shareDocument = function(token, documentID, userID, next) {
+api_shareDocument = function(documentID, userID, next) {
+    var token = getCookie("hive_auth_token");
     Meteor.call('api_shareDocument', token, documentID, userID, function(error, result) {
         next(error, result);
     });

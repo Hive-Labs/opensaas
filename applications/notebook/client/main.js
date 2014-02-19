@@ -46,9 +46,9 @@ function init() {
         Otherwise, bring them to the login screen.
     */
     else if (getCookie("hive_auth_token")) {
-        auth_testToken(getCookie("hive_auth_token"), function(result) {
+        auth_testToken(function(result) {
             if (result == true) {
-                auth_loadUser(getCookie("hive_auth_token"), function(user) {
+                auth_loadUser(function(user) {
                     //Bring the user to the binder page
                     showBinder(user);
                 });

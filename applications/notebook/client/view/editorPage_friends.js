@@ -1,7 +1,7 @@
 loadFriends = function(document) {
     var activeUsers = [];
     for (var j = 0; j < document.writeAccessUsers.length; j++) {
-        api_getUserByID(token, document.writeAccessUsers[j], function(error, result) {
+        api_getUserByID(document.writeAccessUsers[j], function(error, result) {
             if (document.currentlyWritingUsers.indexOf(result._id) > -1) {
                 result.color = "#159725";
             } else {

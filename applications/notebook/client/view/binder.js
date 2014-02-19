@@ -28,10 +28,8 @@ Template.notifications.notifications = function() {
     so the day, month, and year are formatted nicely.
 */
 loadDocuments = function(next) {
-    //  If we are trying to get anything from the server, we need to provide the user's auth token.
-    token = getCookie("hive_auth_token");
     //  Get a list of documents for that user.
-    api_getAllDocuments(token, 20, function(err, documents) {
+    api_getAllDocuments(20, function(err, documents) {
         //  Loop through each document item and do some sanitizing
         for (var i = 0; i < documents.length; i++) {
             if (Session.get("currentView") == "binder") {
@@ -126,10 +124,8 @@ loadDocument = function(documentID) {
     a user to share the document with.
 */
 showDocumentShare = function(documentID) {
-    //  We need the auth token of the user
-    var token = getCookie("hive_auth_token");
     //  Ask the server for a list of all the users using notebook app
-    api_getAllUsers(token, function(err, result) {
+    api_getAllUsers(function(err, result) {
         //  Get the id of the currently logged in user
         var currentUser = Session.get("user.current");
         /*  Loop through the list of users and remove the current one from the list
@@ -172,8 +168,8 @@ dismissNotification = function(id) {
         Template.notifications.notifications();
     }, 1000);
 
-    token = getCookie("hive_auth_token");
-    api_dismissNotification(token, id, function(error, result) {
+    api_dismissNotification(id, function(error, result) {
 
     });
+
 }

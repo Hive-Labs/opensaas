@@ -16,8 +16,8 @@ showHistory = function(documentID) {
 //Load the history page (the functional part)
 loadHistoryPage = function(documentID, next) {
     clearSaveIntervals();
-    var token = getCookie("hive_auth_token");
-    api_getDocument(token, documentID, function(error, document) {
+    
+    api_getDocument(documentID, function(error, document) {
         next(error, document);
     });
 };
