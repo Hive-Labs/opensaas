@@ -7,10 +7,14 @@ config = {
         notes: "notes/note",
         users: "users/user",
     },
-    messages: [{
-        type: 'text',
-        welcomeNotification: "Welcome to the NoteBook app!"
-    }],
+    messages: {
+        welcomeNotification: {
+            type: 'text',
+            text: "Welcome to the NoteBook app!",
+            read: false,
+            id: 0
+        }
+    },
     dbServerHost: "http://localhost",
     dbServerPort: "3000",
     authServerHost: "http://localhost",

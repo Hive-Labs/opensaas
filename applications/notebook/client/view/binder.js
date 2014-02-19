@@ -6,6 +6,23 @@ Template.documents.documents = function() {
     return Session.get("document.list");
 };
 
+Template.notifications.notifications = function() {
+    var notifications = Session.get("user.current").notifications;
+    var resultList = [];
+    for (var i = 0; i < notifications.length; i++) {
+        if (notifications[i].read == false) {
+            resultList.push(notifications[i]);
+        }
+    }
+
+    console.log(resultList.length);
+
+    setTimeout(function() {
+        $("#totalNotificationsHeader").html(resultList.length);
+    }, 500);
+    return resultList;
+};
+
 /*
     This will get a list of all the documents from the server and format it
     so the day, month, and year are formatted nicely.
@@ -130,5 +147,33 @@ showDocumentShare = function(documentID) {
             title: 'Share with a friend',
             message: $(Template.users())
         });
+    });
+}
+
+dismissNotification = function(id) {
+    $('#notification_' + id).animate({
+        "left": '500'
+    });
+    setTimeout(function() {
+        $('#notification_' + id).css("display", "none");
+    }, 1000);
+
+    var user = Session.get("user.current");
+    var notifications = user.notifications;
+    for (var i = 0; i < notifications.length; i++) {
+        if (notifications[i].id == id) {
+            notifications[i].read = true;
+        }
+    }
+    user.notifications = notifications;
+
+    setTimeout(function() {
+        Session.set("user.current", user);
+        Template.notifications.notifications();
+    }, 1000);
+
+    token = getCookie("hive_auth_token");
+    api_dismissNotification(token, id, function(error, result) {
+
     });
 }

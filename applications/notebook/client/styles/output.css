@@ -472,7 +472,6 @@ you can use the generic selector below, but it's slower:
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid #5E5E5E;
-  font-size: 0;
   line-height: 0; }
 
 .rulerBox {
@@ -564,6 +563,48 @@ you can use the generic selector below, but it's slower:
   border-width: 1px;
   border-bottom-style: solid;
   margin-bottom: 10px; }
+
+.notificationsBox {
+  float: right;
+  width: 280px;
+  padding-right: 20px; }
+
+.notificationItem {
+  background-color: #022449;
+  padding: 10px;
+  color: white;
+  position: relative;
+  right: -280px;
+  -webkit-animation: notificationSlide 0.5s forwards;
+  -webkit-animation-delay: 2s;
+  animation: notificationSlide 0.5s forwards;
+  animation-delay: 2s; }
+
+.okBtn {
+  float: left;
+  margin-right: 10px; }
+
+.notificationItemText {
+  margin: 0px; }
+
+.notificationsHeader {
+  height: 70px; }
+
+.notificationsHeader h1 {
+  float: left;
+  width: 270px; }
+
+#totalNotificationsHeader {
+  float: right;
+  margin-right: 20px; }
+
+@-webkit-keyframes notificationSlide {
+  100% {
+    right: 0; } }
+
+@keyframes notificationSlide {
+  100% {
+    right: 0; } }
 
 #timeSlider {
   width: 90%; }

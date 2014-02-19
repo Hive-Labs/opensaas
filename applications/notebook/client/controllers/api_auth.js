@@ -69,4 +69,10 @@ api_getUserByID = function(token, userID, next) {
     Meteor.call('api_getUserByID', token, userID, function(error, result) {
         next(error, result);
     });
-}
+};
+
+api_dismissNotification = function(token, notificationID) {
+    Meteor.call('api_dismissNotification', token, notificationID, function(error, result) {
+        next(error, result);
+    });
+};

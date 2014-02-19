@@ -13,6 +13,10 @@ Meteor.methods({
     //  Given an auth token, it will return a list of all users in the notebook app
     api_getAllUsers: function(token) {
         return api_getAllUsers(token);
+    },
+    //  Given an auth token and a notificationID, it will mark that notification as read for the user
+    api_dismissNotification: function(token, notificationID) {
+        return api_dismissNotification(token, notificationID);
     }
 });
 
@@ -201,6 +205,30 @@ api_saveUser = function(user) {
     } else {
         fut['return'](user);
     }
+
+    return fut.wait();
+}
+
+/*
+    Given an auth token and a notification id, it will mark that notificationID 
+    as read for that user. 
+*/
+api_dismissNotification = function(token, notificationID) {
+    //  Everything below will be asyncronous, so we rely on futures to return a value.
+    var fut = new Future();
+    //  Get the user that you are modifying
+    var user = api_getUser(token);
+    //  Get the list of notifications they have
+    var notifications = user.notifications;
+    for (var i = 0; i < notifications.length; i++) {
+        //  If the id matches the one you are looking for, mark it as read.
+        if (notifications[i].id == notificationID) {
+            notifications[i].read = true;
+        }
+    }
+
+    user.notifications = notifications;
+    api_saveUser(user);
 
     return fut.wait();
 }

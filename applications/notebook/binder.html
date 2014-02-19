@@ -10,7 +10,9 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="dashboard">
-
+            <div class="notificationsBox">
+                {{> notifications}}
+            </div>
         </div>
         <div class="tab-pane" id="docs">
             {{> documents}}
@@ -31,6 +33,18 @@
     </div>
 </template>
 
+<template name="notifications">
+    <div class="notificationsHeader">
+        <h1>
+            Notifications
+            <span class="label label-default" id="totalNotificationsHeader">0</span>
+        </h1>
+    </div>
+    <div id="notifications">
+        {{#each notifications}} {{> notificationItem}} {{/each}}
+    </div>
+</template>
+
 <template name="documentItem">
     <div class="well well-lg documentItem" id="{{_id}}">
         <marquee behavior="scroll" direction="left" scrollamount="3" style="color: {{color}}" class="documentItemTitle">{{title}}</marquee>
@@ -47,8 +61,15 @@
 
 <template name="userItem">
     <div class="userItem" onClick="shareDocument('{{document}}', '{{authServiceID}}');">
-       <p class="userItemDisplayName">{{displayName}}</p>
-       <p class="glyphicon glyphicon-play-circle userItemGoIcon" />
-       <br/>
+        <p class="userItemDisplayName">{{displayName}}</p>
+        <p class="glyphicon glyphicon-play-circle userItemGoIcon" />
+        <br/>
+    </div>
+</template>
+
+<template name="notificationItem">
+    <div class="notificationItem" onClick="dismissNotification('{{id}}');" id="notification_{{id}}">
+        <p class="glyphicon glyphicon-ok-circle okBtn"/>
+        <p class="notificationItemText">{{text}}</p>
     </div>
 </template>
