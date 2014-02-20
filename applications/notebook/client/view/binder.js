@@ -15,8 +15,6 @@ Template.notifications.notifications = function() {
         }
     }
 
-    console.log(resultList.length);
-
     setTimeout(function() {
         $("#totalNotificationsHeader").html(resultList.length);
     }, 500);
@@ -106,6 +104,7 @@ loadDocument = function(documentID) {
         to that documentID
     */
     Session.set('document.currentID', documentID);
+    Session.set('currentView', "editor");
     //  Load the editor page (the functional part)
     loadEditorPage(function(error, document) {
         //  Load the UI part of the editor page 

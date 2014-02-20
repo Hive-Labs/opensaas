@@ -26,20 +26,22 @@ animateSuggestionsRightToLeft = function() {
 };
 
 hideNavBar = function() {
-    if ($("nav").outerHeight() > 5) {
-        $("nav").animate({
-            height: '5px',
-            width: '50px'
-        }, 600);
-        $(".innerFragmentClass").animate({
-            marginTop: '-25px', //5 + 20 for the footer
-            paddingTop: '25px'
-        }, 600);
-        $(".rightTabs").animate({
-            paddingTop: '5px',
-            marginTop: '5px'
-        }, 600);
+    if (Session.get("currentView") == "editor") {
+        if ($("nav").outerHeight() > 5) {
+            $("nav").animate({
+                height: '5px',
+                width: '50px'
+            }, 600);
+            $(".innerFragmentClass").animate({
+                marginTop: '-25px', //5 + 20 for the footer
+                paddingTop: '25px'
+            }, 600);
+            $(".rightTabs").animate({
+                paddingTop: '5px',
+                marginTop: '5px'
+            }, 600);
 
+        }
     }
 };
 

@@ -12,12 +12,14 @@
 api_getAllDocuments = function(maxResults, next) {
     var token = getCookie("hive_auth_token");
 
-    console.log("Getting " + maxResults + " documents");
     Meteor.call('api_getUser', token, function(error, result) {
         //  This is the list of documents that will be returned.
         documentResults = [];
         if (result != null) {
             var totalDocuments = result.privileges.readableDocuments.length + result.privileges.writableDocuments.length
+            if (totalDocuments == 0) {
+                next(null, []);
+            }
             //  Loop through each readable documentID, get it, and add it to the list.
             for (var readableDocumentID in result.privileges.readableDocuments) {
                 if (documentResults.length < maxResults) {

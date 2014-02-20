@@ -38,6 +38,9 @@ clearLocalSaves = function() {
     Save the document to the server.
 */
 saveRemoteStorage = function() {
+    //  Before doing a remote save, check to see if some other user changed something
+    updateDocumentFromRemote();
+
     //  Get the user's temporary login information.
     token = getCookie("hive_auth_token");
     //  Get the currently loaded document's id.
@@ -53,9 +56,13 @@ saveRemoteStorage = function() {
         newDocument.timestamp = new Date();
         newDocument.markup = markup;
         newDocument.title = $('.notebookTitle').val();
+        newDocument.revisions = [];
 
         //  Get the last saved document to compare with current.
         var previousDocument = Session.get("document.last") || {};
+
+        newDocument.revisions = previousDocument.revisions || [];
+
         //  Check to see if we really need to save.
         var docNeedsSave = needsSave(previousDocument, newDocument);
 
@@ -71,6 +78,8 @@ saveRemoteStorage = function() {
             var revision = {};
             revision.diffs = diffs;
             revision.title = $('.notebookTitle').val();
+
+            newDocument.revisions.push(revision);
 
             // Server-side database transaction that appends the revision remotely to the document.
             api_saveDocument(revision, documentID, function(error, result) {
@@ -90,6 +99,31 @@ saveRemoteStorage = function() {
         window.location.reload();
     } else {
         console.log("Aborting save because already saving.");
+    }
+};
+
+updateDocumentFromRemote = function() {
+    var localDocument = Session.get("document.last") || {}
+    var documentID = Session.get('document.currentID');
+    var remoteDocument = Documents.findOne({
+        _id: documentID
+    });
+    if (remoteDocument && localDocument.revisions && remoteDocument.revisions.length != localDocument.revisions.length) {
+        var newDocument = mergeDocuments(localDocument, remoteDocument);
+        var markup = rebuildDiffs(newDocument.revisions);
+        newDocument.markup = markup;
+        Session.set("document.last", newDocument);
+        $(".notebookEditableArea").html(newDocument.markup);
+        console.log("A change was detected!");
+    }
+};
+
+mergeDocuments = function(documentA, documentB) {
+    var revisionDelta = documentA.revisions.length - documentB.revisions.length;
+    if (revisionDelta > 0) {
+        return documentA;
+    } else {
+        return documentB;
     }
 };
 
@@ -129,11 +163,19 @@ startSaveIntervals = function() {
     clearSaveIntervals();
     // Local save the file every 500ms
     localSaveInterval = setInterval(function() {
-        saveLocalStorage();
+        if (Session.get("currentView") == "editor") {
+            saveLocalStorage();
+        } else {
+            clearSaveIntervals();
+        }
     }, 500);
     // Remote save every 500ms.
     remoteSaveInterval = setInterval(function() {
-        saveRemoteStorage();
+        if (Session.get("currentView") == "editor") {
+            saveRemoteStorage();
+        } else {
+            clearSaveIntervals();
+        }
     }, 500);
 };
 

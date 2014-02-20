@@ -41,11 +41,9 @@ renderBinderPage = function() {
 setRefreshInterval = function() {
     binderRefreshInterval = window.setInterval(function() {
         if (binderCurrentlyRefreshing == false && currentTemplate == Template.binder) {
-            console.log("Refreshing!");
             binderCurrentlyRefreshing = true;
             var oldDocuments = Template.documents.documents();
             loadDocuments(function() {
-                console.log("Loaded Docs.");
                 var newDocuments = Template.documents.documents();
                 var equal = true;
                 for (var i = 0; i < newDocuments.length; i++) {
@@ -61,11 +59,10 @@ setRefreshInterval = function() {
                 binderCurrentlyRefreshing = false;
             });
         }
-    }, 5000);
+    }, 2000);
 };
 
 clearRefreshInterval = function() {
-    console.log("clearing!");
     window.clearInterval(binderRefreshInterval);
     binderRefreshInterval = null;
     binderCurrentlyRefreshing = false;

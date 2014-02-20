@@ -26,8 +26,12 @@ module.exports = function(conn, settings) {
                         if (err) {
                             logger.error("db.save error:");
                             logger.error(err);
+                            logger.info("Object:");
+                            logger.info(object);
+                        } else {
+                            object.id = res.id;
                         }
-                        object.id = res.id;
+
                         next(err, object);
                     });
                 }

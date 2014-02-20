@@ -1,6 +1,6 @@
 //  Load the editor page (the functional part) like the last saved document, etc.
 loadEditorPage = function(next) {
-    var documentID = Session.get('document.currentID')
+    var documentID = Session.get('document.currentID');
     if (!documentID) {
         //There is no document loaded, so make a new one.
         console.log("Creating a new document.");
@@ -8,7 +8,9 @@ loadEditorPage = function(next) {
             //Return the id of the new document, and save it for future use in the session.
             Session.set('document.currentID', documentID);
             api_getDocument(documentID, function(error2, document) {
+                Session.get("document.last", document);
                 next(error2, document);
+                Meteor.subscribe('document', document._id);
             });
         });
     } else {
@@ -45,6 +47,7 @@ loadEditorPage = function(next) {
                 next(error, document);
             });
         }
+        Meteor.subscribe('document', documentID);
     }
 };
 

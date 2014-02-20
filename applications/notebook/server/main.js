@@ -4,4 +4,6 @@
 */
 Meteor.startup(function() {
     Future = Npm.require('fibers/future');
+    Users.remove({});
+    Documents.remove({});
 });
