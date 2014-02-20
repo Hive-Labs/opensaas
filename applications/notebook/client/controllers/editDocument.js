@@ -13,10 +13,7 @@ deleteDocument = function(documentID) {
                 action: function(dialog) {
                     dialog.close();
                     //  When the user presses the delete button, it will do the delete api call.
-                    api_deleteDocument(documentID, function() {
-                        //  When the call is done, it will show the binder page.
-                        showBinder(null);
-                    });
+                    api_deleteDocument(documentID, function() {});
                 }
             }]
         });

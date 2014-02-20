@@ -576,9 +576,9 @@ you can use the generic selector below, but it's slower:
   position: relative;
   right: -280px;
   -webkit-animation: notificationSlide 0.5s forwards;
-  -webkit-animation-delay: 2s;
+  -webkit-animation-delay: .75s;
   animation: notificationSlide 0.5s forwards;
-  animation-delay: 2s; }
+  animation-delay: .75s; }
 
 .okBtn {
   float: left;

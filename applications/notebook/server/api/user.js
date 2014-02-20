@@ -153,13 +153,13 @@ api_getUserByID = function(token, userID) {
                         var userID = result.data._id;
                         delete result.data._id;
                         delete result.data.id;
+                        result.data.couch_id = userID;
                         //  Save this user to the temporary mongoDB database.
-                        Users.upsert({
-                            couch_id: userID
-                        }, result.data);
+                        Users.insert(result.data);
 
                         result.data._id = userID;
                         result.data.id = userID;
+                        delete result.data.couch_id;
 
                         fut['return'](result.data || {});
                     }
@@ -185,11 +185,12 @@ api_saveUser = function(user) {
     delete user._id;
     delete user.id;
     delete user_rev;
+    user.couch_id = userID;
     //  Save this user to the temporary mongoDB database.
     Users.upsert({
         couch_id: userID
     }, user);
-
+    delete user.couch_id;
     user._id = userID;
     user.id = userID;
 

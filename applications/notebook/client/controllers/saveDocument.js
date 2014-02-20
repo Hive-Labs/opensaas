@@ -106,7 +106,7 @@ updateDocumentFromRemote = function() {
     var localDocument = Session.get("document.last") || {}
     var documentID = Session.get('document.currentID');
     var remoteDocument = Documents.findOne({
-        _id: documentID
+        couch_id: documentID
     });
     if (remoteDocument && localDocument.revisions && remoteDocument.revisions.length != localDocument.revisions.length) {
         var newDocument = mergeDocuments(localDocument, remoteDocument);
