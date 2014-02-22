@@ -10,10 +10,13 @@
     "underscore": "1.5.1",
     "nconf": "~0.6.7",
     "js-yaml": "~2.1.0",
-    "winston": "~0.7.2"
+    "winston": "~0.7.2",
+    "mime": "~1.2.11",
+    "mmmagic": "~0.3.6"
   },
   "devDependencies": {
     "cradle": "~0.6.6",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "mime": "~1.2.11"
   }
 }

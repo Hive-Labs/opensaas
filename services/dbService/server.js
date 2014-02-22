@@ -71,6 +71,9 @@ app.post('/schema/migrate/:application', routes.schema.migrate);
 app.get('/entity/:application/:collection/:entity/:id', routes.entity.findById);
 app.get('/entity/:application/:collection/:entity', routes.entity.findAll);
 app.post('/entity/:application/:collection/:entity', routes.entity.create);
+app.post('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.attachFile);
+app.get('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.findAttachment);
+app.del('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.removeAttachment);
 app.post('/entity/:application/:collection/:entity/:id', routes.entity.update);
 app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
 

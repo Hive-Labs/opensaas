@@ -71,6 +71,127 @@ module.exports = function(persistent, cache) {
             }
         },
 
+        findAttachment: function(req, res) {
+            if (cache !== undefined) {
+                var cTime = getcacheTime(req);
+                if (cTime !== 0) {
+                    cache.entity.findAttachment(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        function(err, fileStream) {
+                            persistent.entity.findAttachment(req.params.application,
+                                req.params.collection,
+                                req.params.entity,
+                                req.params.id,
+                                req.params.name,
+                                function(err, fileStream) {
+                                    fileStream.pipe(res);
+                                });
+                            return;
+                        });
+                } else {
+                    persistent.entity.findAttachment(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        function(err, fileStream) {
+                            fileStream.pipe(res);
+                        });
+                    return;
+                }
+            } else {
+                persistent.entity.findAttachment(req.params.application,
+                    req.params.collection,
+                    req.params.entity,
+                    req.params.id,
+                    req.params.name,
+                    function(err, fileStream) {
+                        fileStream.pipe(res);
+                    });
+            }
+        },
+
+        removeAttachment: function(req, res) {
+            if (cache !== undefined) {
+                var cTime = getcacheTime(req);
+                if (cTime !== 0) {
+                    cache.entity.removeAttachment(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        function(err, resp) {
+                            persistent.entity.removeAttachment(req.params.application,
+                                req.params.collection,
+                                req.params.entity,
+                                req.params.id,
+                                req.params.name,
+                                sendJSONResponse(res, 201, 400));
+                            return;
+                        });
+                } else {
+                    persistent.entity.removeAttachment(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        sendJSONResponse(res, 201, 400));
+                    return;
+                }
+            } else {
+                persistent.entity.removeAttachment(req.params.application,
+                    req.params.collection,
+                    req.params.entity,
+                    req.params.id,
+                    req.params.name,
+                    sendJSONResponse(res, 201, 400));
+            }
+        },
+
+        attachFile: function(req, res) {
+            if (cache !== undefined) {
+                var cTime = getcacheTime(req);
+                if (cTime !== 0) {
+                    cache.entity.attachFile(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        req.files,
+                        function(obj, err) {
+                            persistent.entity.attachFile(req.params.application,
+                                req.params.collection,
+                                req.params.entity,
+                                req.params.id,
+                                req.params.name,
+                                req.files,
+                                sendJSONResponse(res, 201, 400));
+                        });
+                    return;
+                } else {
+                    persistent.entity.attachFile(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        req.files,
+                        sendJSONResponse(res, 201, 400));
+                    return;
+                }
+            } else {
+                persistent.entity.attachFile(req.params.application,
+                    req.params.collection,
+                    req.params.entity,
+                    req.params.id,
+                    req.params.name,
+                    req.files,
+                    sendJSONResponse(res, 201, 400));
+            }
+        },
+
         //TODO FINISH cached version  
         update: function(req, res) {
             if (cache !== undefined) {
@@ -84,6 +205,7 @@ module.exports = function(persistent, cache) {
                             this.entity.update(req.params.application,
                                 req.params.collection,
                                 req.params.entity,
+                                req.params.id,
                                 req.body,
                                 sendJSONResponse(res, 202, 400));
                         }
@@ -132,6 +254,7 @@ function sendJSONResponse(res, successCode, errorCode) {
 // Returns cache time if cacheable
 //         -1 if time not set but cachable
 //         0 if not cacheable
+
 function getCacheTime(req) {
     var cacheControl = req.header('Cache-Control'),
         cacheSettings = cacheControl.split(',');
