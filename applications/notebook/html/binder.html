@@ -10,6 +10,9 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="dashboard">
+            <div class="onBoardingDiv">
+                {{> gettingStartedJumbotron}}
+            </div>
             <div class="notificationsBox">
                 {{> notifications}}
             </div>
@@ -45,6 +48,67 @@
     </div>
 </template>
 
+
+<template name="gettingStartedJumbotron">
+    <div class="jumbotron gettingStartedJumbotron jumbotronFadeIn">
+        <h1>Welcome to NoteBook!</h1>
+        <p>This is where your news feed will show up. Before we get social, you need to setup your profile.</p>
+        <p><a class="btn btn-primary btn-lg" role="button" onClick="startOnBoarding();">Continue</a>
+        </p>
+    </div>
+</template>
+
+<template name="completeYourProfile">
+    <div class="jumbotron completeProfileJumbotron jumbotronFadeIn">
+        <h1 class="completeProfileHeader">Complete your profile</h1>
+        <div class="changeProfileDiv">
+            <img id="profileImage" src="http://placehold.it/100x100" alt="..." class="img-thumbnail profileImage">
+            <input class="imageFileUploader" id="fileupload" type="file" name="files[]" />
+            </img>
+
+        </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon">Full Name</span>
+            <input id="studentName" type="text" class="form-control" value="{{displayName}}">
+        </div>
+        <div class="input-group input-group-lg ">
+            <span class="input-group-addon">University</span>
+            <select id="studentSchool" class="bootstrapSelect">
+                {{#each schoolList}} {{> schoolItem}} {{/each}}
+            </select>
+        </div>
+        <div class="input-group input-group-lg ">
+            <span class="input-group-addon">Year</span>
+            <select id="studentYear" class="bootstrapSelect">
+                <option>
+                    Freshman
+                </option>
+                <option>
+                    Sophomore
+                </option>
+                <option>
+                    Junior
+                </option>
+                <option>
+                    Senior
+                </option>
+            </select>
+        </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon">Major</span>
+            <input type="text" id="studentMajor" class="form-control" placeholder="Computer Science, Electrical Engineering">
+        </div>
+        <p><a id="completeProfile" class="btn btn-primary btn-lg" role="button" onClick="completeProfile();">Finish</a>
+        </p>
+    </div>
+</template>
+
+<template name="schoolItem">
+    <option>
+        {{name}}
+    </option>
+</template>
+
 <template name="documentItem">
     <div class="well well-lg documentItem" id="{{_id}}">
         <marquee behavior="scroll" direction="left" scrollamount="3" style="color: {{color}}" class="documentItemTitle">{{title}}</marquee>
@@ -69,7 +133,7 @@
 
 <template name="notificationItem">
     <div class="notificationItem" onClick="dismissNotification('{{id}}');" id="notification_{{id}}">
-        <p class="glyphicon glyphicon-ok-circle okBtn"/>
+        <p class="glyphicon glyphicon-ok-circle okBtn" />
         <p class="notificationItemText">{{text}}</p>
     </div>
 </template>

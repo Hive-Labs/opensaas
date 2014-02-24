@@ -5,6 +5,8 @@
 @import "ruler";
 @import "binder";
 @import "history";
+@import "login";
+@import "loading";
 
 
 
@@ -21,6 +23,8 @@ html, body {
 	width: 100%;
 	position: relative;
 	z-index: 9;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 .navbar{
@@ -39,7 +43,7 @@ html, body {
 	padding-right:280px;
 	padding-left:10px;
 	height: 100%;
-	margin-top:10px;
+	padding-top:10px;
 }
 
 .navbar-brand{
@@ -236,4 +240,8 @@ h1{
 .saveStatus p{
 	padding-left:20px;
 	margin-bottom:0;
+}
+
+.profilePictureImage{
+	height: 30px;
 }

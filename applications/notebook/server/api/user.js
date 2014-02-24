@@ -64,7 +64,11 @@ api_createUser = function(token) {
             config.messages.welcomeNotification
         ],
         displayName: authServiceUser.displayName,
-        authServiceID: authServiceUser.user_id
+        authServiceID: authServiceUser.user_id,
+        schoolMajor: "",
+        schoolyear: "",
+        university: "",
+        onBoarded: false
     };
 
     var userID = user._id;
@@ -234,4 +238,82 @@ api_dismissNotification = function(token, notificationID) {
     api_saveUser(user);
 
     return fut.wait();
+}
+
+
+/*
+    Given an auth token, this will onboard the user with the given profile
+    information. 
+    onBoardingData: {
+        displayName: "Rohit Krishnan",
+        university: "University Of Massachusetts Lowell",
+        schoolYear: "Sophomore",
+        schoolMajor: "Computer Science, Magic"
+    }
+*/
+api_onBoarding = function(token, onBoardingData) {
+    var user = api_getUser(token);
+    if (onBoardingData) {
+        user.displayName = onBoardingData.displayName;
+        user.university = onBoardingData.university;
+        user.schoolYear = onBoardingData.schoolYear;
+        user.schoolMajor = onBoardingData.schoolMajor;
+        user.onBoarded = true;
+        api_saveUser(user);
+    }
+}
+
+api_getProfilePicturePathWithID = function(userID) {
+    var fs = Npm.require('fs');
+
+    //  Check to see if the mongoDB has a copy of the profile picture
+    var profilePicture = ProfilePics.findOne({
+        user_id: userID
+    });
+
+    //  If there is a cached copy of the picture
+    if (profilePicture != null && profilePicture.path != null) {
+        console.log("Returning a cached copy of profile picture.");
+        //  The path might exist in database but not the actual file
+        if (!fs.existsSync(profilePicture.path)) {
+            //  If it  is an invalid path, remove it and retry everything.
+            ProfilePics.remove({
+                user_id: userID
+            });
+            return api_getProfilePicturePathWithID(userID);
+        } else {
+            //  If valid path, then return that
+            return profilePicture.path;
+        }
+    } else {
+        var asyncDownloadFunction = function(userID, callback) {
+            //  We use this package to talk to dbServer through REST API
+            var request = Npm.require('request');
+            //  Remove the file if it exists
+            var path = Npm.require('path').resolve('.', config.temporaryPaths.profilePicture + userID);
+            if (fs.existsSync(path) == true) {
+                console.log("Deleting old file.");
+                fs.unlinkSync(path);
+            }
+            //  Get the file from the dbServer and save it to local filesystem
+            var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.users + "/" + userID + "/attachments/profilepic";
+            var reqStream = request.get(config.dbServerHost + ":" + config.dbServerPort + url);
+            reqStream.pipe(fs.createWriteStream(path));
+            if (callback != null)
+                callback(null, path);
+        };
+
+        var syncDownloadFunction = Meteor._wrapAsync(asyncDownloadFunction);
+        var path = syncDownloadFunction(userID);
+
+        console.log("Cached profile picture to " + path);
+        ProfilePics.upsert({
+            user_id: userID
+        }, {
+            path: path,
+            user_id: userID
+        });
+
+        return path;
+    }
 }

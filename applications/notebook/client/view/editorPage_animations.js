@@ -6,7 +6,7 @@ setPageSize = function(width, height) {
     var pageHeight = height * $(".notebookTextArea").outerWidth() / width;
     $(".notebookEditableArea").height(pageHeight);
     $(".notebook").css("padding-right", ($(".notebook").outerWidth() - $('.notebookTextArea').outerWidth()) + "px");
-    $(".saveStatus").css("margin-right", ($(".notebook").outerWidth() - $('.notebookTextArea').outerWidth()) + "px");
+    $(".saveStatus").css("margin-right", ($(".notebook").outerWidth() - $('.notebookTextArea').outerWidth() + 20) + "px");
 };
 
 animateNotebookLeftToRight = function() {

@@ -7,3 +7,6 @@ standard-app-packages
 insecure
 preserve-inputs
 http
+iron-router
+jquery
+npm

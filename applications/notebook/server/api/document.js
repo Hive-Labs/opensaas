@@ -43,6 +43,7 @@ api_getDocument = function(token, documentID) {
                         //  Save it to the temporary mongoDB database.
                         delete result.data.id;
                         delete result.data._id;
+                        delete result.data._rev;
                         result.data.couch_id = documentID;
                         //  Save it to the temporary mongoDB database.
                         Documents.insert(result.data);
@@ -75,7 +76,7 @@ api_saveDocument = function(token, revision, documentID) {
     //  Add some properties to the revision
     revision.authorID = userID;
     revision.modificationTime = new Date();
-
+    var url;
     /*  If the user gave us a documentID, then we need to save the revision to that ID.
             Otherwise, we need to make a new document and save the revision to that as the
             first revision. */
@@ -110,6 +111,7 @@ api_saveDocument = function(token, revision, documentID) {
 
         delete document.id;
         delete document._id;
+        delete document._rev;
         document.couch_id = documentID;
         //  Save it to the temporary mongoDB database.
         Documents.upsert({
@@ -117,9 +119,11 @@ api_saveDocument = function(token, revision, documentID) {
         }, document);
 
         //document.id = documentID;
-        document._id = documentID;
+        delete document._id;
         delete document.couch_id;
         delete document._rev;
+
+        url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + documentID;
     } else {
         //  User didn't give us a document id, so make a new document.
         document = {
@@ -134,14 +138,14 @@ api_saveDocument = function(token, revision, documentID) {
         };
         //  We need to do some things later since this is a new document.
         newDocument = true;
+
+        url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes;
     }
 
 
     try {
         //  Everything below will be asyncronous, so we rely on futures to return a value.
         var fut = new Future();
-        //  This is the url we have to post to the database so we can save the new document
-        var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes;
         //  We perform the post request to save this new document into the dbService.
         postRequest(config.dbServerHost, config.dbServerPort, url, document, function(err, result) {
             //  Check if the database transaction gave an error.
@@ -179,7 +183,7 @@ api_saveDocument = function(token, revision, documentID) {
 
                     delete result.data.id;
                     delete result.data._id;
-                    delete result.data._rev;
+                    //delete result.data._rev;
                     result.data.couch_id = documentID;
                     //  Save it to the temporary mongoDB database.
                     Documents.upsert({
@@ -189,7 +193,7 @@ api_saveDocument = function(token, revision, documentID) {
                     result.data.id = documentID;
                     result.data._id = documentID;
                     delete result.data.couch_id;
-
+                    console.log("Saved to the remote database.");
                     fut['return'](result.data || {});
                 }
             }
@@ -200,7 +204,7 @@ api_saveDocument = function(token, revision, documentID) {
     }
 
     //  If the document already has an id, then return it to user.
-    if (document._id) {
+    if (!newDocument) {
         console.log("Returning cached copy of the document after save.");
         return document;
     }

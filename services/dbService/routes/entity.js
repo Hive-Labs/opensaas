@@ -199,6 +199,7 @@ module.exports = function(persistent, cache) {
                 cache.entity.update(req.params.application,
                     req.params.collection,
                     req.params.entity,
+                    req.params.id,
                     req.body,
                     function(err, obj) {
                         if (err || !obj) {
@@ -215,6 +216,7 @@ module.exports = function(persistent, cache) {
                 persistent.entity.update(req.params.application,
                     req.params.collection,
                     req.params.entity,
+                    req.params.id,
                     req.body,
                     sendJSONResponse(res, 202, 400));
             }

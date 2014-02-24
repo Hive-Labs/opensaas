@@ -126,3 +126,111 @@
 @keyframes notificationSlide {
     100% { right: 0; }
 }
+
+.gettingStartedJumbotron{
+	width: 60%; /* fallback if needed */
+  	width: calc(100% - 280px);
+  	background-color: inherit;
+  	opacity: 0;
+    -moz-animation: fadeInAnim 2s forwards; /* Firefox */
+    -ms-animation: fadeInAnim 2s forwards; /* Internet Explorer */
+    -o-animation: fadeInAnim 2s forwards; /* Opera */
+    -webkit-animation: fadeInAnim 2s forwards;
+    animation: fadeInAnim 2s forwards;
+     -webkit-animation-delay: .75s;
+     animation-delay: .75s;
+    position: absolute;
+    left:0px;
+}
+
+.completeProfileJumbotron{
+	display: none;
+	width: 60%; /* fallback if needed */
+  	width: calc(100% - 280px);
+  	background-color: inherit;
+  	opacity: 0;
+    -moz-animation: fadeInAnim 2s forwards; /* Firefox */
+    -ms-animation: fadeInAnim 2s forwards; /* Internet Explorer */
+    -o-animation: fadeInAnim 2s forwards; /* Opera */
+    -webkit-animation: fadeInAnim 2s forwards;
+    animation: fadeInAnim 2s forwards;
+     -webkit-animation-delay: .75s;
+     animation-delay: .75s;
+    position: absolute;
+    left:200%;
+    text-align: center;
+    padding-top: 0px;
+}
+
+.completeProfileJumbotron h1{
+	margin-bottom:20px;
+}
+
+.completeProfileJumbotron .input-group{
+	margin-bottom:20px;
+}
+
+.bootstrapSelect{
+	background-color: white;
+	border-radius: 5px;
+	border-bottom-left-radius: 0px;
+	border-top-left-radius: 0px;
+	border: 1px solid #cccccc;
+	color: #555555;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 16px;
+	padding-right: 16px;
+	font-size: 18px;
+	width: 100%;
+}
+
+.onBoardingDiv{
+	float: left;
+	overflow-y:scroll;
+}
+
+
+@-webkit-keyframes fadeInAnim {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes fadeInAnim {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-o-keyframes fadeInAnim {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeInAnim {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.profileImage{
+	margin-bottom: 10px;
+	opacity: 0.6;
+	float: left;
+	width: 100px;
+}
+
+.profileImage:hover{
+	margin-bottom: 10px;
+	opacity: 1;
+}
+
+.changeProfileDiv{
+	width:100%;
+	display:inline-block;
+}
+
+.imageFileUploader{
+	width: 100px;
+	height: 100px;
+	position: relative;
+	right: 105px;
+	float: left;
+	opacity: 0;
+}
+

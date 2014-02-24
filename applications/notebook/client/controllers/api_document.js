@@ -26,7 +26,7 @@ api_getAllDocuments = function(maxResults, next) {
                     //  We need to get the full document from the id.
                     api_getDocument(result.privileges.readableDocuments[readableDocumentID],
                         function(error, result) {
-                            if (!error) {
+                            if (!error && result) {
                                 result.readable = true;
                                 result.writable = false;
                                 documentResults.push(result);

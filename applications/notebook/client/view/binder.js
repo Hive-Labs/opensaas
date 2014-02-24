@@ -167,8 +167,127 @@ dismissNotification = function(id) {
         Template.notifications.notifications();
     }, 1000);
 
-    api_dismissNotification(id, function(error, result) {
+    api_dismissNotification(id, function(error, result) {});
 
-    });
+}
 
+startOnBoarding = function() {
+    $(".gettingStartedJumbotron").animate({
+        left: '-100%'
+    }, 750);
+
+    Template.completeYourProfile.displayName = Session.get("user.current").displayName
+    Template.completeYourProfile.schoolList = [{
+        name: 'University Of Massachusetts Lowell'
+    }];
+
+    setTimeout(function() {}, 500);
+    setTimeout(function() {
+        $(".gettingStartedJumbotron").css("display", "none");
+        $(".onBoardingDiv").html($(Template.completeYourProfile()))
+        $(".completeProfileJumbotron").css("display", "block");
+        $(".completeProfileJumbotron").animate({
+            left: '0px'
+        }, 1500);
+
+        $('#fileupload').fileupload({
+            dataType: 'text',
+            url: 'user/profilepic',
+            type: "POST",
+            formdata: {
+                token: getCookie("hive_auth_token")
+            },
+            add: function(e, data) {
+                var url = URL.createObjectURL(data.files[0]);
+                $("#profileImage").attr("src", url);
+                data.formData = Session.get("hive_auth_token");
+                window.profileUploader = data;
+            }
+        });
+    }, 1500);
+
+
+}
+
+completeProfile = function() {
+    var success = true;
+
+    if ($("#studentName").val() == "") {
+        success = false;
+        $("#studentName").parent().effect("shake")
+    }
+
+    if ($("#studentUniversity").val() == "") {
+        success = false;
+        $("#studentUniversity").parent().effect("shake")
+    }
+
+    if ($("#studentYear").val() == "") {
+        success = false;
+        $("#studentYear").parent().effect("shake")
+    }
+
+    if ($("#studentMajor").val() == "") {
+        success = false;
+        $("#studentMajor").parent().effect("shake")
+    }
+
+    if (success) {
+        if (window.profileUploader) {
+            var jqxhr = window.profileUploader.submit()
+                .success(function(result, textStatus, jqXHR) {
+                    console.log("Success");
+                })
+                .error(function(jqXHR, textStatus, errorThrown) {
+
+                })
+                .complete(function(result, textStatus, jqXHR) {
+                    var onBoardingData = {
+                        displayName: $("#studentName").val(),
+                        university: $("#studentSchool").val(),
+                        schoolYear: $("#studentYear").val(),
+                        schoolMajor: $("#studentMajor").val()
+                    };
+
+                    api_onBoarding(onBoardingData, function(err, result) {
+                        $("#studentName").parent().animate({
+                            left: '-200%'
+                        }, 500);
+
+                        $("#studentSchool").parent().animate({
+                            right: '-200%'
+                        }, 500);
+
+                        $("#studentYear").parent().animate({
+                            left: '-200%'
+                        }, 500);
+
+                        $("#studentMajor").parent().animate({
+                            right: '-200%'
+                        }, 500);
+
+                        $("#completeProfile").attr("onClick", null);
+                        $("#completeProfile").click(function() {
+                            window.location.reload();
+                        });
+
+                        setTimeout(function() {
+                            $("#studentName").parent().css("display", "none");
+                            $("#studentSchool").parent().css("display", "none");
+                            $("#studentYear").parent().css("display", "none");
+                            $("#studentMajor").parent().css("display", "none");
+                            $("#profileImage").css("width", "300px");
+                            $("#profileImage").css("margin-left", "auto");
+                            $("#profileImage").css("margin-right", "auto");
+                            $("#profileImage").css("float", "none");
+                            $(".imageFileUploader").css("display", "none");
+                            $(".completeProfileHeader").html(onBoardingData.displayName);
+
+                        }, 700);
+                    });
+                });
+        } else {
+            $(".changeProfileDiv").effect("shake");
+        }
+    }
 }

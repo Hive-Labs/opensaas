@@ -50,6 +50,7 @@ function init() {
             if (result == true) {
                 auth_loadUser(function(user) {
                     //Bring the user to the binder page
+                    $(".profilePictureImage").attr("src", "/user/profilepic");
                     showBinder(user);
                 });
             } else {

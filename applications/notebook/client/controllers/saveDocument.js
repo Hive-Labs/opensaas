@@ -38,9 +38,6 @@ clearLocalSaves = function() {
     Save the document to the server.
 */
 saveRemoteStorage = function() {
-    //  Before doing a remote save, check to see if some other user changed something
-    updateDocumentFromRemote();
-
     //  Get the user's temporary login information.
     token = getCookie("hive_auth_token");
     //  Get the currently loaded document's id.
@@ -49,6 +46,8 @@ saveRemoteStorage = function() {
         and that we aren't currently saving
     */
     if (token && documentID && getSaveStatus() != SAVE_STATUS.SAVING) {
+        //  Before doing a remote save, check to see if some other user changed something
+        var docNeedsSave = updateDocumentFromRemote();
         //  Get the html version of the user's document.
         var markup = $(".notebookEditableArea").html();
         //  Make a document out of it and set some properties.
@@ -56,10 +55,19 @@ saveRemoteStorage = function() {
         newDocument.timestamp = new Date();
         newDocument.markup = markup;
         newDocument.title = $('.notebookTitle').val();
+        newDocument.id = documentID;
         newDocument.revisions = [];
 
         //  Get the last saved document to compare with current.
         var previousDocument = Session.get("document.last") || {};
+
+        if (previousDocument != {}) {
+            //  Check to see if the previous document in session is some other doc
+            if (previousDocument.id != documentID) {
+                previousDocument = {};
+                Session.set("document.last", null);
+            }
+        }
 
         newDocument.revisions = previousDocument.revisions || [];
 
@@ -70,11 +78,11 @@ saveRemoteStorage = function() {
             //  Show the user that we are currently saving.
             setSaveStatus(SAVE_STATUS.SAVING);
 
-            //  Create list of differences between the last save and the current save.
+            //  Create list of differences between the last save and the current markup.
             var dmp = new diff_match_patch();
             var diffs = dmp.diff_main(previousDocument.markup || '', newDocument.markup);
 
-            //Make a new revision for this document
+            //  Make a new revision for this document
             var revision = {};
             revision.diffs = diffs;
             revision.title = $('.notebookTitle').val();
@@ -108,13 +116,20 @@ updateDocumentFromRemote = function() {
     var remoteDocument = Documents.findOne({
         couch_id: documentID
     });
-    if (remoteDocument && localDocument.revisions && remoteDocument.revisions.length != localDocument.revisions.length) {
-        var newDocument = mergeDocuments(localDocument, remoteDocument);
+
+    remoteDocument.id = remoteDocument.couch_id;
+    if (remoteDocument && localDocument.revisions && remoteDocument.revisions.length > localDocument.revisions.length) {
+        var newDocument = remoteDocument;
         var markup = rebuildDiffs(newDocument.revisions);
         newDocument.markup = markup;
         Session.set("document.last", newDocument);
-        $(".notebookEditableArea").html(newDocument.markup);
-        console.log("A change was detected!");
+        updateEditorText(newDocument.markup);
+        console.log(remoteDocument.revisions.length + " != " + localDocument.revisions.length);
+        return false;
+    } else if (remoteDocument && localDocument.revisions && localDocument.revisions.length > remoteDocument.revisions.length) {
+        return true;
+    } else {
+        return false;
     }
 };
 

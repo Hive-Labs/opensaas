@@ -9,10 +9,12 @@ showBinder = function(user) {
     //  Show the loading box while we load stuff
     showLoadingBox();
     //  load the UI part of the binder page
-    renderBinderPage();
     Session.set('currentView', "binder");
     currentTemplate = Template.binder;
     template_changer.changed();
+    setTimeout(function() {
+        renderBinderPage();
+    }, 50);
     //  hide the loading box because its all loaded
     hideLoadingBox();
     //  Start refreshing the data in page occasionally
@@ -35,7 +37,12 @@ loadBinderPage = function(next) {
 
 //  Load the binder page (the UI part)
 renderBinderPage = function() {
-
+    var user = Session.get("user.current");
+    if (user.onBoarded == true) {
+        $(".onBoardingDiv").css("display", "none");
+    } else {
+        $('.profilePictureImage').css("display", "none");
+    }
 };
 
 setRefreshInterval = function() {

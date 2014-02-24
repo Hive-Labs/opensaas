@@ -26,7 +26,7 @@ module.exports = function(conn, settings) {
                     object.view = viewName;
                     db.save(object, function(err, res) {
                         if (err) {
-                            logger.error("db.save error:");
+                            logger.error("error creating. db.save error:");
                             logger.error(err);
                             logger.info("Object:");
                             logger.info(object);
@@ -83,7 +83,7 @@ module.exports = function(conn, settings) {
             });
         },
 
-        update: function(application, collection, entity, object, next) {
+        update: function(application, collection, entity, id, object, next) {
             var db = getDb(conn, application, function(err, db) {
                 if (err) {
                     logger.error("getDB error:");
@@ -93,16 +93,15 @@ module.exports = function(conn, settings) {
                     if (object == null) {
                         logger.error("Object was null.");
                         next(exceptions.entity.updateException("Object cannot be null."), object);
-                    } else if (object._id == null) {
-                        logger.error("The object needs an _id.");
-                        next(exceptions.entity.updateException("The object needs an _id."), object);
                     } else {
-                        var _id = object._id;
+                        var _id = id;
                         delete object._attachments;
                         delete object._id;
                         db.merge(_id, object, function(err, res) {
                             object._id = _id;
                             if (err) {
+                                logger.error("Error updating.");
+                                logger.error(err);
                                 next(exceptions.entity.updateException(res), object);
                             } else {
                                 next(null, object); //XXX should return whole obj? efficiency of that?
@@ -114,8 +113,6 @@ module.exports = function(conn, settings) {
         },
 
         findAttachment: function(application, collection, entity, id, name, next) {
-            var path = require('path');
-            var fs = require('fs');
             var db = getDb(conn, application, function(err, db) {
                 if (err) {
                     logger.error("getDB error:");

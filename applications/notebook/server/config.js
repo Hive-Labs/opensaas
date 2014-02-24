@@ -21,5 +21,8 @@ config = {
     authServerPort: "4455",
     authClientID: "notebookLocal",
     authClientSecret: "google1",
-    authRedirectURI: "http://localhost:5000"
+    authRedirectURI: "http://localhost:5000",
+    temporaryPaths: {
+        profilePicture: 'profilePictures/'
+    }
 };

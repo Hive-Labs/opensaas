@@ -65,7 +65,7 @@ renderEditorPage = function(document) {
         setSaveStatus(SAVE_STATUS.UNSAVED);
 
         //Wait 2 seconds before hiding when the user leaves the mouse, in case they come back.
-        var cancelHide = false;
+        /*var cancelHide = false;
         $("#navBarMain").mouseleave(function() {
             cancelHide = false;
             setTimeout(function() {
@@ -80,7 +80,7 @@ renderEditorPage = function(document) {
         $("#navBarMain").mouseover(function() {
             cancelHide = true;
             showNavBar();
-        });
+        });*/
 
         if (document.currentlyWritingUsers.length > 0) {
             $(".friendsHeader").text("Editors (" + document.currentlyWritingUsers.length + ")");
@@ -128,3 +128,56 @@ showEditor = function(user, forceNew) {
         hideLoadingBox();
     });
 }
+
+updateEditorText = function(markup) {
+    savedSelection = saveSelection(document.getElementById("notebookEditableArea"));
+    $(".notebookEditableArea").html(markup);
+    restoreSelection(document.getElementById("notebookEditableArea"), savedSelection);
+}
+
+saveSelection = function(containerEl) {
+    var range = window.getSelection().getRangeAt(0);
+    var preSelectionRange = range.cloneRange();
+    preSelectionRange.selectNodeContents(containerEl);
+    preSelectionRange.setEnd(range.startContainer, range.startOffset);
+    var start = preSelectionRange.toString().length;
+
+    return {
+        start: start,
+        end: start + range.toString().length
+    }
+};
+
+restoreSelection = function(containerEl, savedSel) {
+    var charIndex = 0,
+        range = document.createRange();
+    range.setStart(containerEl, 0);
+    range.collapse(true);
+    var nodeStack = [containerEl],
+        node, foundStart = false,
+        stop = false;
+
+    while (!stop && (node = nodeStack.pop())) {
+        if (node.nodeType == 3) {
+            var nextCharIndex = charIndex + node.length;
+            if (!foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex) {
+                range.setStart(node, savedSel.start - charIndex);
+                foundStart = true;
+            }
+            if (foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex) {
+                range.setEnd(node, savedSel.end - charIndex);
+                stop = true;
+            }
+            charIndex = nextCharIndex;
+        } else {
+            var i = node.childNodes.length;
+            while (i--) {
+                nodeStack.push(node.childNodes[i]);
+            }
+        }
+    }
+
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+};
