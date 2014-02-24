@@ -6,6 +6,7 @@ config = {
     dbRoutes: {
         notes: "notes/note",
         users: "users/user",
+        feeds: "feeds/feed",
     },
     messages: {
         welcomeNotification: {

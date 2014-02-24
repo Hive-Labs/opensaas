@@ -24,6 +24,36 @@ Meteor.methods({
     }
 });
 
+Router.map(function() {
+    this.route('getProfilePic', {
+        path: '/api/users/:_id/profilepic',
+        where: 'server',
+        action: function() {
+            if (this.request.method == "GET") {
+                var fstream = Npm.require('fs');
+                //  User needs to give an auth token
+                var token = readCookie("hive_auth_token", this.request);
+                var response = this.response;
+                //response.end('Pic');
+                //  Get the user associated with this token
+                var user = api_getUser(token);
+                //  See if user exists
+                if (user != null) {
+                    var path = api_getProfilePicturePathWithID(this.params._id);
+                    console.log("Path=" + path);
+                    // path = "/home/rohit/Pictures/editorPage.png";
+                    this.response.end(fstream.readFileSync(path));
+                } else {
+                    response.writeHead(400, {
+                        'Content-Type': 'text/html'
+                    });
+                    this.response.end('User does not exist or bad auth token was provided.');
+                }
+            }
+        }
+    });
+});
+
 
 Router.map(function() {
     //  This will map to the user uploading a profile picture

@@ -35,13 +35,26 @@ loadBinderPage = function(next) {
     });
 };
 
+loadFeeds = function() {
+    var topFeeds = Feeds.find({}, {
+        limit: 10
+    });
+
+}
+
 //  Load the binder page (the UI part)
 renderBinderPage = function(tabToShow) {
+    Meteor.subscribe('feeds', Session.get("user.current").id);
+    Meteor.subscribe('usersProfile');
+
+    loadFeeds();
+
     var user = Session.get("user.current");
     if (user.onBoarded == true) {
         $(".onBoardingDiv").css("display", "none");
     } else {
         $('.profilePictureImage').css("display", "none");
+        $(".newsFeedDiv").css("display", "none");
     }
 
     if (tabToShow) {

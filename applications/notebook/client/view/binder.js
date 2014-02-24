@@ -21,6 +21,22 @@ Template.notifications.notifications = function() {
     return resultList;
 };
 
+Template.feeds.feeds = function() {
+    var feedAry = Feeds.find().fetch();
+    var finalAry = [];
+    for (var i = 0; i < feedAry.length; i++) {
+        var user = Users.findOne({
+            couch_id: feedAry[i].owner
+        });
+        if (user) {
+            feedAry[i].ownerName = user.displayName;
+            finalAry.push(feedAry[i]);
+        }
+    }
+    return finalAry;
+};
+
+
 /*
     This will get a list of all the documents from the server and format it
     so the day, month, and year are formatted nicely.

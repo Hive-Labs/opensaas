@@ -78,6 +78,14 @@ api_createUser = function(token) {
         couch_id: userID
     }, user);
 
+
+    var newUserFeed = {
+        owner: userID,
+        permission: ["*"],
+        text: "Just joined NoteBook."
+    };
+    api_submitFeed(token, newUserFeed);
+
     user._id = userID;
 
     var error;
@@ -121,6 +129,7 @@ api_getUserByID = function(token, userID) {
     var user = Users.findOne({
         couch_id: userID
     });
+
     if (user != null) {
         //  Return a cached copy of the user
         user.id = userID;
@@ -213,6 +222,7 @@ api_saveUser = function(user) {
         console.log("Error saving to database.");
         console.log(error);
     }
+
     return user;
 }
 

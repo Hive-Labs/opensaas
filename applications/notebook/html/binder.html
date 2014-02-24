@@ -11,7 +11,7 @@
     <div class="binder-tab-content tab-content">
         <div class="tab-pane active dashboard-tab-pane" id="dashboard">
             <div class="newsFeedDiv">
-                News feed here...
+                {{> feeds}}
             </div>
             <div class="onBoardingDiv">
                 {{> gettingStartedJumbotron}}
@@ -144,5 +144,16 @@
     <div class="notificationItem" onClick="dismissNotification('{{id}}');" id="notification_{{id}}">
         <p class="glyphicon glyphicon-ok-circle okBtn" />
         <p class="notificationItemText">{{text}}</p>
+    </div>
+</template>
+
+<template name="feedItem">
+    <div class="feedItem">
+        <div class="feedItemProfilePic">
+            <img src="/api/users/{{owner}}/profilepic" />
+        </div>
+        <div class="feedItemText">
+            <h3>{{ownerName}}</h3><p>{{text}}</p>
+        </div>
     </div>
 </template>
