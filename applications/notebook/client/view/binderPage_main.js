@@ -5,7 +5,7 @@ binderCurrentlyRefreshing = false;
     This function will show the binder page. It will first load the 
     functional part, and then it will load the UI.
 */
-showBinder = function(user) {
+showBinder = function(user, tabToShow) {
     //  Show the loading box while we load stuff
     showLoadingBox();
     //  load the UI part of the binder page
@@ -13,7 +13,7 @@ showBinder = function(user) {
     currentTemplate = Template.binder;
     template_changer.changed();
     setTimeout(function() {
-        renderBinderPage();
+        renderBinderPage(tabToShow);
     }, 50);
     //  hide the loading box because its all loaded
     hideLoadingBox();
@@ -36,12 +36,16 @@ loadBinderPage = function(next) {
 };
 
 //  Load the binder page (the UI part)
-renderBinderPage = function() {
+renderBinderPage = function(tabToShow) {
     var user = Session.get("user.current");
     if (user.onBoarded == true) {
         $(".onBoardingDiv").css("display", "none");
     } else {
         $('.profilePictureImage').css("display", "none");
+    }
+
+    if (tabToShow) {
+        $('#binderTabs a[href="#' + tabToShow + '"]').tab('show') // Select tab by name
     }
 };
 

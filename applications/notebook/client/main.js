@@ -51,6 +51,8 @@ function init() {
                 auth_loadUser(function(user) {
                     //Bring the user to the binder page
                     $(".profilePictureImage").attr("src", "/user/profilepic");
+                    $(".profileBox").css("display", "inline-block");
+                    $(".notebook-navbar-nav").css("display", "inline");
                     showBinder(user);
                 });
             } else {

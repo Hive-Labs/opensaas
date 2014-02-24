@@ -1,6 +1,6 @@
 <template name="binder">
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
+    <ul id="binderTabs" class="nav nav-tabs" style="display: none">
         <li class="active"><a href="#dashboard" data-toggle="tab">Dashboard</a>
         </li>
         <li><a href="#docs" data-toggle="tab">Docs</a>
@@ -8,8 +8,11 @@
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane active" id="dashboard">
+    <div class="binder-tab-content tab-content">
+        <div class="tab-pane active dashboard-tab-pane" id="dashboard">
+            <div class="newsFeedDiv">
+                News feed here...
+            </div>
             <div class="onBoardingDiv">
                 {{> gettingStartedJumbotron}}
             </div>
@@ -20,6 +23,12 @@
         <div class="tab-pane" id="docs">
             {{> documents}}
         </div>
+    </div>
+</template>
+
+<template name="feeds">
+    <div id="feeds">
+        {{#each feeds}} {{> feedItem}} {{/each}}
     </div>
 </template>
 

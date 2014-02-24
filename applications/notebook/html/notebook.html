@@ -56,9 +56,17 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                <li id="navBtnBinder">
-                    <a onclick="showBinder();">Binder</a>
+            <ul class="nav notebook-navbar-nav navbar-nav">
+                <li class="dashboard-dropdown dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dashboard-dropdown-menu dropdown-menu">
+                        <li><a onClick="showBinder(null, 'dashboard');">Trending</a>
+                        </li>
+                        <li><a onClick="showBinder(null, 'docs');">Docs</a>
+                        </li>
+                    </ul>
                 </li>
                 <li id="navBtnCreate">
                     <a href="#" onclick="showEditor(null, true);">Create</a>
@@ -68,26 +76,10 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
                     <span class="dropdown-toggle profileBox" data-toggle="dropdown">
                         <img class="profilePictureImage" src="http://placehold.it/30x30" />
-                        <a id="fullName"></a><b class="caret"></b>
+                        <a id="fullName"></a>
                     </span>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#">Action</a>
-                        </li>
-                        <li>
-                            <a href="#">Another action</a>
-                        </li>
-                        <li>
-                            <a href="#">Something else here</a>
-                        </li>
-                        <li>
-                            <a href="#">Separated link</a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

@@ -21,20 +21,22 @@ html, body {
 	margin-top: -70px;
 	padding-top:70px;
 	width: 100%;
-	position: relative;
+	position: absolute;
 	z-index: 9;
-	overflow-y: scroll;
+	overflow-y: hidden;
 	overflow-x: hidden;
 }
 
 .navbar{
 	border-radius: 0px;
 	margin-bottom: 0px;
-	overflow-x:hidden;
-	overflow-y:hidden;
 	height:50px;
 	min-height:0px !important;
 	z-index: 10;
+}
+
+.navbar-nav{
+	height:50px;
 }
 
 .editorDiv{
@@ -164,12 +166,14 @@ h1{
 	background-color: #022449;
 	color:white;
 	width:100%;
+	position: absolute;
+	bottom: 0px;
 }
 .profileBox{
 	padding-top:10px !important;
 	padding-bottom:10px !important;
-	margin:0px !important;
-	display:inline-block;
+	display: none;
+	margin-right: 10px;
 }
 .profileBox a{
 	line-height:30px;
@@ -244,4 +248,20 @@ h1{
 
 .profilePictureImage{
 	height: 30px;
+}
+
+.dropdown{
+	margin-right: 10px;
+}
+
+.dashboard-dropdown-menu{
+	top: 48px !important;
+}
+
+.dashboard-dropdown{
+	margin-right: 0px !important;
+}
+
+.notebook-navbar-nav{
+	display: none;
 }

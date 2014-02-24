@@ -234,3 +234,26 @@
 	opacity: 0;
 }
 
+.newsFeedDiv{
+	float: left;
+	overflow-y:hidden;
+	opacity: 0px;
+	height: 100%;
+	width: 60%; /* fallback if needed */
+  	width: calc(100% - 280px);
+  	  -moz-animation: fadeInAnim 2s forwards; /* Firefox */
+    -ms-animation: fadeInAnim 2s forwards; /* Internet Explorer */
+    -o-animation: fadeInAnim 2s forwards; /* Opera */
+    -webkit-animation: fadeInAnim 2s forwards;
+    animation: fadeInAnim 2s forwards;
+     -webkit-animation-delay: .75s;
+     animation-delay: .75s;
+}
+
+.binder-tab-content{
+	height: 100%;
+}
+
+.dashboard-tab-pane{
+	height: 100%;
+}

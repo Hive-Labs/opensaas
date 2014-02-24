@@ -2,7 +2,7 @@
     This file contains configuration information for the server side code
 */
 config = {
-    dbAppName: "notebook",
+    dbAppName: "notebooktest",
     dbRoutes: {
         notes: "notes/note",
         users: "users/user",

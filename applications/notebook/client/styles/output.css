@@ -335,7 +335,7 @@ you can use the generic selector below, but it's slower:
 .panelTitle {
   width: 100%; }
 
-.tab-content {
+.rightTabsContent {
   margin-bottom: 20px; }
 
 .fontPanel {
@@ -721,6 +721,31 @@ you can use the generic selector below, but it's slower:
   float: left;
   opacity: 0; }
 
+.newsFeedDiv {
+  float: left;
+  overflow-y: hidden;
+  opacity: 0px;
+  height: 100%;
+  width: 60%;
+  /* fallback if needed */
+  width: calc(100% - 280px);
+  -moz-animation: fadeInAnim 2s forwards;
+  /* Firefox */
+  -ms-animation: fadeInAnim 2s forwards;
+  /* Internet Explorer */
+  -o-animation: fadeInAnim 2s forwards;
+  /* Opera */
+  -webkit-animation: fadeInAnim 2s forwards;
+  animation: fadeInAnim 2s forwards;
+  -webkit-animation-delay: .75s;
+  animation-delay: .75s; }
+
+.binder-tab-content {
+  height: 100%; }
+
+.dashboard-tab-pane {
+  height: 100%; }
+
 #timeSlider {
   width: 90%; }
 
@@ -767,19 +792,20 @@ html, body {
   margin-top: -70px;
   padding-top: 70px;
   width: 100%;
-  position: relative;
+  position: absolute;
   z-index: 9;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden; }
 
 .navbar {
   border-radius: 0px;
   margin-bottom: 0px;
-  overflow-x: hidden;
-  overflow-y: hidden;
   height: 50px;
   min-height: 0px !important;
   z-index: 10; }
+
+.navbar-nav {
+  height: 50px; }
 
 .editorDiv {
   display: table;
@@ -890,13 +916,15 @@ h1 {
   text-align: center;
   background-color: #022449;
   color: white;
-  width: 100%; }
+  width: 100%;
+  position: absolute;
+  bottom: 0px; }
 
 .profileBox {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
-  margin: 0px !important;
-  display: inline-block; }
+  display: none;
+  margin-right: 10px; }
 
 .profileBox a {
   line-height: 30px; }
@@ -960,3 +988,15 @@ h1 {
 
 .profilePictureImage {
   height: 30px; }
+
+.dropdown {
+  margin-right: 10px; }
+
+.dashboard-dropdown-menu {
+  top: 48px !important; }
+
+.dashboard-dropdown {
+  margin-right: 0px !important; }
+
+.notebook-navbar-nav {
+  display: none; }
