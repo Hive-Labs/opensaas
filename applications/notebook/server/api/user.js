@@ -2,9 +2,9 @@
     Given an authentication token, we return a list of all the users
     using the notebook app
 */
-api_getAllUsers = function(token) {
+api_getAllUsers = function(token, forceGet) {
     var users = Users.find({}).fetch();
-    if (users != null) {
+    if (users != null && !forceGet) {
         for (var i = 0; i < users.length; i++) {
             //  Return the cached copy of the document.
             users[i].id = users[i].couch_id;
@@ -14,6 +14,7 @@ api_getAllUsers = function(token) {
         }
         return users;
     } else {
+        console.log("Getting list of users");
         //  Everything below will be asyncronous, so we rely on futures to return a value.
         var fut = new Future();
         try {
@@ -25,7 +26,10 @@ api_getAllUsers = function(token) {
                 if (!err && result != null) {
                     //  Loop through and delete personal data before returning the list.
                     for (var i = 0; i < result.data.length; i++) {
-                        //  We don't want to give someone access to another user's personal info
+                        //  We don't want to give someone access to another user's personal informatio
+                        result.data[i].couch_id = result.data[i].id;
+                        delete result.data[i].id;
+                        Users.insert(result.data[i]);
                         delete result.data[i].privileges;
                         delete result.data[i].notifications;
                     }

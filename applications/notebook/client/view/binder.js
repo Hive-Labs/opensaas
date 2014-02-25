@@ -23,6 +23,7 @@ Template.notifications.notifications = function() {
 
 Template.feeds.feeds = function() {
     var feedAry = Feeds.find().fetch();
+    console.log(feedAry);
     var finalAry = [];
     for (var i = 0; i < feedAry.length; i++) {
         var user = Users.findOne({
