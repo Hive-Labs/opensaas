@@ -153,7 +153,17 @@
             <img src="/api/users/{{owner}}/profilepic" />
         </div>
         <div class="feedItemText">
-            <h3>{{ownerName}}</h3><p>{{text}}</p>
+            <h3>{{ownerName}}</h3>
+            <p>{{text}}</p>
+        </div>
+        <div>
+            <div class="votesDiv">
+                <p class="feedItemBtn">{{votes}}</p>
+                <div id="feedItemUpvoteBtn" onClick="upVoteFeed('{{couch_id}}');" class="feedItemBtn glyphicon glyphicon-thumbs-up">
+                </div>
+                <div id="feedItemDownvoteBtn" onClick="downVoteFeed('{{couch_id}}');" class="feedItemBtn glyphicon glyphicon-thumbs-down">
+                </div>
+            </div>
         </div>
     </div>
 </template>

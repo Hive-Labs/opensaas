@@ -22,8 +22,11 @@ Template.notifications.notifications = function() {
 };
 
 Template.feeds.feeds = function() {
-    var feedAry = Feeds.find().fetch();
-    console.log(feedAry);
+    var feedAry = Feeds.find({}, {
+        sort: {
+            votes: -1
+        }
+    }).fetch();
     var finalAry = [];
     for (var i = 0; i < feedAry.length; i++) {
         var user = Users.findOne({
@@ -285,7 +288,8 @@ completeProfile = function() {
 
                         $("#completeProfile").attr("onClick", null);
                         $("#completeProfile").click(function() {
-                            window.location.reload();
+                            $(".onBoardingDiv").css("display", "none");
+                            $(".newsFeedDiv").css("display", "block");
                         });
 
                         setTimeout(function() {

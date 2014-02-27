@@ -2,7 +2,7 @@ binderRefreshInterval = 0;
 binderCurrentlyRefreshing = false;
 
 /*
-    This function will show the binder page. It will first load the 
+    This function will show the binder page. It will first ad the 
     functional part, and then it will load the UI.
 */
 showBinder = function(user, tabToShow) {
@@ -90,4 +90,16 @@ clearRefreshInterval = function() {
     window.clearInterval(binderRefreshInterval);
     binderRefreshInterval = null;
     binderCurrentlyRefreshing = false;
+};
+
+upVoteFeed = function(couch_id) {
+    api_upvoteFeed(couch_id, function() {
+
+    });
+};
+
+downVoteFeed = function(couch_id) {
+    api_downvoteFeed(couch_id, function() {
+
+    });
 };

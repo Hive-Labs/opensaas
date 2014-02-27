@@ -1,6 +1,5 @@
 Meteor.publish("feeds", function(userID) {
-    return Feeds.find(
-        /*{
+    return Feeds.find({
         $or: [{
             permission: '*'
         }, {
@@ -8,6 +7,5 @@ Meteor.publish("feeds", function(userID) {
         }, {
             owner: userID
         }]
-    }*/
-    );
+    });
 });
