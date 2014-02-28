@@ -240,7 +240,7 @@
 	opacity: 0px;
 	height: 100%;
 	width: 60%; /* fallback if needed */
-  	width: calc(100% - 280px);
+  	width: calc(100% - 290px);
   	  -moz-animation: fadeInAnim 2s forwards; /* Firefox */
     -ms-animation: fadeInAnim 2s forwards; /* Internet Explorer */
     -o-animation: fadeInAnim 2s forwards; /* Opera */
@@ -249,7 +249,14 @@
      -webkit-animation-delay: .75s;
      animation-delay: .75s;
      padding: 20px;
+     margin-right:10px;
 }
+
+.newsFeedDiv::-webkit-scrollbar{
+	display: none;
+}
+
+
 
 .binder-tab-content{
 	height: 100%;
@@ -304,8 +311,8 @@
 
 .votesDiv{
 	background-color: rgb(214, 214, 214);
-	width: 76px;
 	height: 20px;
 	border-radius: 5px;
 	float: left;
+	padding-right: 10px;
 }
