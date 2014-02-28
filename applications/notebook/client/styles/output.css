@@ -728,7 +728,7 @@ you can use the generic selector below, but it's slower:
   height: 100%;
   width: 60%;
   /* fallback if needed */
-  width: calc(100% - 280px);
+  width: calc(100% - 290px);
   -moz-animation: fadeInAnim 2s forwards;
   /* Firefox */
   -ms-animation: fadeInAnim 2s forwards;
@@ -739,7 +739,11 @@ you can use the generic selector below, but it's slower:
   animation: fadeInAnim 2s forwards;
   -webkit-animation-delay: .75s;
   animation-delay: .75s;
-  padding: 20px; }
+  padding: 20px;
+  margin-right: 10px; }
+
+.newsFeedDiv::-webkit-scrollbar {
+  display: none; }
 
 .binder-tab-content {
   height: 100%; }
@@ -782,10 +786,10 @@ you can use the generic selector below, but it's slower:
 
 .votesDiv {
   background-color: #d6d6d6;
-  width: 76px;
   height: 20px;
   border-radius: 5px;
-  float: left; }
+  float: left;
+  padding-right: 10px; }
 
 #timeSlider {
   width: 90%; }
