@@ -236,7 +236,7 @@
 
 .newsFeedDiv{
 	float: left;
-	overflow-y:hidden;
+	overflow-y: scroll;
 	opacity: 0px;
 	height: 100%;
 	width: 60%; /* fallback if needed */

@@ -723,7 +723,7 @@ you can use the generic selector below, but it's slower:
 
 .newsFeedDiv {
   float: left;
-  overflow-y: hidden;
+  overflow-y: scroll;
   opacity: 0px;
   height: 100%;
   width: 60%;
