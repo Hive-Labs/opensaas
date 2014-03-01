@@ -28,12 +28,30 @@ Template.feeds.feeds = function() {
         }
     }).fetch();
     var finalAry = [];
+
     for (var i = 0; i < feedAry.length; i++) {
         var user = Users.findOne({
             couch_id: feedAry[i].owner
         });
         if (user) {
             feedAry[i].ownerName = user.displayName;
+            var alreadyVoted = false;
+            for (var j = 0; j < feedAry[i].upvotes.length; j++) {
+                if (feedAry[i].upvotes[j] == Session.get("user.current").id) {
+                    alreadyVoted = true;
+                }
+            }
+
+            for (var j = 0; j < feedAry[i].downvotes.length; j++) {
+                if (feedAry[i].downvotes[j] == Session.get("user.current").id) {
+                    alreadyVoted = true;
+                }
+            }
+
+            if (alreadyVoted) {
+                feedAry[i].alreadyVoted = "hidden";
+            }
+
             finalAry.push(feedAry[i]);
         }
     }

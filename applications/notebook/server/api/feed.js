@@ -10,7 +10,8 @@ api_submitFeed = function(token, feed) {
     } else {
         feed.votes = 0;
         feed.submitDate = new Date();
-
+        feed.upvotes = [];
+        feed.downvotes = [];
         api_saveFeed(feed);
     }
     return true;
@@ -31,7 +32,22 @@ api_getAllFeeds = function() {
                     couch_id: feedID
                 }, result.data[i]);
 
+                var upgradeNecessary = false;
+
+                if (!result.data[i].upvotes) {
+                    result.data[i].upvotes = [];
+                    upgradeNecessary = true;
+                    console.log("DB Upgrade: Added upvotes field to feed.");
+                }
+                if (!result.data[i].downvotes) {
+                    result.data[i].downvotes = [];
+                    upgradeNecessary = true;
+                    console.log("DB Upgrade: Added upvotes field to feed.");
+                }
+
                 result.data[i].id = feedID;
+
+                api_saveFeed(result.data[i]);
             }
             console.log(result.data.length + " feeds retrieved from db.");
         }
@@ -76,6 +92,8 @@ api_saveFeed = function(feed) {
     } else {
         url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.feeds + "/" + (feed.couch_id || feed.id || feed._id);
     }
+
+    feed.votes = feed.upvotes.length - feed.downvotes.length;
     //  We perform the post request to save this new user to the database
     postRequest(config.dbServerHost, config.dbServerPort, url, feed, function(err, feed) {
         var error = err;
@@ -97,12 +115,49 @@ api_saveFeed = function(feed) {
 
 api_upvoteFeed = function(token, couch_id) {
     var feed = api_getFeed(couch_id);
-    feed.votes++;
-    api_saveFeed(feed);
+    var user = api_getUser(token);
+
+    var userAlreadyVoted = false;
+    for (var i = 0; i < feed.upvotes.length; i++) {
+        if (feed.upvotes[i] == user.id) {
+            userAlreadyVoted = true;
+        }
+    }
+
+    for (var i = 0; i < feed.downvotes.length; i++) {
+        if (feed.downvotes[i] == user.id) {
+            userAlreadyVoted = true;
+        }
+    }
+
+    if (!userAlreadyVoted) {
+        feed.votes++;
+        feed.upvotes.push(user.id);
+        console.log(feed);
+        api_saveFeed(feed);
+    }
 };
 
 api_downvoteFeed = function(token, couch_id) {
     var feed = api_getFeed(couch_id);
-    feed.votes--;
-    api_saveFeed(feed);
+    var user = api_getUser(token);
+
+    var userAlreadyVoted = false;
+    for (var i = 0; i < feed.downvotes.length; i++) {
+        if (feed.downvotes[i] == user.id) {
+            userAlreadyVoted = true;
+        }
+    }
+
+    for (var i = 0; i < feed.upvotes.length; i++) {
+        if (feed.upvotes[i] == user.id) {
+            userAlreadyVoted = true;
+        }
+    }
+
+    if (!userAlreadyVoted) {
+        feed.votes--;
+        feed.downvotes.push(user.id);
+        api_saveFeed(feed);
+    }
 };

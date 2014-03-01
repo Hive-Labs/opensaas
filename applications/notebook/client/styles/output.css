@@ -791,6 +791,9 @@ you can use the generic selector below, but it's slower:
   float: left;
   padding-right: 10px; }
 
+.hidden {
+  display: none; }
+
 #timeSlider {
   width: 90%; }
 
