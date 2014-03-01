@@ -33,7 +33,7 @@
 </template>
 
 <template name="documents">
-    <div id="documents" class="documentsListDiv">
+    <div id="documents" class="documentsListDiv hive_scrollbar">
         {{#each documents}} {{> documentItem}} {{/each}}
     </div>
 </template>
@@ -120,7 +120,7 @@
 
 <template name="documentItem">
     <div class="well well-lg documentItem" id="{{_id}}">
-        <marquee behavior="scroll" direction="left" scrollamount="3" style="color: {{color}}" class="documentItemTitle">{{title}}</marquee>
+        <p style="color: {{color}}" class="documentItemTitle">{{title}}</p>
         <hr/>
         <p class="glyphicon glyphicon-pencil documentItemPencilIcon" onclick="loadDocument('{{_id}}');" />
         <p class="documentItemTimestamp">{{formattedCreationTime}}</p>
