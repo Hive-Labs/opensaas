@@ -80,6 +80,7 @@ html, body {
 	background-color:transparent;
 	border:none;
 	outline : 0px;	
+	margin-left: 5px;
 	font-size:12pt;
 }
 
@@ -238,6 +239,9 @@ h1{
 	float:right;
 	margin-bottom:10px;
 	margin-top:-10px;
+	background-color: transparent !important;
+	border: none !important;
+	color: rgb(40, 145, 0) !important;
 }
 .saveStatus span{
 	float:left;
