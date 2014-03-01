@@ -20,8 +20,8 @@
                 {{> notifications}}
             </div>
         </div>
-        <div class="tab-pane" id="docs">
-            {{> documents}}
+        <div class="tab-pane" id="docs" class="docsTabPane">
+            {{> documents}} 
         </div>
     </div>
 </template>
@@ -33,7 +33,7 @@
 </template>
 
 <template name="documents">
-    <div id="documents">
+    <div id="documents" class="documentsListDiv">
         {{#each documents}} {{> documentItem}} {{/each}}
     </div>
 </template>

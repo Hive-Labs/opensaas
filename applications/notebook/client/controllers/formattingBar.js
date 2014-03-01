@@ -142,6 +142,7 @@ loadFormattingBar = function() {
         var isJustifyCenter = document.queryCommandState("justifyCenter");
         var isJustifyRight = document.queryCommandState("justifyRight");
         var isJustifyFull = document.queryCommandState("justifyFull");
+        var currentForeColor = document.queryCommandValue("foreColor");
 
         if (isBold)
             $('.btnBold').addClass("active");
@@ -216,7 +217,41 @@ loadFormattingBar = function() {
             $('.btnJustifyRight').removeClass("active");
         } else
             $('.btnJustifyFull').removeClass("active");
+
+        var widt = false;
+        $('#colorSelector div').css('backgroundColor', currentForeColor);
+        $('#colorpickerHolder').ColorPicker({
+            flat: true,
+            color: currentForeColor,
+            onSubmit: function(hsb, hex, rgb) {
+                $('#colorSelector div').css('backgroundColor', '#' + hex);
+                $('#colorpickerHolder .colorpicker').stop().animate({
+                    height: widt ? 0 : 173
+                }, 500);
+                widt = !widt;
+                var rte = $('.notebookEditableArea');
+                rte.focus();
+                document.execCommand('foreColor', false, "#" + hex);
+                document.onselectionchange();
+            },
+            onChange: function(hsb, hex, rgb) {
+                $('#colorSelector div').css('backgroundColor', '#' + hex);
+                var rte = $('.notebookEditableArea');
+                rte.focus();
+                document.execCommand('foreColor', false, "#" + hex);
+                document.onselectionchange();
+            }
+        });
+        $('#colorSelector').bind('mousedown', function(e) {
+            $('#colorpickerHolder .colorpicker').stop().animate({
+                height: widt ? 0 : 173
+            }, 500);
+            widt = !widt;
+            e.preventDefault();
+        });
     };
+
+    document.onselectionchange();
 };
 
 function populateFontSizes() {

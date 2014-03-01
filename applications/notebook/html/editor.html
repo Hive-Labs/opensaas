@@ -6,13 +6,13 @@
                     <br/>Paste
                 </button>
                 <button type="button" class="imageButton icon-scissors btnCut btn btn-default">
-                    Cut
+                    <br/>Cut
                 </button>
                 <button type="button" class="imageButton icon-copy btnCopy btn btn-default">
-                    Copy
+                    <br/>Copy
                 </button>
                 <button type="button" class="imageButton icon-paint-format btnFormat btn btn-default">
-                    Format
+                   <br/>Format
                 </button>
             </div>
             <div class="fontPanel">
@@ -31,12 +31,15 @@
                 </button>
                 <button type="button" class="imageButton icon-strikethrough btnStrikethrough btn btn-default">
                 </button>
-                <button type="button" class="imageButton icon-arrow-down-right btnSubscript btn btn-default">
+                <button type="button" class="imageButton glyphicon glyphicon-chevron-down btnSubscript btn btn-default">
                 </button>
-                <button type="button" class="imageButton icon-arrow-up-right btnSuperscript btn btn-default">
+                <button type="button" class="imageButton glyphicon glyphicon-chevron-up btnSuperscript btn btn-default">
                 </button>
-                <p class="txtChooseFontColor">Font:</p>
-                <input type="color" class="fontPanelFontColorSelect">
+                <div class="fontPanelFontColorSelect">
+                    <div id="colorSelector"><div style="background-color: #00ff00"></div></div>
+                    <div id="colorpickerHolder">
+                    </div>
+                </div>
             </div>
             <div class="paragraphPanel">
                 <button type="button" class="btnBullet btn btn-default icon-list">

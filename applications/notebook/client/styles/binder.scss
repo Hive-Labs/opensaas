@@ -320,3 +320,13 @@
 .hidden{
 	display: none;
 }
+
+.documentsListDiv{
+	display: inline-block;
+	overflow-y: scroll;
+	height: 100%;
+}
+
+#docs{
+	height: 100%;
+}

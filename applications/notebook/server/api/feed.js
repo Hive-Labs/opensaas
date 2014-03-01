@@ -133,7 +133,6 @@ api_upvoteFeed = function(token, couch_id) {
     if (!userAlreadyVoted) {
         feed.votes++;
         feed.upvotes.push(user.id);
-        console.log(feed);
         api_saveFeed(feed);
     }
 };

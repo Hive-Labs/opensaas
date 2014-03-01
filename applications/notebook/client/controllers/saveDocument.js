@@ -48,6 +48,9 @@ saveRemoteStorage = function() {
     if (token && documentID && getSaveStatus() != SAVE_STATUS.SAVING) {
         //  Before doing a remote save, check to see if some other user changed something
         var docNeedsSave = updateDocumentFromRemote();
+
+        processIntelligence();
+
         //  Get the html version of the user's document.
         var markup = $(".notebookEditableArea").html();
         //  Make a document out of it and set some properties.
@@ -109,6 +112,15 @@ saveRemoteStorage = function() {
         console.log("Aborting save because already saving.");
     }
 };
+
+processIntelligence = function() {
+    var originalMarkup = $(".notebookEditableArea").html();
+    var linkReplacedMarkup = replaceURLWithHTMLLinks(originalMarkup);
+    // console.log(originalMarkup == linkReplacedMarkup);
+    //if (originalMarkup != linkReplacedMarkup)
+    //  updateEditorText(linkReplacedMarkup);
+}
+
 
 updateDocumentFromRemote = function() {
     var localDocument = Session.get("document.last") || {}
