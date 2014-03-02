@@ -23,6 +23,20 @@ getCookie = function(cname) {
 }
 
 replaceURLWithHTMLLinks = function(text) {
-    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(exp, "<a href='$1'>$1</a>");
+    // Test this insane regex at debuggex.com
+    var regex_url = /(>)?(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)(\?*[a-zA-Z\.\=]*)?(<div|<p|<\/div|<\/p|<br|<\/br)/;
+    return text.replace(regex_url, "$1<a href='$2$3.$4$5$6'>$3.$4</a>$7");
+}
+
+/*
+    In a youtube link like www.youtube.com/watch?v=uaHGjlERVCg
+    it will find the uaHGjlERVChg part and return it. Otherwise null.
+*/
+findYoutubeLinks = function(text) {
+    var regex_youtube = /(>)?(https?:\/\/)?([\da-z\.-]+)\.(youtube)([\/\w \.-]*)(\?v=[\da-zA-Z\.\=]*)(<div|<p|<\/div|<\/p|<br|<\/br)/;
+    var youtubeMatches = text.match(regex_youtube);
+    if (youtubeMatches != null && youtubeMatches.length > 0) {
+        return youtubeMatches[6].substring(3);
+    } else
+        return null;
 }

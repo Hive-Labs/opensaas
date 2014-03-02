@@ -17,8 +17,6 @@ showBinder = function(user, tabToShow) {
     }, 50);
     //  hide the loading box because its all loaded
     hideLoadingBox();
-    //  Start refreshing the data in page occasionally
-    setRefreshInterval();
     if (user) {
         //Set the name at the top right to be the user's name.
         $("#fullName").text(user.displayName);
@@ -44,10 +42,15 @@ loadFeeds = function() {
 
 //  Load the binder page (the UI part)
 renderBinderPage = function(tabToShow) {
-    Meteor.subscribe('feeds', Session.get("user.current").id);
+
+    Meteor.subscribe('feeds', getCookie("hive_auth_token"));
     Meteor.subscribe('usersProfile');
+    Meteor.subscribe('documents', getCookie("hive_auth_token"));
+
+    Session.set('currentPage', 1);
 
     loadFeeds();
+    // run the above func every time the user scrolls
 
     var user = Session.get("user.current");
     if (user.onBoarded == true) {
@@ -60,36 +63,6 @@ renderBinderPage = function(tabToShow) {
     if (tabToShow) {
         $('#binderTabs a[href="#' + tabToShow + '"]').tab('show') // Select tab by name
     }
-};
-
-setRefreshInterval = function() {
-    binderRefreshInterval = window.setInterval(function() {
-        if (binderCurrentlyRefreshing == false && currentTemplate == Template.binder) {
-            binderCurrentlyRefreshing = true;
-            var oldDocuments = Template.documents.documents();
-            loadDocuments(function() {
-                var newDocuments = Template.documents.documents();
-                var equal = true;
-                for (var i = 0; i < newDocuments.length; i++) {
-                    if (oldDocuments && oldDocuments[i]) {
-                        equal = equal && (newDocuments[i].title == oldDocuments[i].title);
-                    } else if (!oldDocuments) {
-                        equal = false;
-                    }
-                }
-                if (!equal) {
-                    $("#docs").html(Template.documents);
-                }
-                binderCurrentlyRefreshing = false;
-            });
-        }
-    }, 2000);
-};
-
-clearRefreshInterval = function() {
-    window.clearInterval(binderRefreshInterval);
-    binderRefreshInterval = null;
-    binderCurrentlyRefreshing = false;
 };
 
 upVoteFeed = function(couch_id) {

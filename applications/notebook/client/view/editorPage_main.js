@@ -108,7 +108,6 @@ showEditor = function(user, forceNew) {
     showLoadingBox();
     Session.set('currentView', "editor");
     console.log("Current View has been set to: " + Session.get("currentView"));
-    clearRefreshInterval();
     if (forceNew == true) {
         Session.set('document.currentID', null);
     }

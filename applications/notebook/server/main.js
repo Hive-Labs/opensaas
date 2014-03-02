@@ -14,6 +14,8 @@ Meteor.startup(function() {
     if (!fs.existsSync(directoryPath)) {
         fs.mkdirSync(directoryPath, 0755);
     }
+
     api_getAllUsers(null, true);
     api_getAllFeeds();
+    api_getAllDocuments();
 });

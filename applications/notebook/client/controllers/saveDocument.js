@@ -113,12 +113,17 @@ saveRemoteStorage = function() {
     }
 };
 
+/*
+    This code will run right before the document gets saved
+*/
 processIntelligence = function() {
+    //  Document markup
     var originalMarkup = $(".notebookEditableArea").html();
+
     var linkReplacedMarkup = replaceURLWithHTMLLinks(originalMarkup);
-    // console.log(originalMarkup == linkReplacedMarkup);
-    //if (originalMarkup != linkReplacedMarkup)
-    //  updateEditorText(linkReplacedMarkup);
+    console.log(originalMarkup == linkReplacedMarkup);
+    if (originalMarkup != linkReplacedMarkup)
+        updateEditorText(linkReplacedMarkup);
 }
 
 

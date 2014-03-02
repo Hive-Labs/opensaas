@@ -1,9 +1,70 @@
-/*
-    The binder page uses a template item for each document. We need to populate this list.
-    The list of documents will always be stored in the session name document.list. 
-*/
 Template.documents.documents = function() {
-    return Session.get("document.list");
+    var documents = Documents.find({}, {
+        limit: Session.get("currentPage") * 20
+    }).fetch();
+
+    for (var i = 0; i < documents.length; i++) {
+        var document = documents[i];
+        document.id = document.couch_id;
+        document._id = document.couch_id;
+        delete document.couch_id;
+        //  Month is usually from 1-12, so we have to associate each with a name
+        var months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        var today = new Date();
+
+        //  Get the date the document was created
+        var date = (new Date(document.creationTime));
+        //  Extract year, month, and day from the date
+        var year = date.getFullYear(),
+            month = months[date.getMonth()],
+            day = date.getDate();
+
+        var properlyFormatted;
+        if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate()) {
+            properlyFormatted = "Today";
+        } else if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate() + 1) {
+            properlyFormatted = "Yesterday";
+        } else {
+            //  Prepend a 0 if the day is single digit
+            if (day < 10) day = "0" + day;
+
+            //  Final date is like: 0 December 2000
+            properlyFormatted = day + " " + month + " " + year;
+        }
+
+
+
+        //  Get the last revision from the document to get the last title of the document
+        var lastRevision = document.revisions[document.revisions.length - 1];
+        if (lastRevision) {
+            //  If the document doesn't have a title, set it to untitled
+            document.title = lastRevision.title || "Untitled";
+        } else {
+            document.title = "Untitled";
+        }
+
+        document.formattedCreationTime = properlyFormatted;
+
+        var currentUserID = Session.get("user.current")._id;
+        for (var j = 0; j < document.currentlyWritingUsers.length; j++) {
+            if (document.currentlyWritingUsers[j] != currentUserID) {
+                document.color = "#159725";
+            }
+        }
+
+        documents[i] = document;
+    }
+
+    setTimeout(function() {
+        $("#documents").scroll(function() {
+            showMoreVisible();
+        });
+    }, 100);
+
+    return documents;
 };
 
 Template.notifications.notifications = function() {
@@ -67,60 +128,7 @@ loadDocuments = function(next) {
     //  Get a list of documents for that user.
     api_getAllDocuments(20, function(err, documents) {
         //  Loop through each document item and do some sanitizing
-        for (var i = 0; i < documents.length; i++) {
-            if (Session.get("currentView") == "binder") {
-                var document = documents[i];
-                //  Month is usually from 1-12, so we have to associate each with a name
-                var months = ["January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
 
-                var today = new Date();
-
-                //  Get the date the document was created
-                var date = (new Date(document.creationTime));
-                //  Extract year, month, and day from the date
-                var year = date.getFullYear(),
-                    month = months[date.getMonth()],
-                    day = date.getDate();
-
-                var properlyFormatted;
-                if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate()) {
-                    properlyFormatted = "Today";
-                } else if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth() && today.getDate() == date.getDate() + 1) {
-                    properlyFormatted = "Yesterday";
-                } else {
-                    //  Prepend a 0 if the day is single digit
-                    if (day < 10) day = "0" + day;
-
-                    //  Final date is like: 0 December 2000
-                    properlyFormatted = day + " " + month + " " + year;
-                }
-
-
-
-                //  Get the last revision from the document to get the last title of the document
-                var lastRevision = document.revisions[document.revisions.length - 1];
-                if (lastRevision) {
-                    //  If the document doesn't have a title, set it to untitled
-                    document.title = lastRevision.title || "Untitled";
-                } else {
-                    document.title = "Untitled";
-                }
-
-                document.formattedCreationTime = properlyFormatted;
-
-                var currentUserID = Session.get("user.current")._id;
-                for (var j = 0; j < document.currentlyWritingUsers.length; j++) {
-                    if (document.currentlyWritingUsers[j] != currentUserID) {
-                        document.color = "#159725";
-                    }
-                }
-
-
-                documents[i] = document;
-            }
-        }
 
         //  We don't return the list, we just set this in session for other functions to use.
         Session.set("document.list", documents);
@@ -135,7 +143,6 @@ loadDocuments = function(next) {
 */
 loadDocument = function(documentID) {
     showNavBar();
-    clearRefreshInterval();
     //  Before loading the document, we need to show the loading box
     showLoadingBox();
     /*  We are about to open a document, so set session variable document.currentID
@@ -327,6 +334,29 @@ completeProfile = function() {
                 });
         } else {
             $(".changeProfileDiv").effect("shake");
+        }
+    }
+}
+
+// whenever #showMoreResults becomes visible, retrieve more results
+showMoreVisible = function() {
+    console.log("SCROLL!");
+    var threshold, target = $('#showMoreResults');
+    if (!target.length) return;
+
+    threshold = $(window).scrollTop() + $(window).height() - target.height();
+
+    if (target.offset().top < threshold) {
+        if (!target.data('visible')) {
+            console.log('target became visible (inside viewable area)');
+            target.data('visible', true);
+            Session.set('currentPage',
+                Session.get('currentPage') + 1);
+        }
+    } else {
+        if (target.data('visible')) {
+            console.log('target became invisible (below viewable arae)');
+            target.data('visible', false);
         }
     }
 }

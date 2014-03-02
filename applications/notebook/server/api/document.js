@@ -142,77 +142,7 @@ api_saveDocument = function(token, revision, documentID) {
         url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes;
     }
 
-
-    try {
-        //  Everything below will be asyncronous, so we rely on futures to return a value.
-        var fut = new Future();
-        //  We perform the post request to save this new document into the dbService.
-        postRequest(config.dbServerHost, config.dbServerPort, url, document, function(err, result) {
-            //  Check if the database transaction gave an error.
-            if (err) {
-                //  return the user.
-                console.log("There was an error saving document to database.");
-                console.log(err);
-                console.log("   Document Info:");
-                console.log(document);
-                fut['return'](DBError(err));
-            } else {
-                //  Check if the database transaction gave an error.
-                if (userID && result.data.error) {
-                    //Tell the future to return an error
-                    console.log("There was an error saving document to database.");
-                    console.log(err);
-                    console.log("   Document Info:");
-                    console.log(document);
-                    fut['return'](DBError(err));
-                } else {
-                    /*  If this document was just created, we need to add it to the allowed
-                            documents the user can access. */
-                    if (newDocument) {
-                        //  Get the user that we want to give access to this document
-                        var user = api_getUser(token);
-                        //  Give that user write privileges to this document
-                        user.privileges.writableDocuments.push(result.data.id);
-                        api_saveUser(user);
-                    }
-                    //  Everything ok, so return whatever the database gives (it usually returns OK).
-
-                    //  Save it to the temporary mongoDB database.
-
-                    var documentID = result.data.id;
-
-                    delete result.data.id;
-                    delete result.data._id;
-                    //delete result.data._rev;
-                    result.data.couch_id = documentID;
-                    //  Save it to the temporary mongoDB database.
-                    Documents.upsert({
-                        couch_id: documentID
-                    }, result.data);
-
-                    result.data.id = documentID;
-                    result.data._id = documentID;
-                    delete result.data.couch_id;
-                    console.log("Saved to the remote database.");
-                    fut['return'](result.data || {});
-                }
-            }
-        });
-    } catch (e) {
-        //  Something went wrong exchanging the given token for the user_id from the authService
-        fut['return'](AuthError("Bad Token"));
-    }
-
-    //  If the document already has an id, then return it to user.
-    if (!newDocument) {
-        console.log("Returning cached copy of the document after save.");
-        return document;
-    }
-    //  Document isn't ready yet, so wait for database transaction to finish.
-    else {
-        //  Return whatever the above asyncronous code set in the future
-        return fut.wait();
-    }
+    return api_saveDocumentToDB(token, document, url);
 }
 
 api_deleteDocument = function(token, documentID) {
@@ -262,4 +192,115 @@ api_getLastRevisionByUser = function(document, userID) {
         }
     }
     return null;
+}
+api_saveDocumentToDB = function(token, document, url) {
+    var fut = new Future();
+    console.log("FUTURE1");
+    console.log(fut);
+    var newDocument = (document.id == null);
+
+    try {
+        postRequest(config.dbServerHost, config.dbServerPort, url, document, function(err, result) {
+            //  Check if the database transaction gave an error.
+            console.log("FUTURE2");
+            console.log(fut);
+            if (err) {
+                //  return the user.
+                console.log("There was an error saving document to database.");
+                console.log(err);
+                console.log("   Document Info:");
+                console.log(document);
+                if (fut)
+                    fut['return'](DBError(err));
+            } else {
+                //  Check if the database transaction gave an error.
+                if (result.data.error) {
+                    //Tell the future to return an error
+                    console.log("There was an error saving document to database.");
+                    console.log(err);
+                    console.log("   Document Info:");
+                    console.log(document);
+                    if (fut)
+                        fut['return'](DBError(err));
+                } else {
+                    /*  If this document was just created, we need to add it to the allowed
+                            documents the user can access. */
+                    if (newDocument && token) {
+                        //  Get the user that we want to give access to this document
+                        var user = api_getUser(token);
+                        //  Give that user write privileges to this document
+                        user.privileges.writableDocuments.push(result.data.id);
+                        api_saveUser(user);
+                    }
+                    //  Everything ok, so return whatever the database gives (it usually returns OK).
+
+                    //  Save it to the temporary mongoDB database.
+
+                    var documentID = result.data.id;
+
+                    delete result.data.id;
+                    delete result.data._id;
+                    //delete result.data._rev;
+                    result.data.couch_id = documentID;
+                    //  Save it to the temporary mongoDB database.
+                    Documents.upsert({
+                        couch_id: documentID
+                    }, result.data);
+
+                    result.data.id = documentID;
+                    result.data._id = documentID;
+                    delete result.data.couch_id;
+                    console.log("Saved to the remote database.");
+                    if (fut)
+                        fut['return'](result.data || {});
+                }
+            }
+        });
+    } catch (e) {
+        //  Something went wrong exchanging the given token for the user_id from the authService
+        if (fut)
+            fut['return'](AuthError("Bad Token"));
+    }
+
+    //  If the document already has an id, then return it to user.
+    if (!newDocument) {
+        console.log("Returning cached copy of the document after save.");
+        return document;
+    }
+    //  Document isn't ready yet, so wait for database transaction to finish.
+    else {
+        //  Return whatever the above asyncronous code set in the future
+        console.log("Waiting for document to save.");
+        return fut.wait();
+    }
+}
+
+
+api_getAllDocuments = function() {
+    var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes;
+    console.log("Documents being downloaded from DB to local");
+    getRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
+        //  If there was no error, and result isn't null
+        if (!err && result != null) {
+            for (var i = 0; i < result.data.length; i++) {
+                var documentID = result.data[i]._id;
+                delete result.data[i].id;
+                delete result.data[i]._id;
+                result.data[i].couch_id = documentID;
+                Documents.upsert({
+                    couch_id: documentID
+                }, result.data[i]);
+
+                result.data[i].id = documentID;
+
+                var upgradeNecessary = false;
+
+                if (upgradeNecessary) {
+                    var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.notes + "/" + documentID;
+                    api_saveDocumentToDB(null, url, result.data[i]);
+                }
+            }
+            console.log(result.data.length + " documents retrieved from db.");
+        }
+    });
 }

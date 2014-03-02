@@ -4,7 +4,8 @@
     "basePackages": {
       "bootstrap-3": {},
       "iron-router": {},
-      "npm": {}
+      "npm": {},
+      "pages": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -14,13 +15,18 @@
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.2",
-        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
+        "tag": "v0.6.4",
+        "commit": "927bbaed1b87894fb6fb70807f74ff3a5bd89f29"
       },
       "npm": {
         "git": "https://github.com/arunoda/meteor-npm.git",
         "tag": "v0.2.6",
         "commit": "177ab6118de5bf8cffb19481343d5762ff7a2aaf"
+      },
+      "pages": {
+        "git": "https://github.com/alethes/meteor-pages.git",
+        "tag": "v0.7.2",
+        "commit": "a88cd76c22311c97ddf0865ece05af9103f7d261"
       }
     }
   }
