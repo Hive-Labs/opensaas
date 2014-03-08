@@ -11,3 +11,10 @@ api_downvoteFeed = function(couch_id, next) {
         next(result);
     });
 };
+
+api_commentFeed = function(couch_id, commentText, next) {
+    var token = getCookie("hive_auth_token");
+    Meteor.call('api_commentFeed', token, couch_id, commentText, function(error, result) {
+        next(result);
+    });
+};

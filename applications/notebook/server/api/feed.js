@@ -12,6 +12,7 @@ api_submitFeed = function(token, feed) {
         feed.submitDate = new Date();
         feed.upvotes = [];
         feed.downvotes = [];
+        feed.comments = [];
         api_saveFeed(feed);
     }
     return true;
@@ -44,6 +45,12 @@ api_getAllFeeds = function() {
                     result.data[i].downvotes = [];
                     upgradeNecessary = true;
                     console.log("DB Upgrade: Added upvotes field to feed.");
+                }
+
+                if (!result.data[i].comments) {
+                    result.data[i].comments = [];
+                    upgradeNecessary = true;
+                    console.log("DB Upgrade: Added comments field to feed.");
                 }
 
                 result.data[i].id = feedID;
@@ -160,4 +167,17 @@ api_downvoteFeed = function(token, couch_id) {
         feed.downvotes.push(user.id);
         api_saveFeed(feed);
     }
+};
+
+api_commentFeed = function(token, couch_id, commentText) {
+    var feed = api_getFeed(couch_id);
+    var user = api_getUser(token);
+
+    var comment = {
+        text: commentText,
+        owner: user.id
+    };
+
+    feed.comments.push(comment);
+    api_saveFeed(feed);
 };

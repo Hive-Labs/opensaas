@@ -35,7 +35,7 @@
 <template name="documents">
     <div id="documents" class="documentsListDiv hive_scrollbar">
         {{#each documents}} {{> documentItem}} {{/each}}
-    </br>
+        </br>
         <div id="showMoreResults" style="margin-left: 25px; float: left; position: relative;">
             <span class="loading"></span>
         </div>
@@ -160,7 +160,7 @@
             <p class="feedItemOwnerName">{{ownerName}}</p>
             <p class="feedItemInnerText">{{text}}</p>
         </div>
-        <div>
+        <div class="feedItemNavBar">
             <div class="votesDiv">
                 <p class="feedItemBtn">{{votes}}</p>
                 <div id="feedItemUpvoteBtn" onClick="upVoteFeed('{{couch_id}}');" class="feedItemBtn glyphicon glyphicon-thumbs-up  {{alreadyVoted}}">
@@ -168,6 +168,30 @@
                 <div id="feedItemDownvoteBtn" onClick="downVoteFeed('{{couch_id}}');" class="feedItemBtn glyphicon glyphicon-thumbs-down  {{alreadyVoted}}">
                 </div>
             </div>
+            <div class="commentsDropdownButton" onclick="$('#commentsSection{{couch_id}}').toggle(500)">
+                <p>{{numComments}}</p>
+                <p class="glyphicon glyphicon-chevron-down"></p>
+            </div>
         </div>
+        <div id="commentsSection{{couch_id}}" class="commentsDiv">
+            <div class="commentsList">
+                {{#each comments}} {{> commentItem}} {{/each}}
+            </div>
+            <div>
+                <img class="postCommentImage" src="/api/users/{{postingUser}}/profilepic" />
+                <div class="postCommentText well" contenteditable="true" placeholder="Speak the truth..."></div>
+                <div class="postCommentSubmit" onClick="postCommentFeed('{{couch_id}}');">
+                    <p class="glyphicon glyphicon-ok" />
+                </div>
+            </div>
+        </div>
+</template>
+
+<template name="commentItem">
+    <div class="commentItem">
+                <img class="listCommentImage" src="/api/users/{{owner}}/profilepic" />
+                <div class="listCommentText well">
+                    {{{text}}}
+                </div>
     </div>
 </template>

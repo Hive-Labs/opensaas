@@ -7,5 +7,8 @@ Meteor.methods({
     },
     api_downvoteFeed: function(token, couch_id) {
         return api_downvoteFeed(token, couch_id);
+    },
+    api_commentFeed: function(token, couch_id, commentText) {
+        return api_commentFeed(token, couch_id, commentText);
     }
 });

@@ -95,13 +95,24 @@ Template.feeds.feeds = function() {
             couch_id: feedAry[i].owner
         });
         if (user) {
+            if (feedAry[i].votes == 1) {
+                feedAry[i].votes = feedAry[i].votes + " Up";
+            } else {
+                feedAry[i].votes = feedAry[i].votes + " Up's";
+            }
+
             if (user.onBoarded == true) {
                 feedAry[i].feedProfilePic = "/api/users/" + feedAry[i].owner + "/profilepic";
             } else {
                 feedAry[i].feedProfilePic = "/images/favicon.ico";
             }
+            feedAry[i].numComments = feedAry[i].comments.length + ((feedAry[i].comments.length == 1) ? " comment" : " comments");
+            feedAry[i].numComments = ((feedAry[i].comments.length == 0) ? "no comments" : feedAry[i].numComments);
+
+            feedAry[i].postingUser = Session.get("user.current").id;
 
             feedAry[i].ownerName = user.displayName;
+
             var alreadyVoted = false;
             for (var j = 0; j < feedAry[i].upvotes.length; j++) {
                 if (feedAry[i].upvotes[j] == Session.get("user.current").id) {
@@ -364,4 +375,10 @@ showMoreVisible = function() {
             target.data('visible', false);
         }
     }
+}
+
+postCommentFeed = function(feedID) {
+    api_commentFeed(feedID, $('#commentsSection' + feedID + " .postCommentText").html(), function(err, result) {
+
+    })
 }
