@@ -46,7 +46,9 @@ api_getDocument = function(token, documentID) {
                         delete result.data._rev;
                         result.data.couch_id = documentID;
                         //  Save it to the temporary mongoDB database.
-                        Documents.insert(result.data);
+                        if (documentID != null) {
+                            Documents.insert(result.data);
+                        }
 
                         result.data.id = documentID;
                         result.data._id = documentID;
@@ -114,9 +116,11 @@ api_saveDocument = function(token, revision, documentID) {
         delete document._rev;
         document.couch_id = documentID;
         //  Save it to the temporary mongoDB database.
-        Documents.upsert({
-            couch_id: documentID
-        }, document);
+        if (documentID != null) {
+            Documents.upsert({
+                couch_id: documentID
+            }, document);
+        }
 
         //document.id = documentID;
         delete document._id;
@@ -243,9 +247,11 @@ api_saveDocumentToDB = function(token, document, url) {
                     //delete result.data._rev;
                     result.data.couch_id = documentID;
                     //  Save it to the temporary mongoDB database.
-                    Documents.upsert({
-                        couch_id: documentID
-                    }, result.data);
+                    if (documentID != null) {
+                        Documents.upsert({
+                            couch_id: documentID
+                        }, result.data);
+                    }
 
                     result.data.id = documentID;
                     result.data._id = documentID;
