@@ -5,7 +5,7 @@ api_submitFeed = function(token, feed) {
     //  Get information about the user from the auth service
     var authServiceUser = auth_getUser(token);
 
-    if (!feed.owner || !feed.permission || !feed.text || !feed.votes) {
+    if (!feed.owner || !feed.permission || !feed.text) {
         return new ParameterError("Owner, Permission, and Text need to be set for a feed.");
     } else {
         feed.votes = 0;
@@ -93,7 +93,7 @@ api_saveFeed = function(feed) {
     } else {
         url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.feeds + "/" + (feed.couch_id || feed.id || feed._id);
     }
-
+    console.log("Saving feed: " + JSON.stringify(feed));
     feed.votes = feed.upvotes.length - feed.downvotes.length;
     //  We perform the post request to save this new user to the database
     postRequest(config.dbServerHost, config.dbServerPort, url, feed, function(err, feed) {

@@ -100,10 +100,38 @@ Router.map(function() {
 
                         }, 1000);
 
+                        var asyncCropFunction = function(param, callback) {
+                            var pathCropped = Npm.require('path').resolve('.', config.temporaryPaths.profilePictureCropped + param.userID);
+                            var easyimg = Meteor.require('easyimage');
+                            easyimg.rescrop({
+                                    src: param.path,
+                                    dst: pathCropped,
+                                    width: 100,
+                                    height: 100,
+                                    cropwidth: 100,
+                                    cropheight: 100,
+                                    x: 0,
+                                    y: 0
+                                },
+                                function(err, image) {
+                                    if (err) throw err;
+                                    if (callback != null)
+                                        callback(null, pathCropped);
+                                }
+                            );
+                        };
+
+                        var syncCropFunction = Meteor._wrapAsync(asyncCropFunction);
+
+                        var path = syncCropFunction({
+                            path: tempPath,
+                            userID: user.id
+                        });
+
                         ProfilePics.upsert({
                             user_id: user.id
                         }, {
-                            path: tempPath,
+                            path: path,
                             user_id: user.id
                         });
 

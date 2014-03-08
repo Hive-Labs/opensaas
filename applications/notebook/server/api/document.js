@@ -281,7 +281,7 @@ api_getAllDocuments = function() {
     console.log("Documents being downloaded from DB to local");
     getRequest(config.dbServerHost, config.dbServerPort, url, function(err, result) {
         //  If there was no error, and result isn't null
-        if (!err && result != null) {
+        if (!err && result != null && result.data.error == null) {
             for (var i = 0; i < result.data.length; i++) {
                 var documentID = result.data[i]._id;
                 delete result.data[i].id;
@@ -301,6 +301,8 @@ api_getAllDocuments = function() {
                 }
             }
             console.log(result.data.length + " documents downloaded from db.");
+        } else {
+            console.log("There are no documents in the database.");
         }
     });
 }

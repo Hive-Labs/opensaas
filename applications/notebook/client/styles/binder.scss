@@ -145,8 +145,7 @@
 
 .completeProfileJumbotron{
 	display: none;
-	width: 60%; /* fallback if needed */
-  	width: calc(100% - 280px);
+	width: 100%;
   	background-color: inherit;
   	opacity: 0;
     -moz-animation: fadeInAnim 2s forwards; /* Firefox */
@@ -156,7 +155,6 @@
     animation: fadeInAnim 2s forwards;
      -webkit-animation-delay: .75s;
      animation-delay: .75s;
-    position: absolute;
     left:200%;
     text-align: center;
     padding-top: 0px;
@@ -188,6 +186,9 @@
 .onBoardingDiv{
 	float: left;
 	overflow-y:scroll;
+	width: 60%; /* fallback if needed */
+	width: calc(100% - 290px);
+	height: 100%;
 }
 
 
@@ -293,11 +294,7 @@
 	border: rgb(255, 255, 255) 1px solid;
 }
 
-.feedItemVerticalLine{
-	width:2px;
-	height: 10px;
-	background-color:black;	
-}
+
 
 .feedItemOwnerName{
 	color: #6A8EB4;

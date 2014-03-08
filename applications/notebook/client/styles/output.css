@@ -794,9 +794,7 @@ you can use the generic selector below, but it's slower:
 
 .completeProfileJumbotron {
   display: none;
-  width: 60%;
-  /* fallback if needed */
-  width: calc(100% - 280px);
+  width: 100%;
   background-color: inherit;
   opacity: 0;
   -moz-animation: fadeInAnim 2s forwards;
@@ -809,7 +807,6 @@ you can use the generic selector below, but it's slower:
   animation: fadeInAnim 2s forwards;
   -webkit-animation-delay: .75s;
   animation-delay: .75s;
-  position: absolute;
   left: 200%;
   text-align: center;
   padding-top: 0px; }
@@ -836,7 +833,11 @@ you can use the generic selector below, but it's slower:
 
 .onBoardingDiv {
   float: left;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  width: 60%;
+  /* fallback if needed */
+  width: calc(100% - 290px);
+  height: 100%; }
 
 @-webkit-keyframes fadeInAnim {
   0% {
@@ -940,11 +941,6 @@ you can use the generic selector below, but it's slower:
   margin-left: -5px;
   margin-top: -5px;
   border: white 1px solid; }
-
-.feedItemVerticalLine {
-  width: 2px;
-  height: 10px;
-  background-color: black; }
 
 .feedItemOwnerName {
   color: #6A8EB4;
@@ -1205,7 +1201,7 @@ h1 {
   height: 10px; }
 
 .hive_scrollbar::-webkit-scrollbar-track {
-  background-color: rgba(113, 112, 107, 0.1);
+  background-color: rgba(113, 112, 107, 0);
   -webkit-border-radius: 5px; }
 
 .hive_scrollbar::-webkit-scrollbar-thumb:vertical {
