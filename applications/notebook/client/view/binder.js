@@ -95,6 +95,12 @@ Template.feeds.feeds = function() {
             couch_id: feedAry[i].owner
         });
         if (user) {
+            if (user.onBoarded == true) {
+                feedAry[i].feedProfilePic = "/api/users/" + feedAry[i].owner + "/profilepic";
+            } else {
+                feedAry[i].feedProfilePic = "/images/favicon.ico";
+            }
+
             feedAry[i].ownerName = user.displayName;
             var alreadyVoted = false;
             for (var j = 0; j < feedAry[i].upvotes.length; j++) {

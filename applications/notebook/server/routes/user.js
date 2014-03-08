@@ -42,7 +42,11 @@ Router.map(function() {
                     var path = api_getProfilePicturePathWithID(this.params._id);
                     console.log("Path=" + path);
                     // path = "/home/rohit/Pictures/editorPage.png";
-                    this.response.end(fstream.readFileSync(path));
+                    if (path != null) {
+                        this.response.end(fstream.readFileSync(path));
+                    } else {
+                        this.response.end();
+                    }
                 } else {
                     response.writeHead(400, {
                         'Content-Type': 'text/html'
@@ -151,7 +155,12 @@ Router.map(function() {
                     var path = api_getProfilePicturePathWithID(user.id);
                     console.log("Path=" + path);
                     // path = "/home/rohit/Pictures/editorPage.png";
-                    this.response.end(fstream.readFileSync(path));
+                    if (path != null) {
+                        this.response.end(fstream.readFileSync(path));
+                    } else {
+                        this.response.end();
+                    }
+
                 } else {
                     response.writeHead(400, {
                         'Content-Type': 'text/html'

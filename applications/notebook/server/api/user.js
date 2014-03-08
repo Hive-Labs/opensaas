@@ -278,6 +278,7 @@ api_onBoarding = function(token, onBoardingData) {
 }
 
 api_getProfilePicturePathWithID = function(userID) {
+    console.log("Downloading propic for " + userID);
     var fs = Npm.require('fs');
 
     //  Check to see if the mongoDB has a copy of the profile picture
@@ -341,7 +342,9 @@ api_getProfilePicturePathWithID = function(userID) {
                     y: 0
                 },
                 function(err, image) {
-                    if (!err && callback != null)
+                    if (err && callback != null) {
+                        callback(null, null);
+                    } else
                         callback(null, pathCropped);
                 }
             );
@@ -349,8 +352,8 @@ api_getProfilePicturePathWithID = function(userID) {
 
         var syncDownloadFunction = Meteor._wrapAsync(asyncDownloadFunction);
         var syncCropFunction = Meteor._wrapAsync(asyncCropFunction);
-
         var path = syncDownloadFunction(userID);
+        console.log("Cached profile picture.");
         path = syncCropFunction(userID);
 
         console.log("Cached and cropped profile picture to " + path);
