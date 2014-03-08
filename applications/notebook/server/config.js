@@ -24,6 +24,7 @@ config = {
     authClientSecret: "google1",
     authRedirectURI: "http://localhost:5000",
     temporaryPaths: {
-        profilePicture: 'profilePictures/'
+        profilePicture: 'profilePictures/',
+        profilePictureCropped: 'profilePicturesCropped/'
     }
 };

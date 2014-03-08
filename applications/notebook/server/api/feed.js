@@ -38,6 +38,7 @@ api_getAllFeeds = function() {
                     result.data[i].upvotes = [];
                     upgradeNecessary = true;
                     console.log("DB Upgrade: Added upvotes field to feed.");
+                    lo
                 }
                 if (!result.data[i].downvotes) {
                     result.data[i].downvotes = [];

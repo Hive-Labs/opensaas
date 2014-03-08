@@ -300,7 +300,7 @@ api_getAllDocuments = function() {
                     api_saveDocumentToDB(null, url, result.data[i]);
                 }
             }
-            console.log(result.data.length + " documents retrieved from db.");
+            console.log(result.data.length + " documents downloaded from db.");
         }
     });
 }

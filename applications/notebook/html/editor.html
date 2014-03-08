@@ -12,7 +12,7 @@
                     <br/>Copy
                 </button>
                 <button type="button" class="imageButton icon-paint-format btnFormat btn btn-default">
-                   <br/>Format
+                    <br/>Format
                 </button>
             </div>
             <div class="fontPanel">
@@ -36,7 +36,9 @@
                 <button type="button" class="imageButton glyphicon glyphicon-chevron-up btnSuperscript btn btn-default">
                 </button>
                 <div class="fontPanelFontColorSelect">
-                    <div id="colorSelector"><div style="background-color: #00ff00"></div></div>
+                    <div id="colorSelector">
+                        <div style="background-color: #00ff00"></div>
+                    </div>
                     <div id="colorpickerHolder">
                     </div>
                 </div>
@@ -117,6 +119,9 @@
                     <h1>
                         Suggestions
                     </h1>
+                    <div id="suggestionsInnerPanel">
+                        {{> suggestions}}
+                    </div>
                 </div>
             </div>
             <div class="tab-pane fade in" id="friends">
@@ -144,11 +149,27 @@
     </div>
 </template>
 
+<template name="suggestions">
+    <div id="suggestions">
+        {{#each suggestions}} {{> suggestionItem}} {{/each}}
+    </div>
+</template>
+
 
 <template name="friendItem">
     <div class="friendItem" onClick="">
         <img src="http://placehold.it/30x30/ffffff">
         <p class="friendItemDisplayName" style="color: {{color}}">{{displayName}}</p>
         <br/>
+    </div>
+</template>
+
+<template name="suggestionItem">
+    <div class="suggestionItem" onClick="">
+        {{{suggestionHTML}}}
+        <div class="onOkay" onClick="{{onOkay}}">
+        </div>
+        <div class="onDismiss" onCLick="{[onDismiss}}">
+        </div>
     </div>
 </template>

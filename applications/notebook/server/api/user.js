@@ -313,14 +313,41 @@ api_getProfilePicturePathWithID = function(userID) {
             var url = '/entity/' + config.dbAppName + "/" + config.dbRoutes.users + "/" + userID + "/attachments/profilepic";
             var reqStream = request.get(config.dbServerHost + ":" + config.dbServerPort + url);
             reqStream.pipe(fs.createWriteStream(path));
-            if (callback != null)
-                callback(null, path);
+            reqStream.on('end', function() {
+                if (callback != null)
+                    callback(null, path);
+            });
+        };
+
+        var asyncCropFunction = function(userID, callback) {
+            var path = Npm.require('path').resolve('.', config.temporaryPaths.profilePicture + userID);
+            var pathCropped = Npm.require('path').resolve('.', config.temporaryPaths.profilePictureCropped + userID);
+            var easyimg = Meteor.require('easyimage');
+            easyimg.rescrop({
+                    src: path,
+                    dst: pathCropped,
+                    width: 100,
+                    height: 100,
+                    cropwidth: 100,
+                    cropheight: 100,
+                    x: 0,
+                    y: 0
+                },
+                function(err, image) {
+                    if (err) throw err;
+                    if (callback != null)
+                        callback(null, pathCropped);
+                }
+            );
         };
 
         var syncDownloadFunction = Meteor._wrapAsync(asyncDownloadFunction);
-        var path = syncDownloadFunction(userID);
+        var syncCropFunction = Meteor._wrapAsync(asyncCropFunction);
 
-        console.log("Cached profile picture to " + path);
+        var path = syncDownloadFunction(userID);
+        path = syncCropFunction(userID);
+
+        console.log("Cached and cropped profile picture to " + path);
         ProfilePics.upsert({
             user_id: userID
         }, {
@@ -329,5 +356,13 @@ api_getProfilePicturePathWithID = function(userID) {
         });
 
         return path;
+    }
+}
+
+api_downloadAllProfilePics = function() {
+    console.log("Downloading all profile pictures.");
+    var users = api_getAllUsers();
+    for (var i = 0; i < users.length; i++) {
+        api_getProfilePicturePathWithID(users[i].id);
     }
 }

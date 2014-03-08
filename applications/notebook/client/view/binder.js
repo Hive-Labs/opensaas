@@ -112,7 +112,6 @@ Template.feeds.feeds = function() {
             if (alreadyVoted) {
                 feedAry[i].alreadyVoted = "hidden";
             }
-
             finalAry.push(feedAry[i]);
         }
     }

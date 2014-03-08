@@ -269,10 +269,16 @@
 
 
 .feedItem{
-	width: 100%;
-	padding-left: 5px;
+	min-width: 500px;
+	display: inline-block;
 	margin-bottom: 10px;
-	height: 70px;
+	padding: 5px;
+	background-color: white;
+	border-radius: 5px;
+	border: rgb(209, 209, 209) solid 1px;
+	border-top-left-radius: 10px;
+	padding-bottom: 0px;
+	min-height:62px;
 }
 
 .feedItemProfilePic{
@@ -281,7 +287,27 @@
 	float: left;
 	height: 60px;
 	overflow-x: hidden;
-	border-radius: 10px;
+	border-top-left-radius: 10px;
+	margin-left: -5px;
+	margin-top: -5px;
+	border: rgb(255, 255, 255) 1px solid;
+}
+
+.feedItemVerticalLine{
+	width:2px;
+	height: 10px;
+	background-color:black;	
+}
+
+.feedItemOwnerName{
+	color: #6A8EB4;
+	font-weight: bold;
+	display: inline-block;
+	color: rgb(120, 137, 206)
+}
+
+.feedItemInnerText{
+	display: inline-block;
 }
 
 .feedItemProfilePic img{
@@ -289,7 +315,7 @@
 }
 
 .feedItemText{
-	height: 50px;
+	display: inline-block;
 }
 
 .feedItemText h3{

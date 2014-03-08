@@ -37,7 +37,7 @@
         {{#each documents}} {{> documentItem}} {{/each}}
     </br>
         <div id="showMoreResults" style="margin-left: 25px; float: left; position: relative;">
-            <span class="loading">Loading...</span>
+            <span class="loading"></span>
         </div>
     </div>
 </template>
@@ -157,8 +157,8 @@
             <img src="/api/users/{{owner}}/profilepic" />
         </div>
         <div class="feedItemText">
-            <h3>{{ownerName}}</h3>
-            <p>{{text}}</p>
+            <p class="feedItemOwnerName">{{ownerName}}</p>
+            <p class="feedItemInnerText">{{text}}</p>
         </div>
         <div>
             <div class="votesDiv">

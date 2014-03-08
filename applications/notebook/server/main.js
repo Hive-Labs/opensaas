@@ -15,7 +15,13 @@ Meteor.startup(function() {
         fs.mkdirSync(directoryPath, 0755);
     }
 
+    directoryPath = Npm.require('path').resolve('.', config.temporaryPaths.profilePictureCropped);
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath, 0755);
+    }
+
     api_getAllUsers(null, true);
     api_getAllFeeds();
     api_getAllDocuments();
+    api_downloadAllProfilePics();
 });

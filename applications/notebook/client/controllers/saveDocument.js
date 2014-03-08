@@ -120,10 +120,23 @@ processIntelligence = function() {
     //  Document markup
     var originalMarkup = $(".notebookEditableArea").html();
 
+    var youtubeLink = findYoutubeLinks(originalMarkup);
     var linkReplacedMarkup = replaceURLWithHTMLLinks(originalMarkup);
-    console.log(originalMarkup == linkReplacedMarkup);
-    if (originalMarkup != linkReplacedMarkup)
+
+    if (youtubeLink != null) {
+        var suggestions = Session.get("suggestions") || [];
+        suggestions.push({
+            suggestionHTML: "hi",
+            onOkay: "alert('ok');",
+            onDismiss: "alert('bye');"
+        });
+        Session.set("suggestions", suggestions);
+        $("#suggestionsInnerPanel").html(Template.suggestions());
+    }
+
+    if (originalMarkup != linkReplacedMarkup) {
         updateEditorText(linkReplacedMarkup);
+    }
 }
 
 
