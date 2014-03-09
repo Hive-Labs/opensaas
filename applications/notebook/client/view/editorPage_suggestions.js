@@ -1,1 +1,0 @@
-Template.suggestions.suggestions = Session.get("suggestions");
