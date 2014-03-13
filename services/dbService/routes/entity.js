@@ -98,7 +98,11 @@ module.exports = function(persistent, cache) {
                         req.params.id,
                         req.params.name,
                         function(err, fileStream) {
-                            fileStream.pipe(res);
+                            if (fileStream != null)
+                                fileStream.pipe(res);
+                            else {
+                                sendJSONResponse(res, 201, 404)(err);
+                            }
                         });
                     return;
                 }
@@ -109,7 +113,11 @@ module.exports = function(persistent, cache) {
                     req.params.id,
                     req.params.name,
                     function(err, fileStream) {
-                        fileStream.pipe(res);
+                        if (fileStream != null) {
+                            fileStream.pipe(res);
+                        } else {
+                            sendJSONResponse(res, 201, 404)(err);
+                        }
                     });
             }
         },

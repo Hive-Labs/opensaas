@@ -248,6 +248,7 @@ function getDb(conn, dbNameStr, next) {
     db.exists(function(err, exists) {
         if (err) { //TODO log this
             logger.error('couch error: ', err);
+            next(err, null);
         } else if (!exists) {
             logger.info("Creating new database: " + dbNameStr);
             db.create(function(err, obj) {
