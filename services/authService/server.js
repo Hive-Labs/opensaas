@@ -78,7 +78,7 @@ db.users.init(function() {
   app.post('/oauth/token', oauth2.token);
   app.get('/auth/google/callback', passport.authenticate('google', {
     successReturnToOrRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/login?loginFailed=true'
   }));
 
   app.get('/api/user', user.info);

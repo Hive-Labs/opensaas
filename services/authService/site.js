@@ -64,13 +64,13 @@ module.exports = function(db) {
 
     returnObj.login = passport.authenticate('local', {
         successReturnToOrRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/login?loginFailed=true'
     });
 
 
     returnObj.googleAuth = passport.authenticate('google', {
         successReturnToOrRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/login?loginFailed=true'
     });
 
     returnObj.logout = function(req, res) {

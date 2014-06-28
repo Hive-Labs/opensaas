@@ -116,6 +116,12 @@ h1{
 	position: absolute;
 	bottom: 0px;
 }
+.alert-danger{
+	padding: 0px;
+	margin-left: auto;
+	width: 500px;
+	margin-right: auto;
+}
 </style>
 </head>
 <body>
@@ -129,10 +135,12 @@ h1{
 			<a class="navbar-brand" href="#">Hive</a>
 	</div>
 </div>
-
 <div id="appContainer" class="appContainer jumbotron">
 	<form method="post" action="/login" class="loginDiv">
 		<h1>Login</h1>
+		<div class="alert alert-danger">
+ 			Incorrect email or password.
+		</div>
 		<div class="separatorBar">
 	</div>
 		<input type="text" class="form-control" placeholder="Email Address" name="username">
@@ -149,3 +157,18 @@ h1{
         Copyright Hive, 2014
 </div>
 </body>
+<script type="text/javascript">
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+if(getParameterByName('loginFailed') == "true"){
+	$('.alert-danger').show();
+}
+else{
+	$('.alert-danger').hide();
+}
+</script>
