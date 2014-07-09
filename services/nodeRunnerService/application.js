@@ -71,8 +71,9 @@ module.exports = function(app, logger) {
 
                 npmProcess.on('close', function(code) {
                     //Spawn a new process to run the child node app
-                    logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
+                    logger.info("RUNNER: Checking if exists..." + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
                     if (fs.existsSync(path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"))) {
+                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
                         var envCopy = [];
                         envCopy['orchestratorIP'] = orchestratorIP;
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
@@ -81,22 +82,18 @@ module.exports = function(app, logger) {
                             cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
                         });
                     } else {
+                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/main.js"));
                         var envCopy = [];
                         envCopy['orchestratorIP'] = orchestratorIP;
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
+                        envCopy['MONGO_URL'] = 'mongodb://localhost';
+                        envCopy['ROOT_URL'] = 'http://notebook.hivelabs.it';
                         this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/main.js")], {
                             env: envCopy,
                             cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
                         });
                     }
 
-                    var envCopy = [];
-                    envCopy['orchestratorIP'] = orchestratorIP;
-                    envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
-                    this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {
-                        env: envCopy,
-                        cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
-                    });
                     //If child app throws an error or console.logs something, display it
                     this.nodeProcess.on('error', function(data) {
                         if (data) {
