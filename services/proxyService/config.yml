@@ -1,7 +1,7 @@
 server:
   port: 2002
 
-# orchestratorservicemanagement.lvho.st:2002 or http://lvho.st:2002/orchestratorServiceManagement
+# orchestratorservicemanagement.lvho.st:2002 or http://lvho.st:2002/app/orchestratorServiceManagement
   subdomain_mode: false
 
 # Time between contacting orchestrator to fetch new list
