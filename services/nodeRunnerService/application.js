@@ -89,7 +89,7 @@ module.exports = function(app, logger) {
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
                         envCopy['MONGO_URL'] = config.MONGO_URL;
                         envCopy['ROOT_URL'] = config.ROOT_URL;
-                        envCopy['PORT'] = config.PORT;
+                        envCopy['PORT'] = (parseInt(currentPort) + 1000);
 
                         this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/main.js")], {
                             env: envCopy,
