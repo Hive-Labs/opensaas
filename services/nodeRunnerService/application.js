@@ -83,11 +83,14 @@ module.exports = function(app, logger) {
                         });
                     } else {
                         logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/main.js"));
+                        config = require(path.resolve(__dirname, "currentApp/" + applicationName + "/runnerConfig.json"));
                         var envCopy = [];
                         envCopy['orchestratorIP'] = orchestratorIP;
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
-                        envCopy['MONGO_URL'] = 'mongodb://localhost';
-                        envCopy['ROOT_URL'] = 'http://notebook.hivelabs.it';
+                        envCopy['MONGO_URL'] = config.MONGO_URL;
+                        envCopy['ROOT_URL'] = config.ROOT_URL;
+                        envCopy['PORT'] = config.PORT;
+
                         this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/main.js")], {
                             env: envCopy,
                             cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
@@ -112,10 +115,10 @@ module.exports = function(app, logger) {
                             logger.info('CHILD:' + data);
                         }
                     });
-                    app.set("applicationNodeProcess", this.nodeProcess);
+                    /*app.set("applicationNodeProcess", this.nodeProcess);
                     callback(null, {
                         appName: applicationName
-                    });
+                    });*/
                 }); //npmProcess.on(close)
             }); //tarProcess.on(close)
         }); //fs.readFile
