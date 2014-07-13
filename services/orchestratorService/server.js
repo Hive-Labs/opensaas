@@ -45,8 +45,8 @@ app.set('port', process.env.PORT || 2000);
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({
     extended: true
-}))
-app.use(bodyParser.json())
+}));
+app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(function(err, req, res, next) {
     logger.error(err.stack);
@@ -81,7 +81,7 @@ asciimo.write('Open SAAS', 'Banner', function(result, font) {
         res.on('error', function(e) {
             logger.warn('problem with response: ' + e.message);
         });
-        app(req, res)
+        app(req, res);
     }).on("clientError", function(exception, socket) {
         logger.warn("Client error: " + exception);
     }).listen(app.get('port'), function() {
