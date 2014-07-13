@@ -1,90 +1,85 @@
 module.exports = function(app, runners, applications, logger) {
-  app.get('/runners', function(req, res) {
-    logger.log('info', 'GET /runners');
-    res.header("Access-Control-Allow-Origin", "*");
-    if (!req.query.only_proxy) {
-      runners.list(false, function(err, runnerList) {
-        res.json(runnerList);
-      });
-    } else {
-      runners.list(true, function(err, runnerList) {
-        res.json(runnerList);
-      });
-    }
-  });
-
-  app.post('/runners', function(req, res) {
-    logger.log('info', 'POST /runners');
-    res.header("Access-Control-Allow-Origin", "*");
-    if (!req.body._expand) {
-      runners.spawnRunner(function(err, runner) {
-        res.send(201);
-        res.send(runner);
-      });
-    }
-  });
-
-  app.get('/runners/:id', function(req, res) {
-    logger.log('info', 'GET /runners/' + req.params.id);
-    res.header("Access-Control-Allow-Origin", "*");
-    runners.getRunnerByID(req.params.id, function(err, runner) {
-       if(runner && !err){
-        res.end((runner));  
-      }
-      else{
-        res.end('An error Occured');
-      }
-    });
-  });
-
-  app.get('/runners/:id/log', function(req, res) {
-    logger.log('info', 'GET /runners/' + req.params.id + "/log");
-    res.header("Access-Control-Allow-Origin", "*");
-    var log = runners.log(req.params.id, function(err, log) {
-      if(log && !err){
-        res.end((log));  
-      }
-      else{
-        res.end('An error Occured');
-      }
-    });
-  });
-
-  app.get('/runners/:id/health', function(req, res) {
-    logger.log('info', 'GET /runners/' + req.params.id + "/health");
-    res.header("Access-Control-Allow-Origin", "*");
-    var health = runners.getHealth(req.params.id, function(err, health) {
-      if (err) {
-        res.json({
-          cpu: 0,
-          memory: 0
-        });
-      } else {
-        res.send(health);
-      }
-    });
-  });
-
-  app.put('/runners/:id', function(req, res) {
-    logger.log('info', 'PUT /runners/' + req.params.id);
-    runners.ping(req.params.id, function(err) {
-      runners.getRunnerByID(req.params.id, function(err, runner) {
-        if (runner) {
-          res.send(200);
-          res.json(runner);
+    app.get('/', function(req, res) {
+        logger.info('GET /runners');
+        if (!req.query.only_proxy) {
+            runners.list(false, function(err, runnerList) {
+                if (!err) {
+                    res.json(runnerList);
+                } else {
+                    res.send(500);
+                }
+            });
         } else {
-          res.send(400);
-          res.end([]);
+            runners.list(true, function(err, runnerList) {
+                res.json(runnerList);
+            });
         }
-      });
     });
-  });
 
-  app.delete('/runners/:id', function(req, res) {
-    logger.log('info', 'DELETE /runners/' + req.params.id);
-    var runner = runners.removeRunner(req.params.id, function(err) {
-      res.send(204);
-      res.end('The runner was removed successfully.');
+    app.post('/', function(req, res) {
+        logger.info('POST /runners');
+        if (!req.body._expand) {
+            runners.spawnRunner(function(err, runner) {
+                if (!err)
+                    res.send(runner);
+            });
+        }
     });
-  });
+
+    app.get('/:id', function(req, res) {
+        logger.info('GET /runners/' + req.params.id);
+        runners.getRunnerByID(req.params.id, function(err, runner) {
+            if (runner && !err) {
+                res.end((runner));
+            } else {
+                res.end('An error Occured');
+            }
+        });
+    });
+
+    app.get('/:id/log', function(req, res) {
+        logger.info('GET /runners/' + req.params.id + "/log");
+        var log = runners.log(req.params.id, function(err, log) {
+            if (log && !err) {
+                res.end((log));
+            } else {
+                res.end('An error Occured');
+            }
+        });
+    });
+
+    app.get('/:id/health', function(req, res) {
+        logger.info('GET /runners/' + req.params.id + "/health");
+        var health = runners.getHealth(req.params.id, function(err, health) {
+            if (err) {
+                res.json({
+                    cpu: 0,
+                    memory: 0
+                });
+            } else {
+                res.send(health);
+            }
+        });
+    });
+
+    app.put('/:id', function(req, res) {
+        logger.info('PUT /runners/' + req.params.id);
+        runners.ping(req.params.id, req.body.log, req.body.health, function(err) {
+            runners.getRunnerByID(req.params.id, function(err, runner) {
+                if (runner && !err) {
+                    res.json(runner);
+                } else {
+                    res.json([]);
+                }
+            });
+        });
+    });
+
+    app.delete('/:id', function(req, res) {
+        logger.info('DELETE /runners/' + req.params.id);
+        var runner = runners.removeRunner(req.params.id, function(err) {
+            if (!err)
+                res.end('The runner was removed successfully.');
+        });
+    });
 };

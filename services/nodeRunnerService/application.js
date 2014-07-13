@@ -25,12 +25,12 @@ module.exports = function(app, logger) {
         logger.info('application/start');
         fs.readFile(applicationTar.path, function(err, data) {
             //Save the applicationTar to a tar.gz file in the local filesystem
-            var newPath = path.resolve(__dirname, "currentApp");
+            var newPath = path.resolve(__dirname, "currentApp/" + runnerID);
             fs.writeFileSync(newPath + "/app.tar.gz", data);
 
             //Delete any pre-existing version of this app
             deleteFolderRecursive(newPath + "/" + applicationName);
-            logger.info('RUNNER:' + path.resolve(__dirname, "currentApp/" + applicationName));
+            logger.info('RUNNER:' + path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName));
             //Spawn a process to un-tar this app
             var tarProcess = childProcess.spawn('tar', ['-xvf', newPath + "/app.tar.gz", '-C', newPath]);
 
@@ -50,9 +50,9 @@ module.exports = function(app, logger) {
 
             //Once tar process finishes, continue...
             tarProcess.on('close', function(code) {
-                logger.info(path.resolve(__dirname, "currentApp/" + applicationName + "/"));
+                logger.info(path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/"));
                 var npmProcess = childProcess.spawn('/usr/local/bin/npm', ['install'], {
-                    cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
+                    cwd: path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/")
                 });
 
                 //If there is an error, display it
@@ -72,18 +72,18 @@ module.exports = function(app, logger) {
                 npmProcess.on('close', function(code) {
                     //Spawn a new process to run the child node app
                     logger.info("RUNNER: Checking if exists..." + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
-                    if (fs.existsSync(path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"))) {
-                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/app.js"));
+                    if (fs.existsSync(path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/app.js"))) {
+                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/app.js"));
                         var envCopy = [];
                         envCopy['orchestratorIP'] = orchestratorIP;
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
-                        this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/app.js")], {
+                        this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/app.js")], {
                             env: envCopy,
-                            cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
+                            cwd: path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/")
                         });
                     } else {
-                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + applicationName + "/main.js"));
-                        config = require(path.resolve(__dirname, "currentApp/" + applicationName + "/runnerConfig.json"));
+                        logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/main.js"));
+                        config = require(path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/runnerConfig.json"));
                         var envCopy = [];
                         envCopy['orchestratorIP'] = orchestratorIP;
                         envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
@@ -91,9 +91,9 @@ module.exports = function(app, logger) {
                         envCopy['ROOT_URL'] = config.ROOT_URL;
                         envCopy['PORT'] = (parseInt(currentPort) + 1000);
 
-                        this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + applicationName + "/main.js")], {
+                        this.nodeProcess = childProcess.spawn('/usr/local/bin/node', [path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/main.js")], {
                             env: envCopy,
-                            cwd: path.resolve(__dirname, "currentApp/" + applicationName + "/")
+                            cwd: path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/")
                         });
                     }
 
