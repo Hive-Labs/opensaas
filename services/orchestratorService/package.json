@@ -15,7 +15,8 @@
         "asciimo": "*",
         "method-override": "*",
         "body-parser": "*",
-        "morgan": "*"
+        "morgan": "*",
+        "longjohn": "*"
     },
     "devDependencies": {
         "grunt": "~0.4.1",
