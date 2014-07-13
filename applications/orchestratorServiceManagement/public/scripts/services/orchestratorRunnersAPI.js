@@ -4,7 +4,7 @@
 
 angular.module('orchestratorServiceManagementApp').factory('orchestratorRunnersAPI', ['$http',
     function($http) {
-        var orchestratorUrl = "http://localhost:2000";
+        var orchestratorUrl = "http://orchestrator.hivelabs.it";
 
         // Public API here
         return {
