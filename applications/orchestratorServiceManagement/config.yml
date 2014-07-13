@@ -5,4 +5,4 @@ server:
 
   oAuthClientSecret: 'google1'
 
-  authServerHostname: 'http://localhost:4455'
+  authServerHostname: 'http://auth.hivelabs.it'
