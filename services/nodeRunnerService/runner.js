@@ -4,7 +4,9 @@ var fs = require('fs'),
 module.exports = function(app, application, logger) {
     var processStatus = {
         cpu: 0,
-        memory: 0
+        memory: 0,
+        runnerPID: -1,
+        applicationPID: -1
     };
     var runnerID = app.get('runnerID');
 
@@ -55,12 +57,16 @@ module.exports = function(app, application, logger) {
                         logger.error("Could not lookup pid of sub-application.");
                         result2 = {
                             cpu: 0,
-                            memory: 0
+                            memory: 0,
+                            runnerPID: runnerPid,
+                            applicationPID: applicationPid
                         };
                     }
                     processStatus = {
-                        cpu: result1.cpu + result2.cpu,
-                        memory: result1.memory + result2.memory
+                        cpu: (result1.cpu + result2.cpu),
+                        memory: result1.memory + result2.memory,
+                        runnerPID: runnerPid,
+                        applicationPID: applicationPid
                     }
                 });
             });
@@ -70,7 +76,9 @@ module.exports = function(app, application, logger) {
                 if (result1) {
                     processStatus = {
                         cpu: result1.cpu,
-                        memory: result1.memory
+                        memory: result1.memory,
+                        runnerPID: runnerPid,
+                        applicationPID: -1
                     }
                 }
             });

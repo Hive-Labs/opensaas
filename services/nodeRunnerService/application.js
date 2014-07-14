@@ -115,10 +115,10 @@ module.exports = function(app, logger) {
                             logger.info('CHILD:' + data);
                         }
                     });
-                    /*app.set("applicationNodeProcess", this.nodeProcess);
+                    app.set("applicationNodeProcess", this.nodeProcess);
                     callback(null, {
                         appName: applicationName
-                    });*/
+                    });
                 }); //npmProcess.on(close)
             }); //tarProcess.on(close)
         }); //fs.readFile

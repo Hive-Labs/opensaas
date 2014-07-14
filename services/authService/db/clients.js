@@ -15,7 +15,7 @@ var clients = [{
     name: 'Notebook',
     clientId: 'notebookLocal',
     clientSecret: 'google1',
-    redirectURI: 'http://localhost:5000'
+    redirectURI: 'http://localhost'
 }, {
     _id: '4',
     name: 'Notebook',

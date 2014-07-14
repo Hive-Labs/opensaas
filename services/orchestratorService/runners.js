@@ -176,10 +176,13 @@ module.exports = function(loadBalancer, settings, logger) {
         logger.log('info', 'runners.getHealth');
         getRunnerByID(runnerID, function(err, runner) {
             if (runner) {
-                callback(err, runner.health);
+                request.get(runner.ip + "/health", function(error, response, body) {
+                    if (callback)
+                        callback(error || err, body);
+                });
             }
         });
-    };
+    }
 
     var spawnRunner = function(callback) {
         logger.log('info', 'runners.spawnRunner');

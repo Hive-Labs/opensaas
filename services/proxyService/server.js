@@ -62,11 +62,13 @@ app.all('*', function route(req, res) {
     var appName;
     if (servConf.get().server.subdomain_mode) {
         appName = req.headers.host.split('.')[0];
-        getNextMachine(appName, function(err, machine) {
+        getNextMachine(appName, req.session.preferredMachine, function(err, machine) {
             if (err) {
                 res.statusCode = 404;
                 res.end('There are no runners running this app');
             } else {
+                req.session.preferredMachine = machine.index;
+                res.cookie('hive_preferred_machine', machine.index);
                 return proxy.proxyRequest(req, res, machine);
             }
         });
@@ -101,11 +103,15 @@ app.all('*', function route(req, res) {
                 }
                 //Save this to session so we know next time which app you were on
                 req.session.appName = appName;
-                getNextMachine(appName, function(err, machine) {
+                logger.info("Request with session: " + JSON.stringify(req.session));
+                getNextMachine(appName, req.session.preferredMachine, function(err, machine) {
                     if (err) {
                         res.statusCode = 404;
                         res.json(err);
                     } else {
+                        req.session.preferredMachine = machine.index;
+                        logger.info("1. Setting preferred machine to " + machine.index);
+                        res.cookie('hive_preferred_machine', machine.index);
                         logger.info(machine);
                         return proxy.proxyRequest(req, res, machine);
                     }
@@ -113,11 +119,15 @@ app.all('*', function route(req, res) {
             }
         } else if (req.session.appName) {
             appName = req.session.appName;
-            getNextMachine(appName, function(err, machine) {
+            machineID = req.session.preferredMachine;
+            getNextMachine(appName, machineID, function(err, machine) {
                 if (err) {
                     res.statusCode = 404;
                     res.json(err);
                 } else {
+                    req.session.preferredMachine = machine.index;
+                    logger.info("2. Setting preferred machine to " + machine.index);
+                    res.cookie('hive_preferred_machine', machine.index);
                     logger.info(machine);
                     return proxy.proxyRequest(req, res, machine);
                 }
@@ -138,17 +148,26 @@ function updateHAList() {
     });
 }
 
-function getNextMachine(appName, callback) {
+function getNextMachine(appName, preferredMachineID, callback) {
+    logger.info("Requested machine number " + preferredMachineID);
     if (!HAList || HAList.length === 0) { //There are no runners available
         callback({
             error: "There are no runners available."
         }); //return error
-    } else if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) { //The machine at the current index is what you want
+    } else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
+        var preferredMachine = {
+            host: HAList[preferredMachineID].host,
+            port: (HAList[preferredMachineID].port + 1000),
+            index: preferredMachineID
+        };
+        callback(null, preferredMachine);
+    } else if (HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) { //The machine at the current index is what you want
         var oldIndex = currIndex;
         currIndex = (currIndex + 1) % HAList.length;
         var newMachine = {
             host: HAList[oldIndex].host,
-            port: (HAList[oldIndex].port + 1000)
+            port: (HAList[oldIndex].port + 1000),
+            index: oldIndex
         };
         callback(null, newMachine);
     } else { //The machine at the current index is not what you want
@@ -159,7 +178,8 @@ function getNextMachine(appName, callback) {
             if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) {
                 newMachine = {
                     host: HAList[currIndex].host,
-                    port: (HAList[currIndex].port + 1000)
+                    port: (HAList[currIndex].port + 1000),
+                    index: currIndex
                 };
                 break;
             }
