@@ -182,7 +182,7 @@ module.exports = function(loadBalancer, settings, logger) {
                 });
             }
         });
-    }
+    };
 
     var spawnRunner = function(callback) {
         logger.log('info', 'runners.spawnRunner');
