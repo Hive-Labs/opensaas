@@ -22,6 +22,18 @@ var clients = [{
     clientId: 'notebook',
     clientSecret: 'google1',
     redirectURI: 'http://notebook.hivelabs.it'
+}, {
+    _id: '5',
+    name: 'Notebook',
+    clientId: 'notebookLocal2',
+    clientSecret: 'google1',
+    redirectURI: 'http://localhost:5000'
+}, {
+    _id: '6',
+    name: 'daps',
+    clientId: 'daps',
+    clientSecret: '4db703a0-0bc5-11e4-9191-0800200c9a66',
+    redirectURI: 'daps://login'
 }];
 
 
