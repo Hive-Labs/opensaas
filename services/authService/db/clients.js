@@ -13,23 +13,17 @@ var clients = [{
 }, {
     _id: '3',
     name: 'Notebook',
-    clientId: 'notebookLocal',
-    clientSecret: 'google1',
-    redirectURI: 'http://localhost'
+    clientId: 'notebook',
+    clientSecret: 'e2e3e380-1520-11e4-8c21-0800200c9a66',
+    redirectURI: 'http://notebook.hivelabs.it'
 }, {
     _id: '4',
     name: 'Notebook',
-    clientId: 'notebook',
-    clientSecret: 'google1',
-    redirectURI: 'http://notebook.hivelabs.it'
-}, {
-    _id: '5',
-    name: 'Notebook',
-    clientId: 'notebookLocal2',
-    clientSecret: 'google1',
+    clientId: 'notebooklocal',
+    clientSecret: 'e2e3e380-1520-11e4-8c21-0800200c9a66',
     redirectURI: 'http://localhost:5000'
 }, {
-    _id: '6',
+    _id: '5',
     name: 'daps',
     clientId: 'daps',
     clientSecret: '4db703a0-0bc5-11e4-9191-0800200c9a66',
