@@ -3,7 +3,7 @@ var httpProxy = require('http-proxy'),
     orchestrator = require('./orchestrator'),
     servConf = require('nconf'),
     winston = require('winston'),
-    proxy = new httpProxy.RoutingProxy();
+    proxy = new httpProxy.createProxyServer({});
 
 require('js-yaml');
 
@@ -52,6 +52,10 @@ var allowCrossDomain = function(req, res, next) {
     }
 };
 
+proxy.on('proxyReq', function(proxyReq, req, res, options) {
+  proxyReq.setHeader('X-Forwarded-For', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+});
+
 app.configure(function() {
     app.use(allowCrossDomain);
 });
@@ -69,7 +73,7 @@ app.all('*', function route(req, res) {
             } else {
                 req.session.preferredMachine = machine.index;
                 res.cookie('hive_preferred_machine', machine.index);
-                return proxy.proxyRequest(req, res, machine);
+                return proxy.web(req, res, machine);
             }
         });
     } else {
@@ -113,7 +117,7 @@ app.all('*', function route(req, res) {
                         logger.info("1. Setting preferred machine to " + machine.index);
                         res.cookie('hive_preferred_machine', machine.index);
                         logger.info(machine);
-                        return proxy.proxyRequest(req, res, machine);
+                        return proxy.web(req, res, machine);
                     }
                 });
             }
@@ -129,7 +133,7 @@ app.all('*', function route(req, res) {
                     logger.info("2. Setting preferred machine to " + machine.index);
                     res.cookie('hive_preferred_machine', machine.index);
                     logger.info(machine);
-                    return proxy.proxyRequest(req, res, machine);
+                    return proxy.web(req, res, machine);
                 }
             });
         } else {
@@ -150,35 +154,39 @@ function updateHAList() {
 
 function getNextMachine(appName, preferredMachineID, callback) {
     logger.info("Requested machine number " + preferredMachineID);
-    if (!HAList || HAList.length === 0) { //There are no runners available
+    //There are no runners available
+    if (!HAList || HAList.length === 0) { 
         callback({
             error: "There are no runners available."
-        }); //return error
-    } else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
+        });
+    } 
+    //  You are requesting a specific machine to run on
+    else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
         var preferredMachine = {
-            host: HAList[preferredMachineID].host,
-            port: (HAList[preferredMachineID].port + 1000),
+            target: "http://" + HAList[preferredMachineID].host + ":" + (HAList[preferredMachineID].port + 1000),
             index: preferredMachineID
         };
         callback(null, preferredMachine);
-    } else if (HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) { //The machine at the current index is what you want
+    } 
+    //The machine at the current index is what you want
+    else if (HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) { 
         var oldIndex = currIndex;
         currIndex = (currIndex + 1) % HAList.length;
         var newMachine = {
-            host: HAList[oldIndex].host,
-            port: (HAList[oldIndex].port + 1000),
+            target: "http://" + HAList[oldIndex].host + ":" + (HAList[oldIndex].port + 1000),
             index: oldIndex
         };
         callback(null, newMachine);
-    } else { //The machine at the current index is not what you want
+    } 
+    //The machine at the current index is not what you want
+    else { 
         var start = currIndex;
         var newMachine;
         for (var i = 1; i < HAList.length; i++) { //loop through all the machines and check
             currIndex = (i + start) % HAList.length;
             if (HAList && HAList[currIndex] && HAList[currIndex].appName && HAList[currIndex].appName.toLowerCase() == appName.toLowerCase()) {
                 newMachine = {
-                    host: HAList[currIndex].host,
-                    port: (HAList[currIndex].port + 1000),
+                    target: "http://" + HAList[currIndex].host + ":" + (HAList[currIndex].port + 1000),
                     index: currIndex
                 };
                 break;
