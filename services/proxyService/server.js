@@ -63,7 +63,7 @@ proxy.on('proxyReq', function(proxyReq, req, res, options) {
 // Listen to the `upgrade` event and proxy the
 // WebSocket requests as well.
 //
-proxyServer.on('upgrade', function (req, socket, head) {
+proxy.on('upgrade', function (req, socket, head) {
   proxy.ws(req, socket, head);
 });
 
