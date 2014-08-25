@@ -3,7 +3,10 @@ var httpProxy = require('http-proxy'),
     orchestrator = require('./orchestrator'),
     servConf = require('nconf'),
     winston = require('winston'),
-    proxy = new httpProxy.createProxyServer({});
+    proxy = new httpProxy.createProxyServer({
+        ws: true
+    });
+
 
 require('js-yaml');
 
@@ -54,6 +57,14 @@ var allowCrossDomain = function(req, res, next) {
 
 proxy.on('proxyReq', function(proxyReq, req, res, options) {
   proxyReq.setHeader('X-Forwarded-For', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+});
+
+//
+// Listen to the `upgrade` event and proxy the
+// WebSocket requests as well.
+//
+proxyServer.on('upgrade', function (req, socket, head) {
+  proxy.ws(req, socket, head);
 });
 
 app.configure(function() {
