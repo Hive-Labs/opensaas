@@ -11,7 +11,7 @@
     "morgan": "~1.0.0",
     "request": "~2.26.0",
     "express-session": "1.7.6",
-    "grunt-bump": "0.0.11",
+    "grunt-bump": "0.0.11"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
