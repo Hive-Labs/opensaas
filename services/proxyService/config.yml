@@ -4,6 +4,8 @@ server:
 # orchestratorservicemanagement.lvho.st:2002 or http://lvho.st:2002/app/orchestratorServiceManagement
   subdomain_mode: false
 
+  loadbalancer: roundrobin
+
 # Time between contacting orchestrator to fetch new list
   update_interval: 2000
 
