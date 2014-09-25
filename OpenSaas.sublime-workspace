@@ -1,0 +1,763 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"fp_in",
+				"fp_input2"
+			],
+			[
+				"egar",
+				"egarment_dev"
+			],
+			[
+				"out_",
+				"out_astream"
+			],
+			[
+				"out",
+				"out_acodec"
+			],
+			[
+				"avco",
+				"avcodec_flush_buffers"
+			],
+			[
+				"size",
+				"audio_outbuf_size"
+			],
+			[
+				"dest",
+				"destpic"
+			],
+			[
+				"video_ou",
+				"video_outbuf_size"
+			],
+			[
+				"src",
+				"srcaudio"
+			],
+			[
+				"pCodec",
+				"pCodecCtx"
+			],
+			[
+				"pCo",
+				"pCodecCtx"
+			],
+			[
+				"getNex",
+				"getNextMachine"
+			],
+			[
+				"right",
+				"rightInches"
+			],
+			[
+				"lef",
+				"leftInches"
+			],
+			[
+				"mar",
+				"marginPopup"
+			],
+			[
+				"result",
+				"resultAgeMinutes"
+			],
+			[
+				"ipLo",
+				"ipLocations"
+			],
+			[
+				"ipL",
+				"ipLocations"
+			],
+			[
+				"iplo",
+				"ipLocationsLookup"
+			],
+			[
+				"for",
+				"for	for (…) {…}"
+			],
+			[
+				"already",
+				"alreadyUpVoted"
+			],
+			[
+				"user",
+				"userAlreadyDownVoted"
+			],
+			[
+				"useral",
+				"userAlreadyUpVoted"
+			],
+			[
+				"userAl",
+				"userAlreadyDownVoted"
+			],
+			[
+				"tag",
+				"tag"
+			],
+			[
+				"lookup",
+				"lookupTerm"
+			],
+			[
+				"notable",
+				"notable_for"
+			],
+			[
+				"sugg",
+				"suggestionsWorker"
+			],
+			[
+				"documen",
+				"documentID"
+			],
+			[
+				"su",
+				"suggestionsWorker"
+			],
+			[
+				"queue",
+				"queueTime"
+			],
+			[
+				"pro",
+				"provider"
+			],
+			[
+				"docu",
+				"documentID"
+			],
+			[
+				"acc",
+				"accessToken"
+			],
+			[
+				"authSe",
+				"authServiceToken"
+			],
+			[
+				"dap",
+				"DapSchema"
+			],
+			[
+				"dis",
+				"displayItem"
+			],
+			[
+				"last",
+				"lastResult"
+			],
+			[
+				"topi",
+				"topicResult"
+			],
+			[
+				"desc",
+				"description"
+			],
+			[
+				"topic",
+				"topicProperties"
+			],
+			[
+				"res",
+				"response"
+			],
+			[
+				"callb",
+				"callback"
+			],
+			[
+				"c",
+				"console"
+			],
+			[
+				"resu",
+				"resultAgeMinutes"
+			],
+			[
+				"call",
+				"callback"
+			],
+			[
+				"cached",
+				"cachedResult"
+			],
+			[
+				"cache",
+				"cachedResult"
+			],
+			[
+				"wolf",
+				"wolframResults"
+			],
+			[
+				"search",
+				"searchTerm"
+			],
+			[
+				"veri",
+				"verifyValidMarkup"
+			],
+			[
+				"engin",
+				"engine"
+			],
+			[
+				"verif",
+				"verifyValidProvider"
+			],
+			[
+				"callback",
+				"callbackIndex"
+			],
+			[
+				"prefe",
+				"preferredMachineID"
+			],
+			[
+				"pref",
+				"preferredMachineID"
+			],
+			[
+				"curr",
+				"currIndex"
+			],
+			[
+				"node",
+				"nodeProcess"
+			],
+			[
+				"appl",
+				"applicationPID"
+			],
+			[
+				"runn",
+				"runnerPid"
+			],
+			[
+				"runnerP",
+				"runnerPID"
+			],
+			[
+				"runner",
+				"runnerPID"
+			],
+			[
+				"applic",
+				"applicationPid"
+			],
+			[
+				"runners",
+				"runnersRoute"
+			],
+			[
+				"applica",
+				"applicationsRoute"
+			],
+			[
+				"appli",
+				"applicationsRoute"
+			],
+			[
+				"method",
+				"methodOverride"
+			],
+			[
+				"di",
+				"diffRevisions"
+			],
+			[
+				"sea",
+				"searchTerm"
+			],
+			[
+				"fin",
+				"finalKeyTerms"
+			],
+			[
+				"cach",
+				"cachedResult"
+			],
+			[
+				"key",
+				"keyTerms"
+			],
+			[
+				"return",
+				"returnList"
+			],
+			[
+				"k",
+				"finalKeyTerms"
+			],
+			[
+				"wol",
+				"wolframResults"
+			],
+			[
+				"doc",
+				"docText"
+			],
+			[
+				"sort",
+				"sortedWordCountList"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"beau",
+				"HTMLBeautify"
+			],
+			[
+				"veay",
+				"Javascript Beautify"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"xml",
+				"Indent XML"
+			],
+			[
+				"h",
+				"HTMLBeautify"
+			],
+			[
+				"html",
+				"HTMLBeautify"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/rkrishnan/Documents/Computing II/assignment II/Array.h",
+		"/home/rkrishnan/Documents/Computing II/assignment II/ArrayTest.c",
+		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedListTest.c",
+		"/home/rkrishnan/Documents/Computing II/assignment II/Array.c",
+		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedList.h",
+		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedList.c",
+		"/home/rkrishnan/Documents/Computing II/assignment II/ArrayTimeMeas.c",
+		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedListTimeMeas.c",
+		"/home/rkrishnan/Documents/hive/VPN/godPage.txt",
+		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
+		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/workspace/Program1/Program1.cpp",
+		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/completeYourProfile.js",
+		"/home/rkrishnan/Desktop/burst.log",
+		"/home/rkrishnan/Desktop/burst3.log",
+		"/home/rkrishnan/Desktop/burst2.log",
+		"/home/rkrishnan/Documents/Computing IV/Assignment II/input.xml",
+		"/home/rkrishnan/egarmentdistrict/config/paypal.yml",
+		"/home/rkrishnan/egarmentdistrict/db/schema.rb",
+		"/home/rkrishnan/egarmentdistrict/config/routes.rb",
+		"/home/rkrishnan/egarmentdistrict/config/database.yml",
+		"/home/rkrishnan/Downloads/hw1.c",
+		"/home/rkrishnan/Downloads/burst (100).log",
+		"/home/rkrishnan/Downloads/ToDoList1.txt",
+		"/home/rkrishnan/Downloads/ToDoList.txt",
+		"/home/rkrishnan/egarmentdistrict/howToDeploy.txt",
+		"/home/rkrishnan/egarmentdistrict/app/assets/stylesheets/scaffolds.css.scss",
+		"/home/rkrishnan/egarmentdistrict/app/assets/stylesheets/application.css.scss",
+		"/media/rkrishnan/FreeAgent GoFlex Drive/2a5546aa-5129-4e74-97a9-f656f34ecc0a/console.log",
+		"/home/rkrishnan/Desktop/rest.c",
+		"/home/rkrishnan/Desktop/output_example.c",
+		"/home/rkrishnan/Documents/burst/build/BurstMediaPlayer/src/BurstConverter.cpp",
+		"/home/rkrishnan/Downloads/burst (95).log",
+		"/home/rkrishnan/Downloads/burst (97).log",
+		"/home/rkrishnan/Documents/burst/build/BurstMediaPlayer/src/BurstConverter.h",
+		"/home/rkrishnan/Documents/burst/build/ffmpeg.mk",
+		"/home/rkrishnan/Documents/burst/build/android.mk",
+		"/home/rkrishnan/Documents/thingsToBring",
+		"/home/rkrishnan/Documents/burst/build/BurstMediaPlayer/src/FFMPEGDecoder.cpp",
+		"/home/rkrishnan/Documents/burst/build/utils.mk",
+		"/home/rkrishnan/Documents/burst/build/burstmediaplayer.mk",
+		"/home/rkrishnan/Documents/burst/build/androidtoolchain.mk",
+		"/home/rkrishnan/Documents/burst/build/venders/ffmpeg/configure",
+		"/home/rkrishnan/Downloads/burst (93).log",
+		"/home/rkrishnan/Downloads/burst (92).log",
+		"/home/rkrishnan/Downloads/burst (91).log",
+		"/home/rkrishnan/Downloads/burst (89).log",
+		"/home/rkrishnan/Documents/hive/notebook/server/routes/user.js",
+		"/home/rkrishnan/Documents/hive/notebook/server/api/user.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/binder.scss",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/settings.scss",
+		"/home/rkrishnan/Downloads/burst (88).log",
+		"/home/rkrishnan/Downloads/burst (87).log",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/dashboardPage/settingsPage.js",
+		"/home/rkrishnan/Documents/hive/notebook/html/settings.html",
+		"/home/rkrishnan/Downloads/burst (94).log",
+		"/home/rkrishnan/Downloads/burst (90).log",
+		"/home/rkrishnan/Downloads/burst (86).log",
+		"/home/rkrishnan/Documents/hive/notebook/html/dashboard.html",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/ruler.js",
+		"/home/rkrishnan/Documents/hive/notebook/html/editor.html",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/ruler.scss",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/server.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/roundrobin.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/dashboardPage/completeYourProfile.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/package.json",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/config.yml",
+		"/home/rkrishnan/Documents/hive/wolframAlphaEngine/server.js",
+		"/home/rkrishnan/Documents/hive/notebook/server/main.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/settings.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/style.scss",
+		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/feeds.js",
+		"/home/rkrishnan/Downloads/burst (85).log",
+		"/home/rkrishnan/Downloads/burst (83).log",
+		"/home/rkrishnan/Downloads/burst (82).log",
+		"/home/rkrishnan/Downloads/burst (81).log",
+		"/home/rkrishnan/Downloads/burst (78).log",
+		"/home/rkrishnan/Downloads/burst (80).log",
+		"/home/rkrishnan/Downloads/burst (79).log",
+		"/home/rkrishnan/Documents/hive/notebook/server/api/document.js",
+		"/home/rkrishnan/Downloads/burst (84).log",
+		"/home/rkrishnan/Downloads/burst (77).log",
+		"/home/rkrishnan/Documents/hive/notebook/server/api/feeds.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/utils.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/documents.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/dashboardPage/feeds.js",
+		"/home/rkrishnan/Documents/hive/VPN/updateAll.sh",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/output.css",
+		"/home/rkrishnan/Downloads/burst (66).log",
+		"/home/rkrishnan/Downloads/burst (67).log",
+		"/home/rkrishnan/Downloads/burst (68).log",
+		"/home/rkrishnan/Downloads/burst (71).log",
+		"/home/rkrishnan/Downloads/burst (72).log",
+		"/home/rkrishnan/Downloads/burst (73).log",
+		"/home/rkrishnan/Downloads/burst (74).log",
+		"/home/rkrishnan/Downloads/burst (75).log",
+		"/home/rkrishnan/Downloads/burst (76).log",
+		"/home/rkrishnan/Downloads/burst (70).log",
+		"/home/rkrishnan/Downloads/burst (69).log",
+		"/home/rkrishnan/Downloads/burst (63).log",
+		"/home/rkrishnan/Downloads/burst (64).log",
+		"/home/rkrishnan/Documents/hive/notebook/html/groups.html",
+		"/home/rkrishnan/Documents/hive/notebook/html/notebook.html",
+		"/home/rkrishnan/Downloads/burst (60).log",
+		"/home/rkrishnan/Downloads/burst (61).log",
+		"/home/rkrishnan/Downloads/burst (59).log",
+		"/home/rkrishnan/Downloads/burst (58).log",
+		"/home/rkrishnan/Documents/burst/cheatsheet",
+		"/home/rkrishnan/Downloads/burst (62).log",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/formattingBar.js",
+		"/home/rkrishnan/Documents/hive/cheatsheet.onSelect",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/animations.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/editor.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/controllers/editorPage/refactorDocument.js",
+		"/home/rkrishnan/Documents/hive/notebook/server/routes/document.js",
+		"/home/rkrishnan/Documents/hive/notebook/server/routes/auth.js",
+		"/home/rkrishnan/Documents/hive/notebook/server/api/auth.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/main.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/api/api_user.js",
+		"/home/rkrishnan/Documents/hive/freebaseEngine/server.js",
+		"/home/rkrishnan/Documents/hive/VPN/bamboo.sh",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/publicProfile.scss",
+		"/home/rkrishnan/Documents/hive/notebook/html/publicProfile.html",
+		"/home/rkrishnan/Documents/hive/notebook/server/api/suggestions.js",
+		"/home/rkrishnan/android/system/packages/apps/Gallery2/gallerycommon/src/com/android/gallery3d/common/LruCache.java",
+		"/home/rkrishnan/Documents/hive/notebook/client/styles/formattingBar.scss",
+		"/home/rkrishnan/Documents/hive/notebook/client/router.js",
+		"/home/rkrishnan/Documents/hive/notebook/client/view/loginPage/login.js",
+		"/home/rkrishnan/Documents/burst/toDo"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"",
+			"/home/rkrishnan/Documents/burst/build/",
+			"/home/rkrishnan/Documents/burst/build/venders/",
+			"/home/rkrishnan/Documents/burst/build/venders/ffmpeg",
+			"",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/html",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/html",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/server",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/html",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/server",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/android/system/packages/apps/Gallery2",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/server",
+			"/home/rkrishnan/Documents/hive/notebook",
+			"/home/rkrishnan/Documents/hive/notebook/server",
+			"/home/rkrishnan/Documents/hive/notebook/client",
+			"/home/rkrishnan/Documents/hive/notebook/server",
+			"/home/rkrishnan/Documents/hive/opensaas/services/orchestratorService",
+			"/home/rkrishnan/Documents/hive/opensaas/applications/orchestratorServiceManagement",
+			"-.meteor/*",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"fatal",
+			"start uploadchunk",
+			"completeprofile",
+			"statistics",
+			"products_statistics",
+			"migrate",
+			"photo_file_name",
+			"products_statistics",
+			"assets.css",
+			"scss",
+			"scaffold.css.scss",
+			"import",
+			"compass",
+			"correctTimeToSyncSample",
+			".build",
+			"correcttimetosync",
+			"MovieCreator",
+			"HAS_MEDIA_MUXER",
+			"apihelper",
+			"ApiHelper",
+			"VideoUtils",
+			"trim",
+			"fatal",
+			"SyncService",
+			"framerate",
+			"swsconte",
+			"errbuf",
+			"video_frames",
+			"got_picture",
+			"defaults",
+			"out",
+			"err",
+			"PRId",
+			"avcodec_encode_video",
+			"avcodec_enco",
+			"avcodec_decode_audio",
+			"video_outbuf",
+			"avcodec_encode_video",
+			"assert",
+			"in_vstream",
+			"nb_samples",
+			"avr",
+			"libavresample",
+			"printf(",
+			"return",
+			"fault",
+			"pCodecCtx",
+			"sws_ctx",
+			"pCodecCtx",
+			"pFrame",
+			"pFrameRGB",
+			"pFormatCtx",
+			"outfile",
+			"avcodec_decode_video2",
+			"stlport",
+			"LOCAL_C_INCLUDES",
+			"LOCAL_STATIC_LIBRARIES",
+			"android_getCpuCount",
+			"arch=arm",
+			"arch=",
+			"ffprobe",
+			"-enable-neon",
+			"neon",
+			"enable-static",
+			"codecctx",
+			"argtable2",
+			"sdk",
+			"pthread",
+			"pframergb",
+			"optionsdic",
+			"av_find_stream_info",
+			"avformat_find_stream_info",
+			"<libavformat/avformat.h>",
+			"avformat",
+			"return -1",
+			"argv[1]",
+			"avcodec",
+			"pFormatCtx",
+			"pCodecCtx",
+			"argv[1]",
+			"pFormatCtx",
+			"endMSec",
+			"encodeVideo",
+			"encodevideo",
+			"setupAudioStream",
+			"fatal",
+			"FATAL",
+			"camerasurfa",
+			"userid",
+			"profilepic",
+			"500ms",
+			"imagefileuploader",
+			"cubic-bezier(1.000, 0.525, 0.000, 0.695)",
+			"1",
+			"all",
+			"green",
+			"newsFeedDiv",
+			"fileupload",
+			"profileUploader",
+			"servconf",
+			"config",
+			"config.",
+			"allowCrossDomain",
+			"http",
+			"	\n",
+			"removefromdb",
+			"Wolframresult.",
+			"Notifi",
+			"Notifications",
+			"totalnoti",
+			"totalnotificationsheader",
+			"httpProxy",
+			"editAccountSummary",
+			"folders",
+			".ruler",
+			"fatal",
+			"FATAL",
+			"fatal",
+			"accesshistory",
+			"<<",
+			"\";\n",
+			"hascomments",
+			"numcommen",
+			"feedid",
+			"alread",
+			"hidden",
+			".feeds",
+			"E/"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Log::log(Log::INFO,",
+			"return",
+			"\"",
+			"$ANDROID_SDK"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"styles.scss",
+				"notebook/client/styles/style.scss"
+			],
+			[
+				"notebook/client/feed.js",
+				"notebook/client/controllers/dashboardPage/feeds.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 198.0,
+	"status_bar_visible": true
+}
