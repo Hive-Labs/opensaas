@@ -9,36 +9,28 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            options: {
-                force: true
-            },
-            dist: {
-                files: [{
-                    dot: true,
-                    src: ['.tmp', 'dist/*', 'orchestratorServiceManagement.tar.gz']
-                }]
-            },
-            server: '.tmp'
+            build: {
+                src: ['.tmp', 'dist', 'orchestratorServiceManagement.tar.gz']
+            }
         },
         bump: {
             options: {
                 files: ['package.json'],
-                updateConfigs: [],
                 commit: false,
                 createTag: false,
                 push: false
             }
         },
         jshint: {
-            files: ['**/*.js'],
+            files: ['./**/*.js'],
             options: {
-                ignores: ['gruntfile.js', 'node_modules/**/*', 'public/scripts/jquery.flot.js', 'public/bower_components/**/*']
+                ignores: ['gruntfile.js', './node_modules/**/*', './public/scripts/jquery.flot.js', 'public/bower_components/**/*']
             }
         },
         copyto: {
             build: {
                 files: [{
-                    cwd: '.',
+                    cwd: './',
                     src: ['**/*'],
                     dest: 'dist/'
                 }],
@@ -58,7 +50,7 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     cwd: 'dist/',
-                    src: ['**'],
+                    src: ['**/*'],
                     dest: 'orchestratorServiceManagement/',
                 }]
             }
@@ -79,9 +71,7 @@ module.exports = function(grunt) {
     // This task will copy files from source to dist for production
     grunt.loadNpmTasks('grunt-copy-to');
 
-    grunt.registerTask('test', ['clean:server']);
+    grunt.registerTask('build', ['clean', 'jshint', 'bump', 'copyto', 'compress']);
 
-    grunt.registerTask('build', ['clean:dist', 'jshint', 'bump', 'copyto', 'compress']);
-
-    grunt.registerTask('default', ['test', 'build']);
+    grunt.registerTask('default', ['build']);
 };

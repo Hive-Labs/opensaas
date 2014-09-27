@@ -1,7 +1,7 @@
 server:
   port: 3005
 
-  oAuthClientID: 'orchestratorManagementLocal'
+  oAuthClientID: 'orchestratorManagement'
 
   oAuthClientSecret: 'google1'
 
