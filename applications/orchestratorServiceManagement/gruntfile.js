@@ -27,18 +27,18 @@ module.exports = function(grunt) {
                 ignores: ['gruntfile.js', './node_modules/**/*', './public/scripts/jquery.flot.js', 'public/bower_components/**/*']
             }
         },
-        copyto: {
+        copy: {
             build: {
                 files: [{
                     cwd: './',
-                    src: ['**/*'],
+                    src: ['**/*', '!node_modules/**', '!./.git/**', '!./dist', '!./orchestratorServiceManagement.tar.gz'],
                     dest: 'dist/'
                 }],
                 options: {
-                    processContent: function(content, path) {
+                    noProcess: function(content, path) {
                         return content;
                     },
-                    ignore: ['./node_modules{,/**/*}', './.git{,/**/*}', './dist{,/**/*}', './orchestratorServiceManagement.tar.gz']
+                    ignore: []
                 }
             }
         },
@@ -69,9 +69,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // This task will copy files from source to dist for production
-    grunt.loadNpmTasks('grunt-copy-to');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('build', ['clean', 'jshint', 'bump', 'copyto', 'compress']);
+    grunt.registerTask('build', ['clean', 'jshint', 'bump', 'copy', 'compress']);
 
     grunt.registerTask('default', ['build']);
 };
