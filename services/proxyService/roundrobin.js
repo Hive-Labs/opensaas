@@ -57,9 +57,8 @@ module.exports = function(proxy, servConf) {
                             res.end('There are no runners running this app');
                         } else {
                             req.session.preferredMachine = machine.index;
-                            console.log("forwarding to " + req.url + "/")
                             res.writeHead(303, [
-                                ['Location', req.url + "/"],
+                                ['Location', req.url == "/" ? req.url : req.url + "/"],
                                 ['Set-Cookie', 'hive_preferred_machine=' + machine.index + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())],
                                 ['Set-Cookie', 'hive_current_app=' + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())]
                             ]);
