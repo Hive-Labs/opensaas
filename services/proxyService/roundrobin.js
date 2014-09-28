@@ -96,7 +96,7 @@ module.exports = function(proxy, servConf) {
             str = str.substr(0, str.length - 1);
         }
         if(str[0] == '/' && str.length > 2){
-            str = str.substr(1, str.length - 2);
+            str = str.substr(1, str.length - 1);
         }
         return str;
     }
