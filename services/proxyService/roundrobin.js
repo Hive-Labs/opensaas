@@ -47,6 +47,9 @@ module.exports = function(proxy, servConf) {
                 //  User is requesting the app for the first time, redirect them and store the app name in cookie
                 if (xAppHeaderIndex > 0) {
                     req.url = stripTrailingSlash(req.url.replace(subList[xAppHeaderIndex] + "/" + subList[xAppHeaderIndex + 1], ""));
+                    if(req.url == ""){
+                        req.url = "/";
+                    }
                     console.log("Changed to " + req.url);
                     //  The name of the app is the first part of the domain
                     appName = subList[xAppHeaderIndex + 1];
@@ -56,13 +59,12 @@ module.exports = function(proxy, servConf) {
                             res.statusCode = 404;
                             res.end('There are no runners running this app');
                         } else {
-                            req.session.preferredMachine = machine.index;
-                            res.writeHead(303, [
-                                ['Location', req.url == "/" ? req.url : req.url + "/"],
-                                ['Set-Cookie', 'hive_preferred_machine=' + machine.index + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())],
-                                ['Set-Cookie', 'hive_current_app=' + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())]
-                            ]);
-                            res.end();
+                            req.session.preferxredMachine = machine.index;
+                            res.setHeader('Set-Cookie', 'hive_preferred_machine=' + machine.index + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString()));
+                            res.setHeader('Set-Cookie', 'hive_current_app=' + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString()));
+                            proxy.createProxyServer({
+                                target: machine
+                            }).web(req, res, machine);
                         }
                     });
                 }
