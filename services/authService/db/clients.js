@@ -9,7 +9,7 @@ var clients = [{
     name: 'Orchestrator Service Management',
     clientId: 'orchestratorManagementLocal',
     clientSecret: 'google1',
-    redirectURI: 'http://localhost:2002/app/orchestratorServiceManagement/'
+    redirectURI: 'http://localhost:2002'
 }, {
     _id: '3',
     name: 'Notebook',

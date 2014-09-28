@@ -1,4 +1,4 @@
-module.exports = function(servConf) {
+module.exports = function(proxy, servConf) {
     //	Will hold the list of servers currently running the app
     var HAList = [];
 
@@ -6,30 +6,110 @@ module.exports = function(servConf) {
     var currIndex = 0;
 
     return {
-        getNext = function(req, res) {
+        setHAList: function(HAList) {
+            this.HAList = HAList;
+        },
+        getNext: function(req, res, next) {
             //	Figure out the the name of the app being requested
             var appName;
 
+            var cookieList = parseCookies(req);
+            console.log("GOt a hit: " + req.url);
             //	notebook.hivelabs.it
             if (servConf.get().server.subdomain_mode) {
                 //	The name of the app is the first part of the domain
                 appName = req.headers.host.split('.')[0];
-                getNextMachine(appName, req.session.preferredMachine, function(err, machine) {
+                getNextMachine(this.HAList, appName, req.session.preferredMachine, function(err, machine) {
                     if (err) {
                         res.statusCode = 404;
                         res.end('There are no runners running this app');
                     } else {
                         req.session.preferredMachine = machine.index;
-                        res.cookie('hive_preferred_machine', machine.index);
-                        return proxy.web(req, res, machine);
+                        res.setHeader('Set-Cookie', 'hive_preferred_machine=' + machine.index);
+                        res.setHeader('Set-Cookie', 'hive_current_app=' + appName);
+                        proxy.createProxyServer({
+                            target: machine
+                        }).web(req, res, machine);
                     }
                 });
             }
+            //  http://lvho.st:2002/x_app/orchestratorServiceManagement
+            else {
+                var subList = req.url.split('/');
+                var xAppHeaderIndex = -1;
+                for (var i = 0; i < subList.length; i++) {
+                    if (subList[i] == "x_app") {
+                        xAppHeaderIndex = i;
+                        break;
+                    }
+                }
 
-        };
+                //  User is requesting the app for the first time, redirect them and store the app name in cookie
+                if (xAppHeaderIndex > 0) {
+                    req.url = stripTrailingSlash(req.url.replace(subList[xAppHeaderIndex] + "/" + subList[xAppHeaderIndex + 1], ""));
+                    console.log("Changed to " + req.url);
+                    //  The name of the app is the first part of the domain
+                    appName = subList[xAppHeaderIndex + 1];
+                    getNextMachine(this.HAList, appName, null, function(err, machine) {
+                        if (err) {
+                            console.log(err);
+                            res.statusCode = 404;
+                            res.end('There are no runners running this app');
+                        } else {
+                            req.session.preferredMachine = machine.index;
+                            console.log("forwarding to " + req.url + "/")
+                            res.writeHead(303, [
+                                ['Location', req.url + "/"],
+                                ['Set-Cookie', 'hive_preferred_machine=' + machine.index + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())],
+                                ['Set-Cookie', 'hive_current_app=' + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString())]
+                            ]);
+                            res.end();
+                        }
+                    });
+                }
+                //  User already has a specific machine in mind, so give that to them
+                else if (cookieList["hive_preferred_machine"] != null && cookieList["hive_current_app"]) {
+                    console.log("Found a cookie with machine id: " + cookieList["hive_preferred_machine"]);
+                    getNextMachine(this.HAList, cookieList["hive_current_app"], cookieList["hive_preferred_machine"], function(err, machine) {
+                        if (err) {
+                            console.log(err);
+                            res.statusCode = 404;
+                            res.end('There are no runners running this app');
+                        } else {
+                            proxy.createProxyServer({
+                                target: machine
+                            }).web(req, res, machine);
+                        }
+                    });
+                } else {
+                    console.log("Weird.");
+                    console.log(cookieList);
+                    console.log(req.url);
+                }
+            }
+        }
     };
 
-    function getNextMachine(appName, preferredMachineID, callback) {
+    function stripTrailingSlash(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
+    }
+
+    function parseCookies(request) {
+        var list = {},
+            rc = request.headers.cookie;
+
+        rc && rc.split(';').forEach(function(cookie) {
+            var parts = cookie.split('=');
+            list[parts.shift().trim()] = unescape(parts.join('='));
+        });
+
+        return list;
+    }
+
+    function getNextMachine(HAList, appName, preferredMachineID, callback) {
         //	There are no runners available
         if (!HAList || HAList.length === 0) {
             callback({
@@ -37,7 +117,8 @@ module.exports = function(servConf) {
             });
         }
         //  You are requesting a specific machine to run on
-        else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
+        else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
+            console.log("requesting specific machine" + preferredMachineID);
             var preferredMachine = {
                 target: "http://" + HAList[preferredMachineID].host + ":" + (HAList[preferredMachineID].port + 1000),
                 index: preferredMachineID

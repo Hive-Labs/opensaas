@@ -1,9 +1,9 @@
 var http = require('http'),
-    orchestrator = require('./orchestrator'),
     servConf = require('nconf'),
     winston = require('winston'),
-    httpProxy = require('.http-proxy'),
-    require('js-yaml');
+    httpProxy = require('http-proxy'),
+    session = require('sesh').magicSession(),
+    jsyaml = require('js-yaml');
 
 // Load the logger
 logger = new winston.Logger({
@@ -21,17 +21,19 @@ servConf.defaults(require('./config.yml')).argv().env();
 global.servConf = servConf;
 
 //  Load the loadbalancer that the user chose (eg. roundrobin)
-var loadBalancer = require('./' + servConf.get().server.loadbalancer)(servConf);
-
+var loadBalancer = require('./' + servConf.get().server.loadbalancer)(httpProxy, servConf);
+var orchestrator = require('./orchestrator')(servConf);
 //  Send the HTTP request to the appropriate loadbalancer
 var server = http.createServer(function(req, res) {
-    loadBalancer.getNext(req, res).web(req, res);
+    loadBalancer.getNext(req, res);
 });
 
 
 //  Handle the websocket 'Upgrade' event to the appropriate loadbalancer
 server.on('upgrade', function(req, socket, head) {
-    loadBalancer.getNext(req, res).ws(req, socket, head);
+    loadBalancer.getNext(req, res, function(result){
+        result.ws(req, socket, head);
+    });
 });
 
 //  Every few seconds, check to see if a new machine was added to the list
@@ -48,7 +50,7 @@ logger.info("Listening on port " + port);
 function updateHAList() {
     orchestrator.getHAList(function(err, data) {
         if (!err && data) {
-            loadBalancer.HAList = JSON.parse(data);
+            loadBalancer.setHAList(JSON.parse(data));
         }
     });
 }
