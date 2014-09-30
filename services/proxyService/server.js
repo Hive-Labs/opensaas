@@ -25,14 +25,30 @@ var loadBalancer = require('./' + servConf.get().server.loadbalancer)(httpProxy,
 var orchestrator = require('./orchestrator')(servConf);
 //  Send the HTTP request to the appropriate loadbalancer
 var server = http.createServer(function(req, res) {
-    loadBalancer.getNext(req, res);
+    loadBalancer.getNext(req, res, function(error, req, proxy, machine){
+        if(error || !proxy || !machine){
+                res.statusCode = 404;
+                res.end('There are no runners running this app');
+        }
+        else{
+            console.log("Proxying web.");
+            proxy.web(req, res, machine);
+        }
+    });
 });
 
 
 //  Handle the websocket 'Upgrade' event to the appropriate loadbalancer
 server.on('upgrade', function(req, socket, head) {
-    loadBalancer.getNext(req, res, function(result){
-        result.ws(req, socket, head);
+    loadBalancer.getNext(req, res, function(error, req, proxy, machine){
+        if(error || !proxy || !machine){
+                res.statusCode = 404;
+                res.end('There are no runners running this app');
+        }
+        else{
+            console.log("Proxying websocket.");
+            proxy.ws(req, socket, head);
+        }
     });
 });
 

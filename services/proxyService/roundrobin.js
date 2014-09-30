@@ -1,4 +1,4 @@
-module.exports = function(proxy, servConf) {
+module.exports = function(httpProxy, servConf) {
     //	Will hold the list of servers currently running the app
     var HAList = [];
 
@@ -21,23 +21,23 @@ module.exports = function(proxy, servConf) {
             //  lvho.st:2002/x_app/orchestratorServiceManagement
             if (!servConf.get().server.subdomain_mode) {
                 //  Check if header has cookies which tell us which machine to run on
-                checkCookies(req, res, this.HAList, function(cookieError, cookiesValid) {
+                checkCookies(req, res, this.HAList, httpProxy, function(cookieError, cookiesValid, proxy, machine) {
                     if (!cookiesValid) {
                         console.log("Cookies were null, checking the url.");
                         //  Check if the url has which app the user is requesting
-                        checkUrl(req,res, HAList, function(urlError, urlValid){
-                            if(!urlValid){
-                                res.statusCode = 404;
-                                res.end('There are no runners running this app');
-                            }
+                        checkUrl(req,res, HAList, httpProxy, function(urlError, urlValid, proxy, machine){
+                            next(urlError, req, proxy, machine);
                         });
+                    }
+                    else{
+                        next(cookieError, req, proxy, machine);
                     }
                 });    
             }
         }
     };
 
-    function checkUrl(req, res, HAList, next) {
+    function checkUrl(req, res, HAList, httpProxy, next) {
         //  Take the url and delimit it using '/'
         var subList = req.url.split('/');
         //  Check if the url contains x_app and store where it is found
@@ -74,16 +74,16 @@ module.exports = function(proxy, servConf) {
                     req.url = removeXAppFromUrl(req.url, appName);
                     console.log("Serving from url as " + req.url);
 
-                    proxy.createProxyServer({
+                    var proxy = httpProxy.createProxyServer({
                         target: machine
-                    }).web(req, res, machine);
-                    next(null, true);
+                    });
+                    next(null, true, proxy, machine);
                 }
             });
         }
     }
 
-    function checkCookies(req, res, HAList, next) {
+    function checkCookies(req, res, HAList, httpProxy, next) {
         //  Get a list of cookies in the request header
         var cookieList = parseCookies(req);
         //  Make sure the two parts necessary exist
@@ -99,10 +99,10 @@ module.exports = function(proxy, servConf) {
                     req.url = removeXAppFromUrl(req.url, currentApp);
                     console.log("Serving from cookie as " + req.url);
                     //  Proxy the user's request to this machine
-                    proxy.createProxyServer({
+                    var proxy = httpProxy.createProxyServer({
                         target: machine
-                    }).web(req, res, machine);
-                    next(null, true);
+                    });
+                    next(null, true, proxy, machine);
                 }
             });
         } else {
@@ -121,7 +121,8 @@ module.exports = function(proxy, servConf) {
     }
 
     function removeXAppFromUrl(url, appName){
-        return url.replace("/x_app/" + appName, "").replace("/x_app", "");
+        var url = url.replace("/x_app/" + appName, "").replace("/x_app", "");
+        return url == "" ? "/" : url;
     }
 
     function parseCookies(request) {

@@ -4,7 +4,7 @@
 
 angular.module('orchestratorServiceManagementApp').factory('authAPI', ['$http',
     function($http) {
-    var orchestratorUrl = "http://orchestrator.hivelabs.it";
+    var orchestratorUrl = "http://localhost:2000";
         // Public API here
         return {
             get: function(callback) {
