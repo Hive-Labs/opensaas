@@ -10,95 +10,118 @@ module.exports = function(proxy, servConf) {
             this.HAList = HAList;
         },
         getNext: function(req, res, next) {
+            console.log("Got a hit: " + req.url);
+
             //	Figure out the the name of the app being requested
             var appName;
 
-            var cookieList = parseCookies(req);
-            console.log("GOt a hit: " + req.url);
-            //	notebook.hivelabs.it
-            if (servConf.get().server.subdomain_mode) {
-                //	The name of the app is the first part of the domain
-                appName = req.headers.host.split('.')[0];
-                getNextMachine(this.HAList, appName, req.session.preferredMachine, function(err, machine) {
-                    if (err) {
-                        res.statusCode = 404;
-                        res.end('There are no runners running this app');
-                    } else {
-                        req.session.preferredMachine = machine.index;
-                        res.setHeader('Set-Cookie', 'hive_preferred_machine=' + machine.index);
-                        res.setHeader('Set-Cookie', 'hive_current_app=' + appName);
-                        proxy.createProxyServer({
-                            target: machine
-                        }).web(req, res, machine);
-                    }
-                });
-            }
-            //  http://lvho.st:2002/x_app/orchestratorServiceManagement
-            else {
-                var subList = req.url.split('/');
-                var xAppHeaderIndex = -1;
-                for (var i = 0; i < subList.length; i++) {
-                    if (subList[i] == "x_app") {
-                        xAppHeaderIndex = i;
-                        break;
-                    }
-                }
+            //  Store the HAList so you can use it inside callback functions
+            var HAList = this.HAList;
 
-                //  User is requesting the app for the first time, redirect them and store the app name in cookie
-                if (xAppHeaderIndex > 0) {
-                    req.url = stripTrailingSlash(req.url.replace(subList[xAppHeaderIndex] + "/" + subList[xAppHeaderIndex + 1], ""));
-                    if(req.url == ""){
-                        req.url = "/";
+            //  lvho.st:2002/x_app/orchestratorServiceManagement
+            if (!servConf.get().server.subdomain_mode) {
+                //  Check if header has cookies which tell us which machine to run on
+                checkCookies(req, res, this.HAList, function(cookieError, cookiesValid) {
+                    if (!cookiesValid) {
+                        console.log("Cookies were null, checking the url.");
+                        //  Check if the url has which app the user is requesting
+                        checkUrl(req,res, HAList, function(urlError, urlValid){
+                            if(!urlValid){
+                                res.statusCode = 404;
+                                res.end('There are no runners running this app');
+                            }
+                        });
                     }
-                    console.log("Changed to " + req.url);
-                    //  The name of the app is the first part of the domain
-                    appName = subList[xAppHeaderIndex + 1];
-                    getNextMachine(this.HAList, appName, null, function(err, machine) {
-                        if (err) {
-                            console.log(err);
-                            res.statusCode = 404;
-                            res.end('There are no runners running this app');
-                        } else {
-                            req.session.preferxredMachine = machine.index;
-                            res.setHeader('Set-Cookie', 'hive_preferred_machine=' + machine.index + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString()));
-                            res.setHeader('Set-Cookie', 'hive_current_app=' + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString()));
-                            proxy.createProxyServer({
-                                target: machine
-                            }).web(req, res, machine);
-                        }
-                    });
-                }
-                //  User already has a specific machine in mind, so give that to them
-                else if (cookieList["hive_preferred_machine"] != null && cookieList["hive_current_app"]) {
-                    console.log("Found a cookie with machine id: " + cookieList["hive_preferred_machine"]);
-                    getNextMachine(this.HAList, cookieList["hive_current_app"], cookieList["hive_preferred_machine"], function(err, machine) {
-                        if (err) {
-                            console.log(err);
-                            res.statusCode = 404;
-                            res.end('There are no runners running this app');
-                        } else {
-                            proxy.createProxyServer({
-                                target: machine
-                            }).web(req, res, machine);
-                        }
-                    });
-                } else {
-                    console.log("Weird.");
-                    console.log(cookieList);
-                    console.log(req.url);
-                }
+                });    
             }
         }
     };
 
-    function stripTrailingSlash(str) {
-        if (str.substr(-1) == '/') {
+    function checkUrl(req, res, HAList, next) {
+        //  Take the url and delimit it using '/'
+        var subList = req.url.split('/');
+        //  Check if the url contains x_app and store where it is found
+        var xAppHeaderIndex = -1;
+        for (var i = 0; i < subList.length; i++) {
+            if (subList[i] == "x_app") {
+                xAppHeaderIndex = i;
+                break;
+            }
+        }
+        //  If x_app was not found, then the url isn't valid.
+        if(xAppHeaderIndex == 0){
+            next(null, false);
+            return;
+        }
+        else{
+            //  Remove the trailing and leading slash from the url
+            req.url = removeLeadingTrailingSlash(
+                                req.url.replace(subList[xAppHeaderIndex] 
+                                + "/" + subList[xAppHeaderIndex + 1], ""));
+
+            //  The name of the app is right after the x_app part of the url
+            appName = subList[xAppHeaderIndex + 1];
+
+            //  Get a machine that is running this app
+            getNextMachine(HAList, appName, null, function(err, machine) {
+                if (err) {
+                    console.log(err);
+                    next(null, false);
+                } else {
+                    res.setHeader('Set-Cookie', 'hive_preferred_machine=' + machine.index + "~" + appName + "; path=/; Expires=" + (new Date(new Date().getTime() + 86409000).toUTCString()));
+
+                    //  Remove the x_app and the app name from the url
+                    req.url = removeXAppFromUrl(req.url, appName);
+                    console.log("Serving from url as " + req.url);
+
+                    proxy.createProxyServer({
+                        target: machine
+                    }).web(req, res, machine);
+                    next(null, true);
+                }
+            });
+        }
+    }
+
+    function checkCookies(req, res, HAList, next) {
+        //  Get a list of cookies in the request header
+        var cookieList = parseCookies(req);
+        //  Make sure the two parts necessary exist
+        if (cookieList["hive_preferred_machine"] != null) {
+            //  The cookie is stored as 1~orchestratorServiceManagement
+            var machineID = cookieList["hive_preferred_machine"].split("~")[0];
+            var currentApp = cookieList["hive_preferred_machine"].split("~")[1];
+            //  Check if the requested machine exists
+            getNextMachine(HAList, currentApp, machineID, function(err, machine) {
+                if (err) {
+                    next(err, false);
+                } else {
+                    req.url = removeXAppFromUrl(req.url, currentApp);
+                    console.log("Serving from cookie as " + req.url);
+                    //  Proxy the user's request to this machine
+                    proxy.createProxyServer({
+                        target: machine
+                    }).web(req, res, machine);
+                    next(null, true);
+                }
+            });
+        } else {
+            next(null, false);
+        }
+    }
+
+    function removeLeadingTrailingSlash(str) {
+        if (str != "/" && str.substr(-1) == '/') {
             str = str.substr(0, str.length - 1);
         }
-        if(str[0] == '/' && str.length > 2){
+        if (str != "/" && str[0] == '/' && str.length > 2) {
             str = str.substr(1, str.length - 1);
         }
         return str;
+    }
+
+    function removeXAppFromUrl(url, appName){
+        return url.replace("/x_app/" + appName, "").replace("/x_app", "");
     }
 
     function parseCookies(request) {
@@ -122,7 +145,7 @@ module.exports = function(proxy, servConf) {
         }
         //  You are requesting a specific machine to run on
         else if (preferredMachineID != null && HAList[preferredMachineID] != null && HAList[preferredMachineID].appName != null && HAList[preferredMachineID].appName.toLowerCase() == appName.toLowerCase()) {
-            console.log("requesting specific machine" + preferredMachineID);
+            console.log("requesting specific machine number " + preferredMachineID);
             var preferredMachine = {
                 target: "http://" + HAList[preferredMachineID].host + ":" + (HAList[preferredMachineID].port + 1000),
                 index: preferredMachineID
