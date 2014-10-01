@@ -72,12 +72,9 @@ var lastPing = new Date() - TIMEOUT_TIME - 1;
 function pingOrchestrator() {
     if ((new Date) - lastPing > TIMEOUT_TIME) {
         var newPing = new Date();
-        logger.log('info', 'RUNNER: pinging orchestrator at ' + app.get('orchestratorIP'));
         runner.health(function(err1, health) {
             logger.info("health=" + JSON.stringify(health));
             runner.log(function(err2, log) {
-                logger.info("health=" + JSON.stringify(log));
-                logger.info("Putting to:" + app.get('orchestratorIP') + "/runners/" + app.get('runnerID'));
                 request.put(app.get('orchestratorIP') + "/runners/" + app.get('runnerID'), {
                     form: {
                         ping: newPing,
