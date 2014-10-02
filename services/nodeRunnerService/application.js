@@ -85,8 +85,6 @@ module.exports = function(app, logger) {
                         logger.info('RUNNER:running: ' + '/usr/local/bin/node ' + path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/main.js"));
                         config = require(path.resolve(__dirname, "currentApp/" + runnerID + "/" + applicationName + "/runnerConfig.json"));
                         var envCopy = [];
-                        envCopy['orchestratorIP'] = orchestratorIP;
-                        envCopy['SUBPORT'] = (parseInt(currentPort) + 1000);
                         envCopy['MONGO_URL'] = config.MONGO_URL;
                         envCopy['ROOT_URL'] = config.ROOT_URL;
                         envCopy['PORT'] = (parseInt(currentPort) + 1000);
@@ -100,19 +98,19 @@ module.exports = function(app, logger) {
                     //If child app throws an error or console.logs something, display it
                     this.nodeProcess.on('error', function(data) {
                         if (data) {
-                            logger.error('CHILD:' + data);
+                            logger.error('CHILD(ERROR):' + data);
                         }
                     });
 
                     this.nodeProcess.stderr.on('data', function(data) {
                         if (data) {
-                            logger.error('CHILD:' + data);
+                            logger.error('CHILD(ERROR):' + data);
                         }
                     });
 
                     this.nodeProcess.stdout.on('data', function(data) {
                         if (data) {
-                            logger.info('CHILD:' + data);
+                            logger.info('CHILD(DATA):' + data);
                         }
                     });
                     app.set("applicationNodeProcess", this.nodeProcess);
