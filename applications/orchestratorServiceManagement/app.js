@@ -12,7 +12,7 @@ var express = require('express'),
   jsYaml = require('js-yaml');
 
 // setup the configs
-servConf.defaults(require('./config.yml'))
+servConf.defaults(safeLoad('./config.yml'))
      .argv()
      .env();
 
