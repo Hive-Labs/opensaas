@@ -13,7 +13,7 @@ module.exports = function(app, runner, application, logger) {
     } else {
       application.start(req.files.applicationTar, req.body.applicationName, function(err, appJSON) {
         res.send(200);
-        res.end(appJSON);
+        res.end(JSON.stringify(appJSON));
       });
     }
   });
