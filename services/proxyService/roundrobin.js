@@ -98,6 +98,7 @@ module.exports = function(httpProxy, servConf) {
                 } else {
                     req.url = removeXAppFromUrl(req.url, currentApp);
                     console.log("Serving from cookie as " + req.url);
+                    console.log("Machine info: " + JSON.stringify(machine,1));
                     //  Proxy the user's request to this machine
                     var proxy = httpProxy.createProxyServer({
                         target: machine
