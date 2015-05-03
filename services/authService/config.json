@@ -7,6 +7,11 @@
     "activationSubject": "Welcome to <company name>"
   },
 
+  "google": {
+    "clientID": "711304068864-s4gpe6t05n8njrsjupls1e52efgd2mrr.apps.googleusercontent.com",
+    "clientSecret": "8kh1lNeTBwK9O3W4L5B1v062"
+  },
+
   "security": {
     "sessionPassword": "superNinjaMonkeyPower",
     "oAuthCryptKey": "encryption secret",

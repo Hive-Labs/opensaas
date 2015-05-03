@@ -316,43 +316,34 @@
 	"buffers":
 	[
 		{
-			"contents": "'use strict';\n\n// # Globbing\n// for performance reasons we're only matching one level down:\n// 'test/spec/{,*/}*.js'\n// use this if you want to recursively match all subfolders:\n// 'test/spec/**/*.js'\nmodule.exports = function(grunt) {\n    grunt.initConfig({\n        pkg: grunt.file.readJSON('package.json'),\n        clean: {\n            options: {\n                force: true\n            },\n            dist: {\n                \n                files: [{\n                    dot: true,\n                    src: ['.tmp', 'dist/*', 'orchestratorServiceManagement.tar.gz']\n                }]\n            },\n            server: '.tmp'\n        },\n        bump: {\n            options: {\n                files: ['package.json'],\n                updateConfigs: [],\n                commit: false,\n                createTag: false,\n                push: false\n            }\n        },\n        jshint: {\n            files: ['**/*.js'],\n            options: {\n                ignores: ['gruntfile.js', 'node_modules/**/*', 'public/scripts/jquery.flot.js', 'public/bower_components/**/*']\n            }\n        },\n        copyto: {\n            build: {\n                files: [{\n                    cwd: '.',\n                    src: ['**/*'],\n                    dest: 'dist/'\n                }],\n                options: {\n                    processContent: function(content, path) {\n                        return content;\n                    },\n                    ignore: ['./node_modules{,/**/*}', './.git{,/**/*}', './dist{,/**/*}', './orchestratorServiceManagement.tar.gz']\n                }\n            }\n        },\n        compress: {\n            main: {\n                options: {\n                    mode: 'tgz',\n                    archive: 'orchestratorServiceManagement.tar.gz'\n                },\n                files: [{\n                    cwd: 'dist/',\n                    src: ['**'],\n                    dest: 'orchestratorServiceManagement/',\n                }]\n            }\n        }\n    });\n\n    grunt.loadNpmTasks('grunt-contrib-compress');\n\n    // This will run linting on the code\n    grunt.loadNpmTasks('grunt-contrib-jshint');\n\n    // This is the task to increment the build each build\n    grunt.loadNpmTasks('grunt-bump');\n\n    // This task will clear the dist directory of old files\n    grunt.loadNpmTasks('grunt-contrib-clean');\n\n    // This task will copy files from source to dist for production\n    grunt.loadNpmTasks('grunt-copy-to');\n\n    grunt.registerTask('test', ['clean:server']);\n\n    grunt.registerTask('build', ['clean:dist', 'jshint', 'bump', 'copyto', 'compress']);\n\n    grunt.registerTask('default', ['test', 'build']);\n};",
-			"file": "applications/orchestratorServiceManagement/gruntfile.js",
-			"file_size": 2358,
-			"file_write_time": 1411837016000000,
+			"file": "services/proxyService/server.js",
 			"settings":
 			{
-				"buffer_size": 2658,
+				"buffer_size": 2255,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "/*\n	Program 3\n	Authors: Jamalie Thenor and Rohit Krishnan\n	Desc: This program illustrates the use of classes to make \"Turtles\" that can be fed, killed, and played with.\n*/\n\n#include <iostream>\n#include <string>\n#include <stdint.h>\n\nusing namespace std;\n\nclass Turtle{\npublic:\n	Turtle(int32_t food = 0, int32_t fatigue = 0, int32_t happiness = 0){\n		m_food = food;\n		m_fatigue = fatigue;\n		m_happiness = happiness;\n		cout << \"Dude...you made a turtle!\" << endl;\n		t_total++;\n	}\n\n	Turtle(const Turtle& t){\n		m_food = t.m_food;\n		m_fatigue = t.m_fatigue;\n		m_happiness = t.m_happiness;\n		t_total++;\n	}\n\n	virtual ~Turtle(){\n		cout << \"Turtle died.\" << endl;\n		t_total--;\n	}\n\n	const int32_t getFood(){\n		return m_food;\n	}\n\n	const int32_t getFatigue(){\n		return m_fatigue;\n	}\n\n	const int32_t getHappiness(){\n		return m_happiness;\n	}\n\n	const int32_t getTotalTurtles(){\n		return t_total;\n	}\n\n	bool play(){\n		setHappiness(getHappiness() + 1);\n		return setFatigue(getFatigue() + 1);\n	}\n\n	bool feed(){\n		return setFood(getFood() + 1);\n	}\n\nprivate:\n	int32_t m_food, m_fatigue, m_happiness;\n	static int32_t t_total;\n\n	//	Returns whether the turtle is alive after feeding it.\n	bool setFood(int32_t food){\n		m_food = food;\n		if (m_food > 3){\n			cout << \"You overfed the turtle.\" << endl;\n			this->~Turtle();\n			return false;\n		}\n		else if (m_food <= 1){\n			cout << \"Turtle is still hungry\" << endl;\n		}\n		else if (m_food == 2){\n			cout << \"Turtle is satisfied.\" << endl;\n		}\n		else if (m_food == 3){\n			cout << \"Turtle is full.\" << endl;\n		}\n\n		return true;\n	}\n\n	//	Set the fatigue level of the turtle\n	bool setFatigue(int32_t fatigue){\n		m_fatigue = fatigue;\n		if (m_fatigue > 3){\n			cout << \"You overworked the turtle.\" << endl;\n			this->~Turtle();\n			return false;\n		}\n		else if (m_food == 3){\n			cout << \"Turtle is getting tired.\" << endl;\n		}\n		return true;\n	}\n\n	void setHappiness(int32_t happiness){\n		cout << \"Turtle is enjoying itself.\" << endl;\n		m_happiness = happiness;\n	}\n};\n\nint32_t Turtle::t_total = 0;\n\n\nvoid showTurtle(){\n	cout << \" .---.           _....._\" << endl\n		<< \" /  p  `\\\\     .-\\\"\\\"`:     :`\\\"-.\" << endl\n		<< \" |__   - |  ,'     .     '    ',\" << endl\n		<< \"  ._>    \\\\ /:      :     ;      :,\" << endl\n		<< \"   '-.    '\\\\`.     .     :     '  \\\\\" << endl\n		<< \"      `.   | .'._.' '._.' '._.'.  |\" << endl\n		<< \"        `;-\\\\.   :     :     '   '/,__,\" << endl\n		<< \"        .-'`'._ '     .     : _.'.__.'\" << endl\n		<< \"       ((((-'/ `\\\"; --..:..--; \\\"` \\\\\" << endl\n		<< \"           .'   /           \\\\   \\\\\" << endl\n		<< \"          ((((-'           ((((-'\" << endl;\n}\n\nint promptTurtleNumber(){\n	int i = 0;\n	cout << \"Which turtle would you like to do this action to?\" << endl;\n	cin >> i;\n	return i;\n}\n\nint32_t main(){\n	showTurtle();\n	Turtle *turtleList[4];\n	for (int i = 0; i < 4; ++i){ turtleList[i] = new Turtle(); }\n\n	int i;\n	while (true){\n		cout << \"Would you like to\" << endl\n			<< \"\\tPlay with turtle    (0)\" << endl\n			<< \"\\tFeed turtle         (1)\" << endl\n			<< \"\\tKill turtle         (2)\" << endl\n			<< \"\\tEscape from turtle? (3)\" << endl\n			<< \"\\tQuit Program?       (4)\" << endl;\n\n		cin >> i;\n		//	Play with the turtle\n		if (i == 0){\n			int turtleNumber = promptTurtleNumber();\n			if (turtleList[turtleNumber] != NULL){\n				bool alive = turtleList[turtleNumber]->play();\n				//	Check to see if you killed it by playiing too much\n				if (!alive){\n					turtleList[turtleNumber] = NULL;\n				}\n			}\n			else{\n				cout << \"This turtle is already gone.\" << endl;\n			}\n		}\n		//	Feed the turtle\n		else if (i == 1){\n			int turtleNumber = promptTurtleNumber();\n			if (turtleList[turtleNumber] != NULL){\n				bool alive = turtleList[turtleNumber]->feed();\n				//	Check to see if you killed it by feeding too much\n				if (!alive){\n					turtleList[turtleNumber] = NULL;\n				}\n			}\n			else{\n				cout << \"This turtle is already gone.\" << endl;\n			}\n		}\n		//	Kill the turtle\n		else if (i == 2){\n			int turtleNumber = promptTurtleNumber();\n			if (turtleList[turtleNumber] != NULL){\n				cout << \"Wow. You killed the turtle.\" << endl;\n				delete turtleList[turtleNumber];\n				turtleList[turtleNumber] = NULL;\n			}\n			else{\n				cout << \"This turtle is already gone.\" << endl;\n			}\n		}\n		//	Escape from turtle\n		else if (i == 3){\n			int turtleNumber = promptTurtleNumber();\n			if (turtleList[turtleNumber] != NULL){\n				turtleList[turtleNumber] = NULL;\n			}\n			else{\n				cout << \"This turtle is already gone.\" << endl;\n			}\n		}\n		//	Exit the program\n		else if (i == 4){\n			//	Make sure to delete the refrences to turtle you made earlier and clear memory\n			for (int j = 0; j < 4; j++){\n				delete turtleList[j];\n			}\n			system(\"pause\");\n			return 0;\n		}\n	}\n}\n\n",
-			"file": "/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
-			"file_size": 4871,
-			"file_write_time": 1392785659000000,
+			"file": "services/proxyService/roundrobin.js",
 			"settings":
 			{
-				"buffer_size": 4666,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "",
-			"file": "/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/My Documents/Visual Studio 2013/Projects/program2/program2/main.cpp",
-			"file_size": -1,
-			"file_write_time": -1,
-			"settings":
-			{
-				"buffer_size": 0,
+				"buffer_size": 7950,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "applications/orchestratorServiceManagement/routes/apiRoute.js",
+			"file": "services/nodeRunnerService/application.js",
 			"settings":
 			{
-				"buffer_size": 2263,
+				"buffer_size": 6522,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/nodeRunnerService/routes/index.js",
+			"settings":
+			{
+				"buffer_size": 1242,
 				"line_ending": "Unix"
 			}
 		}
@@ -409,6 +400,11 @@
 	},
 	"file_history":
 	[
+		"/home/rkrishnan/hs_err_pid8077.log",
+		"/home/rkrishnan/Documents/hive/OpenSaas/applications/orchestratorServiceManagement/gruntfile.js",
+		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
+		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/My Documents/Visual Studio 2013/Projects/program2/program2/main.cpp",
+		"/home/rkrishnan/Documents/hive/OpenSaas/applications/orchestratorServiceManagement/routes/apiRoute.js",
 		"/home/rkrishnan/Desktop/homework3.c",
 		"/home/rkrishnan/Documents/Computing II/assignment II/Array.h",
 		"/home/rkrishnan/Documents/Computing II/assignment II/ArrayTest.c",
@@ -419,7 +415,6 @@
 		"/home/rkrishnan/Documents/Computing II/assignment II/ArrayTimeMeas.c",
 		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedListTimeMeas.c",
 		"/home/rkrishnan/Documents/hive/VPN/godPage.txt",
-		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
 		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/workspace/Program1/Program1.cpp",
 		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/completeYourProfile.js",
 		"/home/rkrishnan/Desktop/burst.log",
@@ -532,11 +527,7 @@
 		"/home/rkrishnan/Documents/hive/VPN/bamboo.sh",
 		"/home/rkrishnan/Documents/hive/notebook/client/styles/publicProfile.scss",
 		"/home/rkrishnan/Documents/hive/notebook/html/publicProfile.html",
-		"/home/rkrishnan/Documents/hive/notebook/server/api/suggestions.js",
-		"/home/rkrishnan/android/system/packages/apps/Gallery2/gallerycommon/src/com/android/gallery3d/common/LruCache.java",
-		"/home/rkrishnan/Documents/hive/notebook/client/styles/formattingBar.scss",
-		"/home/rkrishnan/Documents/hive/notebook/client/router.js",
-		"/home/rkrishnan/Documents/hive/notebook/client/view/loginPage/login.js"
+		"/home/rkrishnan/Documents/hive/notebook/server/api/suggestions.js"
 	],
 	"find":
 	{
@@ -730,22 +721,23 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "applications/orchestratorServiceManagement/gruntfile.js",
+					"file": "services/proxyService/server.js",
 					"settings":
 					{
-						"buffer_size": 2658,
+						"buffer_size": 2255,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								924,
-								924
+								812,
+								812
 							]
 						],
 						"settings":
@@ -755,79 +747,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
+					"file": "services/proxyService/roundrobin.js",
 					"settings":
 					{
-						"buffer_size": 4666,
+						"buffer_size": 7950,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4666,
-								4666
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1807.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/My Documents/Visual Studio 2013/Projects/program2/program2/main.cpp",
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "applications/orchestratorServiceManagement/routes/apiRoute.js",
-					"settings":
-					{
-						"buffer_size": 2263,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								3590,
+								3590
 							]
 						],
 						"settings":
@@ -837,7 +775,63 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 513.0,
+						"translation.y": 1461.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "services/nodeRunnerService/application.js",
+					"settings":
+					{
+						"buffer_size": 6522,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								686,
+								686
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1512.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "services/nodeRunnerService/routes/index.js",
+					"settings":
+					{
+						"buffer_size": 1242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								737,
+								737
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

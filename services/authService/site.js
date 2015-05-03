@@ -69,8 +69,7 @@ module.exports = function(db) {
 
 
     returnObj.googleAuth = passport.authenticate('google', {
-        successReturnToOrRedirect: '/',
-        failureRedirect: '/login?loginFailed=true'
+        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']
     });
 
     returnObj.logout = function(req, res) {
