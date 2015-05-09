@@ -7,11 +7,13 @@
 <style type="text/css">
 
 .navbar-brand{
-        font-size:20pt;
-        font-family: 'Lily Script One', cursive; 
-      }
+        font-size: 13pt;
+        font-family: Gotham, 'Helvetica Neue', Helvetica, sans-serif;
+        color: white !important;
+}
 .navbar-inverse{
-	background-color: #022449;
+	background-color: rgba(56, 59, 65, 0.84);
+	border: none;
 }
 
 .navbar-inverse .navbar-nav  .active a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
@@ -40,7 +42,9 @@ body{
 	padding-right:0px;
 	padding-top: 60px;
 	padding-bottom: 40px;
-	background-image:url('/images/brushed.png');
+	background-image:url('/images/lowell.png');
+	background-position-y: bottom;
+  	background-size: cover;
 }
 .nameField{
 	float:left;
@@ -69,8 +73,10 @@ h1{
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	background-color:transparent;
+  margin-bottom: 0px;
+  width: 600px;
 	margin-bottom: 0px;
+
 }
 
 .loginDiv input{
@@ -91,6 +97,8 @@ h1{
 	height:33px;
 	width:150px;
 	background-size:150px;
+	border-radius: 5px;
+	margin-top: 10px;
 }
 .googleSignInButton:hover{
 	background-image:url('/images/Red-signin-Long-hover-44dp.png');
@@ -110,7 +118,7 @@ h1{
 .footer{
 	float:left;
 	text-align:center;
-	background-color: #022449;
+	background-color: rgba(56, 59, 65, 0.84);;
 	color:white;
 	width:100%;
 	position: absolute;
@@ -137,20 +145,16 @@ h1{
 		<div class="alert alert-danger">
  			Incorrect email or password.
 		</div>
-		<div class="separatorBar">
-	</div>
 		<input type="text" class="form-control" placeholder="Email Address" name="username">
 		<input type="password" class="form-control" placeholder="Password" name="password">
 		<button type="submit" class="btn btn-primary">Login</button>
+		<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
+		</div>
 	</form>
-	<div class="separatorBar">
-	</div>
-	<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
-	</div>
 </div>
  <link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Montserrat+Alternates|Roboto+Slab' rel='stylesheet' type='text/css'>
  <div class="footer">
-        Copyright Hive, 2014
+        © Hive Labs, 2015
 </div>
 </body>
 <script type="text/javascript">

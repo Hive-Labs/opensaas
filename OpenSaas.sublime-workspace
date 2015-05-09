@@ -316,34 +316,10 @@
 	"buffers":
 	[
 		{
-			"file": "services/proxyService/server.js",
+			"file": "services/authService/views/login.ejs",
 			"settings":
 			{
-				"buffer_size": 2255,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "services/proxyService/roundrobin.js",
-			"settings":
-			{
-				"buffer_size": 7950,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "services/nodeRunnerService/application.js",
-			"settings":
-			{
-				"buffer_size": 6522,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "services/nodeRunnerService/routes/index.js",
-			"settings":
-			{
-				"buffer_size": 1242,
+				"buffer_size": 4105,
 				"line_ending": "Unix"
 			}
 		}
@@ -351,12 +327,12 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 222.0,
 		"selected_items":
 		[
 			[
 				"beau",
-				"HTMLBeautify"
+				"Javascript Beautify"
 			],
 			[
 				"veay",
@@ -383,7 +359,7 @@
 				"HTMLBeautify"
 			]
 		],
-		"width": 449.0
+		"width": 467.0
 	},
 	"console":
 	{
@@ -400,6 +376,15 @@
 	},
 	"file_history":
 	[
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/auth.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/package.json",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/server.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/site.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/config.json",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/nodeRunnerService/routes/index.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/nodeRunnerService/application.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/server.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/roundrobin.js",
 		"/home/rkrishnan/hs_err_pid8077.log",
 		"/home/rkrishnan/Documents/hive/OpenSaas/applications/orchestratorServiceManagement/gruntfile.js",
 		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/Documents/Visual Studio 2013/Projects/Program3/Program3/program3.cpp",
@@ -466,8 +451,6 @@
 		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/ruler.js",
 		"/home/rkrishnan/Documents/hive/notebook/html/editor.html",
 		"/home/rkrishnan/Documents/hive/notebook/client/styles/ruler.scss",
-		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/server.js",
-		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/roundrobin.js",
 		"/home/rkrishnan/Documents/hive/notebook/client/view/dashboardPage/completeYourProfile.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/package.json",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/config.yml",
@@ -520,14 +503,7 @@
 		"/home/rkrishnan/Documents/hive/notebook/client/controllers/editorPage/refactorDocument.js",
 		"/home/rkrishnan/Documents/hive/notebook/server/routes/document.js",
 		"/home/rkrishnan/Documents/hive/notebook/server/routes/auth.js",
-		"/home/rkrishnan/Documents/hive/notebook/server/api/auth.js",
-		"/home/rkrishnan/Documents/hive/notebook/client/main.js",
-		"/home/rkrishnan/Documents/hive/notebook/client/api/api_user.js",
-		"/home/rkrishnan/Documents/hive/freebaseEngine/server.js",
-		"/home/rkrishnan/Documents/hive/VPN/bamboo.sh",
-		"/home/rkrishnan/Documents/hive/notebook/client/styles/publicProfile.scss",
-		"/home/rkrishnan/Documents/hive/notebook/html/publicProfile.html",
-		"/home/rkrishnan/Documents/hive/notebook/server/api/suggestions.js"
+		"/home/rkrishnan/Documents/hive/notebook/server/api/auth.js"
 	],
 	"find":
 	{
@@ -572,6 +548,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"googleSignInButton",
+			"loginDiv",
+			"brand",
+			"googleSignInButton",
+			"googlest",
+			"callback",
+			"google",
+			".authenticate",
+			"passport.authenticate",
+			"clientID",
+			"clientid",
+			"googl",
 			"4455",
 			"dist",
 			"fatal",
@@ -687,19 +675,7 @@
 			"totalnotificationsheader",
 			"httpProxy",
 			"editAccountSummary",
-			"folders",
-			".ruler",
-			"fatal",
-			"FATAL",
-			"fatal",
-			"accesshistory",
-			"<<",
-			"\";\n",
-			"hascomments",
-			"numcommen",
-			"feedid",
-			"alread",
-			"hidden"
+			"folders"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -721,117 +697,32 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "services/proxyService/server.js",
+					"file": "services/authService/views/login.ejs",
 					"settings":
 					{
-						"buffer_size": 2255,
+						"buffer_size": 4105,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								812,
-								812
+								1712,
+								1712
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "services/proxyService/roundrobin.js",
-					"settings":
-					{
-						"buffer_size": 7950,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3590,
-								3590
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1461.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "services/nodeRunnerService/application.js",
-					"settings":
-					{
-						"buffer_size": 6522,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								686,
-								686
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1512.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "services/nodeRunnerService/routes/index.js",
-					"settings":
-					{
-						"buffer_size": 1242,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								737,
-								737
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1254.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
