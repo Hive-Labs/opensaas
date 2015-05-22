@@ -315,14 +315,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "services/authService/views/login.ejs",
-			"settings":
-			{
-				"buffer_size": 4105,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -376,6 +368,7 @@
 	},
 	"file_history":
 	[
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/views/login.ejs",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/auth.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/package.json",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/server.js",
@@ -502,8 +495,7 @@
 		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/editor.js",
 		"/home/rkrishnan/Documents/hive/notebook/client/controllers/editorPage/refactorDocument.js",
 		"/home/rkrishnan/Documents/hive/notebook/server/routes/document.js",
-		"/home/rkrishnan/Documents/hive/notebook/server/routes/auth.js",
-		"/home/rkrishnan/Documents/hive/notebook/server/api/auth.js"
+		"/home/rkrishnan/Documents/hive/notebook/server/routes/auth.js"
 	],
 	"find":
 	{
@@ -697,36 +689,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "services/authService/views/login.ejs",
-					"settings":
-					{
-						"buffer_size": 4105,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1712,
-								1712
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1254.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
