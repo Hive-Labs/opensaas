@@ -76,6 +76,7 @@ app.get('/entity/:application/:collection/:entity/:id/attachments/:name', routes
 app.del('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.removeAttachment);
 app.post('/entity/:application/:collection/:entity/:id', routes.entity.update);
 app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
+app.del('/entity/:application/:collection/:entity', routes.entity.del);
 
 
 http.createServer(app).listen(servConf.get().server.port, function() {

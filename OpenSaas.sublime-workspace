@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"nex",
+				"nextDelete"
+			],
+			[
 				"fp_in",
 				"fp_input2"
 			],
@@ -315,6 +319,38 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "services/authService/views/login.ejs",
+			"settings":
+			{
+				"buffer_size": 3959,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/dbService/server.js",
+			"settings":
+			{
+				"buffer_size": 3167,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/dbService/adaptors/couchdb/entity.js",
+			"settings":
+			{
+				"buffer_size": 12657,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/dbService/routes/entity.js",
+			"settings":
+			{
+				"buffer_size": 11014,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -540,6 +576,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"entit",
 			"googleSignInButton",
 			"loginDiv",
 			"brand",
@@ -666,8 +703,7 @@
 			"totalnoti",
 			"totalnotificationsheader",
 			"httpProxy",
-			"editAccountSummary",
-			"folders"
+			"editAccountSummary"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -689,8 +725,120 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "services/authService/views/login.ejs",
+					"settings":
+					{
+						"buffer_size": 3959,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1060,
+								1060
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 68.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "services/dbService/server.js",
+					"settings":
+					{
+						"buffer_size": 3167,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2536,
+								2536
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 765.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "services/dbService/adaptors/couchdb/entity.js",
+					"settings":
+					{
+						"buffer_size": 12657,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11233,
+								11233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3665.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "services/dbService/routes/entity.js",
+					"settings":
+					{
+						"buffer_size": 11014,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9851,
+								9851
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3576.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],

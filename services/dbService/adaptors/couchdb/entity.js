@@ -234,9 +234,32 @@ module.exports = function(conn, settings) {
                     logger.error(err);
                     next(err);
                 } else {
-                    db.remove(id, function(err, res) {
-                        next(err, res);
-                    });
+                    if (!id) {
+                        var viewName = nsBuilder([collection, entity], 2) + "/all";
+                        logger.info("Searching for view: " + viewName);
+                        db.view(viewName, function(err, res) {
+                            if (res == null || err) {
+                                next(err, res);
+                            } else {
+                                var nextDelete = function(x) {
+                                    if (x >= res.length) {
+                                        next(err, res);
+                                    } else {
+                                        db.remove(res[x].id, function(err, res) {
+                                            logger.info(res);
+                                            nextDelete(x + 1);
+                                        });
+                                    }
+                                }
+                                nextDelete(0);
+                            }
+
+                        });
+                    } else {
+                        db.remove(id, function(err, res) {
+                            next(err, res);
+                        });
+                    }
                 }
             });
         }
