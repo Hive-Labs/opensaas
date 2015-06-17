@@ -37,7 +37,7 @@ exports.get = function(collectionName, entityType, next) {
   getRequest(this.serverHost, this.serverPort, url, next);
 };
 
-exports.set = function(collectionName, entityType, entityId, object, next) {
+exports.setID = function(collectionName, entityType, entityId, object, next) {
   var url = '/entity/' + this.applicationName + "/" + collectionName + "/" + entityType + "/" + entityId;
   postRequest(this.serverHost, this.serverPort, url, object, next);
 };

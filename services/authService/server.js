@@ -1,32 +1,32 @@
 // library imports
 var engine = require('ejs-locals'),
-  express = require('express'),
-  email = require('./lib/email'),
-  fs = require('fs'),
-  http = require('http'),
-  https = require('https'),
-  MemoryStore = express.session.MemoryStore,
-  mongoose = require('mongoose'),
-  passport = require('passport'),
-  user = require('./user'),
-  dbService = require("dbService"),
-  winston = require('winston');
+    express = require('express'),
+    email = require('./lib/email'),
+    fs = require('fs'),
+    http = require('http'),
+    https = require('https'),
+    MemoryStore = express.session.MemoryStore,
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    user = require('./user'),
+    dbService = require("dbService"),
+    winston = require('winston');
 
 // setup the logger
 global.logger = new winston.Logger({
-  transports: [
-    new(winston.transports.Console)({
-      handleExceptions: true
-    })
-  ],
-  exitOnError: false
+    transports: [
+        new(winston.transports.Console)({
+            handleExceptions: true
+        })
+    ],
+    exitOnError: false
 });
 
 logger.cli();
 
 // Models
 var models = require('./lib/models'),
-  User = models.UserModel;
+    User = models.UserModel;
 
 // Application Settings
 var settings = require('./config.json');
@@ -39,10 +39,10 @@ app.use(express.bodyParser());
 app.use(express.query());
 app.use(express.cookieParser());
 app.use(express.session({
-  store: new MemoryStore({
-    reapInterval: 5 * 60 * 1000
-  }),
-  secret: settings.security.sessionPassword
+    store: new MemoryStore({
+        reapInterval: 5 * 60 * 1000
+    }),
+    secret: settings.security.sessionPassword
 }));
 
 app.set('view engine', 'ejs');
@@ -60,61 +60,65 @@ dbService.init("127.0.0.1", 3000, "authservice");
 var db = require("./db")(dbService, logger);
 
 db.users.init(function() {
-  require('./auth')(dbService, db);
-  var site = require('./site')(db);
-  var oauth2 = require('./oauth2')(dbService, db);
-  app.get('/', ensureAuthenticated, site.index);
-  app.get('/login', site.loginForm);
-  app.get('/users', ensureAuthenticated, site.usersForm);
-  app.post('/user', ensureAuthenticated, site.newUser);
-  app.del('/user', ensureAuthenticated, site.removeUser);
-  app.post('/login', site.login);
-  app.get('/logout', site.logout);
-  app.get('/account', ensureAuthenticated, site.account);
-  app.get('/auth/google', site.googleAuth);
+    require('./auth')(dbService, db);
+    var site = require('./site')(db);
+    var oauth2 = require('./oauth2')(dbService, db);
+    app.get('/', ensureAuthenticated, site.index);
+    app.get('/login', site.loginForm);
+    app.get('/users', ensureAuthenticated, site.usersForm);
+    app.post('/user', ensureAuthenticated, site.newUser);
+    app.del('/user', ensureAuthenticated, site.removeUser);
+    app.post('/login', site.login);
+    app.get('/logout', site.logout);
+    app.get('/account', ensureAuthenticated, site.account);
+    app.get('/auth/google', site.googleAuth);
+    //Nigga....app.put('/user', ensureAuthenticated, site.updateUser);
 
-  app.get('/dialog/authorize', oauth2.authorization);
-  app.post('/dialog/authorize/decision', oauth2.decision);
-  app.post('/oauth/token', oauth2.token);
-  app.get('/auth/google/callback', passport.authenticate('google', {
-    successReturnToOrRedirect: '/',
-    failureRedirect: '/login?loginFailed=true'
-  }));
+    app.get('/dialog/authorize', oauth2.authorization);
+    app.post('/dialog/authorize/decision', oauth2.decision);
+    app.post('/oauth/token', oauth2.token);
+    app.get('/auth/google/callback', passport.authenticate('google', {
+        successReturnToOrRedirect: '/',
+        failureRedirect: '/login?loginFailed=true'
+    }));
 
-  app.get('/api/user', user.info);
+    app.get('/api/user', user.info);
+    app.put("/api/user", passport.authenticate('bearer', {
+        session: false
+    }),  site.updateUser);
 
-  //////////////////  Have the express server listen on the specified port  //////////////////
-  if (settings.security.ssl.enable === true) {
-    logger.info('Running in SSL Protected mode: ');
-    logger.info('Using SSL Key ' + settings.security.ssl.key);
-    logger.info('Using SSL cert ' + settings.security.ssl.cert);
+    //////////////////  Have the express server listen on the specified port  //////////////////
+    if (settings.security.ssl.enable === true) {
+        logger.info('Running in SSL Protected mode: ');
+        logger.info('Using SSL Key ' + settings.security.ssl.key);
+        logger.info('Using SSL cert ' + settings.security.ssl.cert);
 
-    var ssl_options = {
-      key: fs.readFileSync(settings.security.ssl.key),
-      cert: fs.readFileSync(settings.security.ssl.cert)
-    };
+        var ssl_options = {
+            key: fs.readFileSync(settings.security.ssl.key),
+            cert: fs.readFileSync(settings.security.ssl.cert)
+        };
 
-    https.createServer(ssl_options, app).listen(settings.server.port);
-  } else {
-    logger.info('Running in plaintext mode');
-    http.createServer(app).listen(settings.server.port);
-  }
+        https.createServer(ssl_options, app).listen(settings.server.port);
+    } else {
+        logger.info('Running in plaintext mode');
+        http.createServer(app).listen(settings.server.port);
+    }
 });
 
 function escapeEntities(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function validateUsername(username) {
-  return username.length > 0;
+    return username.length > 0;
 }
 
 function validateEmail(email) {
-  var validEmailRegex = new RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/, i);
+    var validEmailRegex = new RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/, i);
 }
 
 function validatePassword(password) {
-  return password.length >= 6;
+    return password.length >= 6;
 }
 
 function validateNonExistingUser(user) {
@@ -122,24 +126,24 @@ function validateNonExistingUser(user) {
 }
 
 function stripTrailingSlash(str) {
-  if (str.substr(-1) == '/') {
-    return str.substr(0, str.length - 1);
-  }
-  return str;
+    if (str.substr(-1) == '/') {
+        return str.substr(0, str.length - 1);
+    }
+    return str;
 }
 
 function readProviders() {
-  var providerList = settings.providers;
-  for (var i = 0; i < providerList.length; i++) {
-    var provider = require('./providers/' + providerList[i].type + ".js");
-    provider.init(providerList[i].settings);
-    providers.push(provider);
-  }
+    var providerList = settings.providers;
+    for (var i = 0; i < providerList.length; i++) {
+        var provider = require('./providers/' + providerList[i].type + ".js");
+        provider.init(providerList[i].settings);
+        providers.push(provider);
+    }
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
 }

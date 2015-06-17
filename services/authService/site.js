@@ -3,25 +3,19 @@ module.exports = function(db) {
     var passport = require('passport'),
         login = require('connect-ensure-login'),
         errorcodes = require("./errorcodes");
-
-
     returnObj.index = function(req, res) {
         res.end('Hello ' + req.user.displayName);
     };
-
     returnObj.loginForm = function(req, res) {
         res.render('login');
     };
-
     returnObj.usersForm = function(req, res) {
         res.render('users', {
             users: db.users.users
         });
     };
-
     returnObj.removeUser = function(req, res) {
         var email = req.body.email;
-
         if (checkIfNullOrEmpty(email)) {
             res.send(errorcodes.BAD_REQUEST("email is null."), 400);
         } else {
@@ -36,9 +30,7 @@ module.exports = function(db) {
                 }
             });
         }
-
     };
-
     returnObj.newUser = function(req, res) {
         var name = req.body.name,
             email = req.body.email,
@@ -59,19 +51,21 @@ module.exports = function(db) {
                 }
             });
         }
-
     };
-
     returnObj.login = passport.authenticate('local', {
         successReturnToOrRedirect: '/',
         failureRedirect: '/login?loginFailed=true'
     });
-
-
     returnObj.googleAuth = passport.authenticate('google', {
         scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']
     });
-
+    returnObj.login = passport.authenticate('local', {
+        successReturnToOrRedirect: '/',
+        failureRedirect: '/login?loginFailed=true'
+    });
+    returnObj.googleAuth = passport.authenticate('google', {
+        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']
+    });
     returnObj.logout = function(req, res) {
         req.logout();
         if (req.query.redirectUri) {
@@ -81,7 +75,6 @@ module.exports = function(db) {
             res.redirect("/");
         }
     };
-
     returnObj.account = [
 
         function(req, res) {
@@ -98,5 +91,34 @@ module.exports = function(db) {
             return false;
         }
     }
+    returnObj.updateUser = function(req, res) {
+        var user = req.user,
+            name = req.body.name,
+            email = req.body.email,
+            password = req.body.password;
+            var crypto = require('crypto');
+
+            var shasum = crypto.createHash('sha1');
+            shasum.update(password);
+            password = shasum.digest('hex');
+
+        logger.info("Put updateUser data: name=" + name + " email=" + email + " password=" + password);
+        if (checkIfNullOrEmpty(name) || checkIfNullOrEmpty(email) || checkIfNullOrEmpty(password)) {
+            res.send(errorcodes.BAD_REQUEST("name, email, or password is null. name=" + name + " email=" + email + " password=" + password), 400);
+        } else {
+            db.users.updateUser(user, name, email, password, function(err, user) {
+                logger.info("site.updateUser callback.");
+                if (!err) {
+                    delete user.password;
+                    res.json(user);
+                    res.statusCode = 200;
+                } else {
+                    logger.error("Error: " + JSON.stringify(err));
+                    res.send(err, 401);
+                    res.end();
+                }
+            });
+        }
+    };
     return returnObj;
 }
