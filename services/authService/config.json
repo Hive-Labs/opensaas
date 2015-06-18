@@ -46,13 +46,21 @@
   },
 
   "providers": [{
-    "name": "notoja auth",
-    "type": "activeDirectory",
+    "enabled": false,
+    "name": "HiveLdap",
+    "type": "ldap",
     "settings": {
-      "url": "ldap://10.0.0.12:389",
-      "masterDn": "cn=Notoja Auth,ou=Administrators,dc=notoja,dc=com",
-      "masterPw": "Google1",
-      "groupSearchDN": "cn=Administrators,cn=Builtin,dc=notoja,dc=com"
+      "url": "ldap://10.0.0.101:389",
+      "masterDn": "dc=hivelabs,dc=it",
+      "masterPw": "bTdhpA56f8RQSXt",
+      "groupSearchDN": "ou=users,dc=hivelabs,dc=it"
+    }
+  },{
+    "enabled": true,
+    "name": "UML",
+    "type": "uml",
+    "settings": {
+     
     }
   }]
 

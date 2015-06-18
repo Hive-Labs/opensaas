@@ -16,7 +16,7 @@ module.exports = function(dbService, logger) {
             if (err) {
                 if (err.error == 'not_found') {
                     logger.info("There are no users in the database yet. Adding default admin user.");
-                    returnObj.addUser("Administrator", "admin", "admin", function(err, user) {
+                    returnObj.addUser("Administrator", "admin", "admin", null, function(err, user) {
                         if (err) {
                             logger.error("db.users.init() error:" + err);
                         } else {
@@ -54,20 +54,24 @@ module.exports = function(dbService, logger) {
         return done(null, null);
     };
 
-    returnObj.addUser = function(name, email, password, done) {
+    returnObj.addUser = function(name, email, password, type, done) {
         logger.info("db.users.addUser()");
         returnObj.findByEmail(email, function(err, user) {
             if (user != null || err != null) {
                 logger.error("User already exists.");
                 done(ERROR_CODE.USER_EXISTS, null);
             } else {
-                var shasum = crypto.createHash('sha1');
-                shasum.update(password);
-
+                var pass = null;
+                if (!type) {
+                    var shasum = crypto.createHash('sha1');
+                    shasum.update(password);
+                    pass = shasum.digest('hex');
+                }
                 var newUser = {
                     email: email,
-                    password: shasum.digest('hex'),
-                    displayName: name
+                    password: pass,
+                    displayName: name,
+                    type: type
                 };
 
                 dbService.set("credentials", "user", newUser, function(err, obj) {

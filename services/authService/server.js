@@ -10,7 +10,8 @@ var engine = require('ejs-locals'),
     passport = require('passport'),
     user = require('./user'),
     dbService = require("dbService"),
-    winston = require('winston');
+    winston = require('winston'),
+    providers = [];
 
 // setup the logger
 global.logger = new winston.Logger({
@@ -56,11 +57,11 @@ logger.info('Running the Notoja Authentication Server on port ' + settings.serve
 //Application name must be lower case due to limits in couchdb
 dbService.init("127.0.0.1", 3000, "authservice");
 
-
 var db = require("./db")(dbService, logger);
 
 db.users.init(function() {
-    require('./auth')(dbService, db);
+    readProviders();
+    require('./auth')(dbService,providers, db);
     var site = require('./site')(db);
     var oauth2 = require('./oauth2')(dbService, db);
     app.get('/', ensureAuthenticated, site.index);
@@ -86,6 +87,7 @@ db.users.init(function() {
     app.put("/api/user", passport.authenticate('bearer', {
         session: false
     }),  site.updateUser);
+
 
     //////////////////  Have the express server listen on the specified port  //////////////////
     if (settings.security.ssl.enable === true) {
@@ -135,9 +137,12 @@ function stripTrailingSlash(str) {
 function readProviders() {
     var providerList = settings.providers;
     for (var i = 0; i < providerList.length; i++) {
-        var provider = require('./providers/' + providerList[i].type + ".js");
-        provider.init(providerList[i].settings);
-        providers.push(provider);
+        if(providerList[i].enabled){
+            var provider = require('./providers/' + providerList[i].type + ".js");
+            provider.init(providerList[i].settings);
+            console.log("Adding " + providerList[i].name);
+            providers.push(provider);
+        }
     }
 }
 

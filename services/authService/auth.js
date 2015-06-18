@@ -1,4 +1,4 @@
-module.exports = function(dbService, db) {
+module.exports = function(dbService, providers, db) {
     /**
      * Module dependencies.
      */
@@ -20,21 +20,46 @@ module.exports = function(dbService, db) {
      * a user is logged in before asking them to approve the request.
      */
     passport.use(new LocalStrategy(
-
         function(username, password, done) {
             db.users.findByEmail(username, function(err, user) {
                 if (err) {
                     return done(err);
                 }
-                if (!user) {
-                    return done(null, false);
+                if (!user || user.type != null) {
+                    checkAllProviders = function(idx, callback) {
+                        console.log(idx);
+                        if (idx >= providers.length) {
+                            callback(null, false);
+                        } else {
+                            providers[idx].authenticate(username, password, function(err, result) {
+                                if (err || !result) {
+                                    checkAllProviders(idx + 1, callback);
+                                } else {
+                                    if (!user) {
+                                        console.log("ADDING");
+                                        console.log(result);
+                                        db.users.addUser(result.displayName, result.email, null, result.type, function(err, newUser) {
+                                            console.log(newUser);
+                                            callback(null, newUser);
+                                        });
+                                    }
+                                    else{
+                                        console.log(user);
+                                        callback(null, user);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    checkAllProviders(0, done);
+                } else {
+                    var shasum = crypto.createHash('sha1');
+                    shasum.update(password);
+                    if (user.password != shasum.digest('hex')) {
+                        return done(null, false);
+                    }
+                    return done(null, user);
                 }
-                var shasum = crypto.createHash('sha1');
-                shasum.update(password);
-                if (user.password != shasum.digest('hex')) {
-                    return done(null, false);
-                }
-                return done(null, user);
             });
         }));
 
@@ -58,12 +83,13 @@ module.exports = function(dbService, db) {
             });
         }
     ));
-    
+
     passport.serializeUser(function(user, done) {
-        done(null, user._id);
+        done(null, user._id || user.id);
     });
 
     passport.deserializeUser(function(id, done) {
+        console.log("Deserialize " + id);
         db.users.find(id, function(err, user) {
             done(err, user);
         });
@@ -82,7 +108,6 @@ module.exports = function(dbService, db) {
      * the specification, in practice it is quite common.
      */
     passport.use(new BasicStrategy(
-
         function(username, password, done) {
             db.clients.findByClientId(username, function(err, client) {
                 if (err) {
