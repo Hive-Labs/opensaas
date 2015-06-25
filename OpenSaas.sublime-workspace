@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"new",
+				"newUser"
+			],
+			[
+				"form",
+				"formData"
+			],
+			[
+				"provid",
+				"providerList"
+			],
+			[
+				"for",
+				"formData"
+			],
+			[
+				"auth",
+				"authenticate"
+			],
+			[
 				"nex",
 				"nextDelete"
 			],
@@ -82,10 +102,6 @@
 			[
 				"iplo",
 				"ipLocationsLookup"
-			],
-			[
-				"for",
-				"for	for (…) {…}"
 			],
 			[
 				"already",
@@ -320,6 +336,62 @@
 	"buffers":
 	[
 		{
+			"file": "services/authService/server.js",
+			"settings":
+			{
+				"buffer_size": 4557,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/config.json",
+			"settings":
+			{
+				"buffer_size": 1445,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/package.json",
+			"settings":
+			{
+				"buffer_size": 1165,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/providers/ldap.js",
+			"settings":
+			{
+				"buffer_size": 356,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/oauth2.js",
+			"settings":
+			{
+				"buffer_size": 9601,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/auth.js",
+			"settings":
+			{
+				"buffer_size": 7790,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "services/authService/providers/uml.js",
+			"settings":
+			{
+				"buffer_size": 1803,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "services/authService/views/login.ejs",
 			"settings":
 			{
@@ -328,37 +400,31 @@
 			}
 		},
 		{
-			"file": "services/dbService/server.js",
+			"contents": "Searching 167093 files for \"addUser\"\n\n\n\nSearching 11631 files for \"addUser\"\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/db/users.js:\n   17                  if (err.error == 'not_found') {\n   18                      logger.info(\"There are no users in the database yet. Adding default admin user.\");\n   19:                     returnObj.addUser(\"Administrator\", \"admin\", \"admin\", function(err, user) {\n   20                          if (err) {\n   21                              logger.error(\"db.users.init() error:\" + err);\n   ..\n   55      };\n   56  \n   57:     returnObj.addUser = function(name, email, password, done) {\n   58:         logger.info(\"db.users.addUser()\");\n   59          returnObj.findByEmail(email, function(err, user) {\n   60              if (user != null || err != null) {\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/node_modules/adclient/node_modules/ldapjs/docs/guide.md:\n  397  \n  398  This is going to be a little bit ghetto, since what we're going to do is just\n  399: use node's child process module to spawn calls to `adduser`.  Go ahead and add\n  400  the following code in as another handler (you'll need a\n  401  `var spawn = require('child_process').spawn;` at the top of your file):\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/node_modules/mongoose/node_modules/mongodb/lib/mongodb/admin.js:\n  144     * @param {String} password The password for the authentication.\n  145     * @param {Object} [options] additional options during update.\n  146:    * @param {Function} callback this will be called after executing this method. The first parameter will contain the Error object if an error occured, or null otherwise. While the second parameter will contain the results from addUser or null if an error occured.\n  147     * @return {null} Returns no result\n  148     * @api public\n  149     */\n  150:   this.addUser = function(username, password, options, callback) {\n  151      var args = Array.prototype.slice.call(arguments, 2);\n  152      callback = args.pop();\n  ...\n  155      options.dbName = 'admin';\n  156      // Add user\n  157:     db.addUser(username, password, options, function(err, doc) {\n  158        return callback(err, doc);\n  159      })\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/node_modules/mongoose/node_modules/mongodb/lib/mongodb/db.js:\n  727   * @param {String} password password.\n  728   * @param {Object} [options] additional options during update.\n  729:  * @param {Function} callback this will be called after executing this method. The first parameter will contain the Error object if an error occurred, or null otherwise. While the second parameter will contain the results from addUser or null if an error occurred.\n  730   * @return {null}\n  731   * @api public\n  732   */\n  733: Db.prototype.addUser = function(username, password, options, callback) {\n  734    // Checkout a write connection to get the server capabilities\n  735    var connection = this.serverConfig.checkoutWriter();\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/node_modules/nodemailer/node_modules/aws-sdk/node_modules/aws-sdk-apis/apis/iam-2010-05-08.api.json:\n   24        }\n   25      },\n   26:     \"AddUserToGroup\": {\n   27        \"input\": {\n   28          \"type\": \"structure\",\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/site.js:\n   40              res.send(errorcodes.BAD_REQUEST(\"name, email, or password is null. name=\" + name + \" email=\" + email + \" password=\" + password), 400);\n   41          } else {\n   42:             db.users.addUser(name, email, password, function(err, user) {\n   43                  logger.info(\"site.newUser callback.\");\n   44                  if (!err) {\n\n/home/rkrishnan/Documents/hive/OpenSaas/services/authService/views/users.ejs:\n  214  <script type=\"text/javascript\">\n  215  $(document).ready(function(){\n  216:   $(\"#addUserBtn\").click(function(){\n  217      var UserData = {\n  218:       email: $(\"#addUserEmail\").val(),\n  219:       name: $(\"#addUserName\").val(),\n  220:       password: $(\"#addUserPassword\").val()\n  221      };\n  222      $.ajax({\n  ...\n  352    <div>\n  353      <h2>Add User</h2>\n  354:     <input id=\"addUserEmail\" class=\"form-control\" name=\"email\" type=\"text\" placeholder=\"email\"/>\n  355      <br/>\n  356:     <input id=\"addUserName\" class=\"form-control\" name=\"name\" type=\"text\" placeholder=\"name\"/>\n  357      <br/>\n  358:     <input id=\"addUserPassword\" class=\"form-control\" name=\"password\" type=\"password\" placeholder=\"password\"/>\n  359      <br/>\n  360:     <button id=\"addUserBtn\" class=\"btn btn-success\">\n  361        Add User\n  362      </button>\n\n19 matches across 7 files\n",
 			"settings":
 			{
-				"buffer_size": 3167,
+				"buffer_size": 4688,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "module.exports = function(db) {\n    var returnObj = {};\n    var passport = require('passport'),\n        login = require('connect-ensure-login'),\n        errorcodes = require(\"./errorcodes\");\n    returnObj.index = function(req, res) {\n        res.end('Hello ' + req.user.displayName);\n    };\n    returnObj.loginForm = function(req, res) {\n        res.render('login');\n    };\n    returnObj.usersForm = function(req, res) {\n        res.render('users', {\n            users: db.users.users\n        });\n    };\n    returnObj.removeUser = function(req, res) {\n        var email = req.body.email;\n        if (checkIfNullOrEmpty(email)) {\n            res.send(errorcodes.BAD_REQUEST(\"email is null.\"), 400);\n        } else {\n            db.users.removeUser(email, function(err, user) {\n                if (!err) {\n                    res.json(user);\n                    res.statusCode = 200;\n                } else {\n                    logger.error(\"Error: \" + JSON.stringify(err));\n                    res.send(err, 401);\n                    res.end();\n                }\n            });\n        }\n    };\n    returnObj.newUser = function(req, res) {\n        var name = req.body.name,\n            email = req.body.email,\n            password = req.body.password;\n        logger.info(\"Get newUser data: name=\" + name + \" email=\" + email + \" password=\" + password);\n        if (checkIfNullOrEmpty(name) || checkIfNullOrEmpty(email) || checkIfNullOrEmpty(password)) {\n            res.send(errorcodes.BAD_REQUEST(\"name, email, or password is null. name=\" + name + \" email=\" + email + \" password=\" + password), 400);\n        } else {\n            db.users.addUser(name, email, password, null, function(err, user) {\n                logger.info(\"site.newUser callback.\");\n                if (!err) {\n                    res.json(user);\n                    res.statusCode = 200;\n                } else {\n                    logger.error(\"Error: \" + JSON.stringify(err));\n                    res.send(err, 401);\n                    res.end();\n                }\n            });\n        }\n    };\n    returnObj.login = passport.authenticate('local', {\n        successReturnToOrRedirect: '/',\n        failureRedirect: '/login?loginFailed=true'\n    });\n    returnObj.googleAuth = passport.authenticate('google', {\n        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']\n    });\n    returnObj.login = passport.authenticate('local', {\n        successReturnToOrRedirect: '/',\n        failureRedirect: '/login?loginFailed=true'\n    });\n    returnObj.googleAuth = passport.authenticate('google', {\n        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']\n    });\n    returnObj.logout = function(req, res) {\n        req.logout();\n        if (req.query.redirectUri) {\n            console.log(\"redirecting to: \" + req.query.redirectUri);\n            res.redirect(req.query.redirectUri);\n        } else {\n            res.redirect(\"/\");\n        }\n    };\n    returnObj.account = [\n\n        function(req, res) {\n            res.render('account', {\n                user: req.user\n            });\n        }\n    ];\n\n    function checkIfNullOrEmpty(object) {\n        if (object == null || object == \"\") {\n            return true;\n        } else {\n            return false;\n        }\n    }\n    returnObj.updateUser = function(req, res) {\n        var user = req.user,\n            name = req.body.name,\n            email = req.body.email,\n            password = req.body.password;\n            var crypto = require('crypto');\n\n            var shasum = crypto.createHash('sha1');\n            shasum.update(password);\n            password = shasum.digest('hex');\n\n        logger.info(\"Put updateUser data: name=\" + name + \" email=\" + email + \" password=\" + password);\n        if (checkIfNullOrEmpty(name) || checkIfNullOrEmpty(email) || checkIfNullOrEmpty(password)) {\n            res.send(errorcodes.BAD_REQUEST(\"name, email, or password is null. name=\" + name + \" email=\" + email + \" password=\" + password), 400);\n        } else {\n            db.users.updateUser(user, name, email, password, function(err, user) {\n                logger.info(\"site.updateUser callback.\");\n                if (!err) {\n                    delete user.password;\n                    res.json(user);\n                    res.statusCode = 200;\n                } else {\n                    logger.error(\"Error: \" + JSON.stringify(err));\n                    res.send(err, 401);\n                    res.end();\n                }\n            });\n        }\n    };\n    return returnObj;\n}",
+			"file": "services/authService/site.js",
+			"file_size": 4641,
+			"file_write_time": 1434524061000000,
+			"settings":
+			{
+				"buffer_size": 4647,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "services/dbService/adaptors/couchdb/entity.js",
+			"file": "services/authService/db/users.js",
 			"settings":
 			{
-				"buffer_size": 12657,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "services/dbService/routes/entity.js",
-			"settings":
-			{
-				"buffer_size": 11014,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "{\n  \"name\": \"notoja-auth_service\",\n  \"version\": \"0.0.58\",\n  \"private\": true,\n  \"scripts\": {\n    \"start\": \"node server.js\"\n  },\n  \"dependencies\": {\n    \"express\": \"3.2.6\",\n    \"jade\": \"*\",\n    \"stylus\": \"*\",\n    \"mongoose\": \"*\",\n    \"underscore\": \"*\",\n    \"email-templates\": \"*\",\n    \"nodemailer\": \"*\",\n    \"ejs\": \"*\",\n    \"handlebars\": \"*\",\n    \"mustache\": \"*\",\n    \"oauth2-provider\": \"*\",\n    \"ejs-locals\": \"~1.0.2\",\n    \"grunt-clean\": \"~0.4.0\",\n    \"grunt-bump\": \"0.0.11\",\n    \"ldapjs\": \"~0.6.3\",\n    \"adclient\": \"~0.9.9\",\n    \"passport-google\": \"~0.3.0\",\n    \"passport\": \"~0.1.17\",\n    \"passport-google-oauth2\": \"~0.1.6\",\n    \"oauth2orize\": \"~0.1.0\",\n    \"connect-ensure-login\": \"~0.1.1\",\n    \"passport-local\": \"~0.1.6\",\n    \"passport-http\": \"~0.2.2\",\n    \"passport-oauth2-client-password\": \"~0.1.1\"\n,    \"passport-http-bearer\": \"~1.0.1\",\n    \"winston\": \"~0.7.2\",\n    \"crypto\": \"0.0.3\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.1\",\n    \"grunt-contrib-jshint\": \"~0.6.0\",\n    \"grunt-contrib-nodeunit\": \"~0.2.0\",\n    \"grunt-contrib-uglify\": \"~0.2.2\",\n    \"grunt-nodemon\": \"0.0.7\",\n    \"grunt-contrib-clean\": \"~0.5.0\",\n    \"grunt-contrib-concat\": \"~0.3.0\"\n  }\n}\n",
-			"file": "services/authService/package.json",
-			"file_size": 1166,
-			"file_write_time": 1430894264000000,
-			"settings":
-			{
-				"buffer_size": 1166,
+				"buffer_size": 4093,
 				"line_ending": "Unix"
 			}
 		}
@@ -415,12 +481,18 @@
 	},
 	"file_history":
 	[
+		"/home/rkrishnan/Desktop/mypassword.uml.edu.har",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/views/login.ejs",
-		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/auth.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/dbService/server.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/dbService/adaptors/couchdb/entity.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/dbService/routes/entity.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/package.json",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/providers/ldap.js",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/config.json",
+		"/home/rkrishnan/Documents/hive/VPN/godPage.txt",
+		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/auth.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/server.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/site.js",
-		"/home/rkrishnan/Documents/hive/OpenSaas/services/authService/config.json",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/nodeRunnerService/routes/index.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/nodeRunnerService/application.js",
 		"/home/rkrishnan/Documents/hive/OpenSaas/services/proxyService/server.js",
@@ -439,7 +511,6 @@
 		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedList.c",
 		"/home/rkrishnan/Documents/Computing II/assignment II/ArrayTimeMeas.c",
 		"/home/rkrishnan/Documents/Computing II/assignment II/LinkedListTimeMeas.c",
-		"/home/rkrishnan/Documents/hive/VPN/godPage.txt",
 		"/media/rkrishnan/AC264B4D264B17AA/Users/Rohit Krishnan/workspace/Program1/Program1.cpp",
 		"/home/rkrishnan/Documents/hive/notebook/client/controllers/dashboardPage/completeYourProfile.js",
 		"/home/rkrishnan/Desktop/burst.log",
@@ -537,12 +608,7 @@
 		"/home/rkrishnan/Documents/burst/cheatsheet",
 		"/home/rkrishnan/Downloads/burst (62).log",
 		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/formattingBar.js",
-		"/home/rkrishnan/Documents/hive/cheatsheet.onSelect",
-		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/animations.js",
-		"/home/rkrishnan/Documents/hive/notebook/client/view/editorPage/editor.js",
-		"/home/rkrishnan/Documents/hive/notebook/client/controllers/editorPage/refactorDocument.js",
-		"/home/rkrishnan/Documents/hive/notebook/server/routes/document.js",
-		"/home/rkrishnan/Documents/hive/notebook/server/routes/auth.js"
+		"/home/rkrishnan/Documents/hive/cheatsheet.onSelect"
 	],
 	"find":
 	{
@@ -553,6 +619,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"/home/rkrishnan/Documents/hive/OpenSaas/services/authService",
 			"",
 			"/home/rkrishnan/Documents/burst/build/",
 			"/home/rkrishnan/Documents/burst/build/venders/",
@@ -587,6 +654,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"adduser",
+			"addUser",
+			"serializeuser",
+			"db.users",
+			"providers",
+			"readProviders",
+			"settings",
 			"entit",
 			"googleSignInButton",
 			"loginDiv",
@@ -707,14 +781,7 @@
 			"allowCrossDomain",
 			"http",
 			"	\n",
-			"removefromdb",
-			"Wolframresult.",
-			"Notifi",
-			"Notifications",
-			"totalnoti",
-			"totalnotificationsheader",
-			"httpProxy",
-			"editAccountSummary"
+			"removefromdb"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -736,134 +803,79 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "services/authService/views/login.ejs",
+					"file": "services/authService/server.js",
 					"settings":
 					{
-						"buffer_size": 3959,
+						"buffer_size": 4557,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1060,
-								1060
+								3988,
+								3988
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 68.0,
+						"translation.y": 1104.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "services/dbService/server.js",
+					"file": "services/authService/config.json",
 					"settings":
 					{
-						"buffer_size": 3167,
+						"buffer_size": 1445,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2536,
-								2536
+								706,
+								706
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 765.0,
+						"translation.y": 618.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "services/dbService/adaptors/couchdb/entity.js",
-					"settings":
-					{
-						"buffer_size": 12657,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								11164,
-								11164
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3665.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "services/dbService/routes/entity.js",
-					"settings":
-					{
-						"buffer_size": 11014,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9602,
-								9602
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3576.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "services/authService/package.json",
 					"settings":
 					{
-						"buffer_size": 1166,
+						"buffer_size": 1165,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								474,
-								474
+								497,
+								497
 							]
 						],
 						"settings":
@@ -874,6 +886,316 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "services/authService/providers/ldap.js",
+					"settings":
+					{
+						"buffer_size": 356,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								356,
+								356
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "services/authService/oauth2.js",
+					"settings":
+					{
+						"buffer_size": 9601,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1245,
+								1245
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "services/authService/auth.js",
+					"settings":
+					{
+						"buffer_size": 7790,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1378,
+								1378
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 225.0,
+						"translation.y": 414.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "services/authService/providers/uml.js",
+					"settings":
+					{
+						"buffer_size": 1803,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								929,
+								929
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 345.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "services/authService/views/login.ejs",
+					"settings":
+					{
+						"buffer_size": 3959,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3307,
+								3307
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3010.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"settings":
+					{
+						"buffer_size": 4688,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										353,
+										360
+									],
+									[
+										590,
+										597
+									],
+									[
+										677,
+										684
+									],
+									[
+										1080,
+										1087
+									],
+									[
+										1758,
+										1765
+									],
+									[
+										1891,
+										1898
+									],
+									[
+										2129,
+										2136
+									],
+									[
+										2714,
+										2721
+									],
+									[
+										2830,
+										2837
+									],
+									[
+										3227,
+										3234
+									],
+									[
+										3583,
+										3590
+									],
+									[
+										3901,
+										3908
+									],
+									[
+										3984,
+										3991
+									],
+									[
+										4029,
+										4036
+									],
+									[
+										4077,
+										4084
+									],
+									[
+										4207,
+										4214
+									],
+									[
+										4328,
+										4335
+									],
+									[
+										4446,
+										4453
+									],
+									[
+										4581,
+										4588
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								3355,
+								3355
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 2,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1242.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "services/authService/site.js",
+					"settings":
+					{
+						"buffer_size": 4647,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1753,
+								1753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 345.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "services/authService/db/users.js",
+					"settings":
+					{
+						"buffer_size": 4093,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1753,
+								1753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 759.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

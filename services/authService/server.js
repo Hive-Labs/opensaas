@@ -1,4 +1,3 @@
-// library imports
 var engine = require('ejs-locals'),
     express = require('express'),
     email = require('./lib/email'),
@@ -11,9 +10,13 @@ var engine = require('ejs-locals'),
     user = require('./user'),
     dbService = require("dbService"),
     winston = require('winston'),
-    providers = [];
+    providers = [],
+    models = require('./lib/models'),
+    User = models.UserModel,
+    settings = require('./config.json'),
+    app = express();
 
-// setup the logger
+//  Setup the logger
 global.logger = new winston.Logger({
     transports: [
         new(winston.transports.Console)({
@@ -23,18 +26,10 @@ global.logger = new winston.Logger({
     exitOnError: false
 });
 
+//  Pretty-print the output
 logger.cli();
 
-// Models
-var models = require('./lib/models'),
-    User = models.UserModel;
-
-// Application Settings
-var settings = require('./config.json');
-
-var app = express();
-
-// load all express middleware
+// Load all express middleware
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use(express.query());
@@ -45,23 +40,24 @@ app.use(express.session({
     }),
     secret: settings.security.sessionPassword
 }));
-
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
 app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(passport.session());
 
-logger.info('Running the Notoja Authentication Server on port ' + settings.server.port);
+logger.info('Running the Hive Authentication Server on port ' + settings.server.port);
 
-//Application name must be lower case due to limits in couchdb
+// Application name must be lower case due to limits in couchdb
 dbService.init("127.0.0.1", 3000, "authservice");
 
 var db = require("./db")(dbService, logger);
 
 db.users.init(function() {
+    //  Read in an list of authentication providers (UML)
     readProviders();
     require('./auth')(dbService,providers, db);
+    var jabber = require('./jabberAuth.js')(db);
     var site = require('./site')(db);
     var oauth2 = require('./oauth2')(dbService, db);
     app.get('/', ensureAuthenticated, site.index);
@@ -73,7 +69,6 @@ db.users.init(function() {
     app.get('/logout', site.logout);
     app.get('/account', ensureAuthenticated, site.account);
     app.get('/auth/google', site.googleAuth);
-    //Nigga....app.put('/user', ensureAuthenticated, site.updateUser);
 
     app.get('/dialog/authorize', oauth2.authorization);
     app.post('/dialog/authorize/decision', oauth2.decision);
@@ -87,6 +82,7 @@ db.users.init(function() {
     app.put("/api/user", passport.authenticate('bearer', {
         session: false
     }),  site.updateUser);
+    app.post("/login/jabber",  jabber.jabberLogin);
 
 
     //////////////////  Have the express server listen on the specified port  //////////////////
