@@ -8,20 +8,20 @@ module.exports = function(db) {
                 db.users.find(token.userID, function(err, user) {
                     if (!error && user) {
                         res.json({
-                            success: true;
+                            success: true
                         });
                     } else {
                         res.json({
-                            success: false;
+                            success: false
                         });
                     }
                 });
             } else {
                 res.json({
-                    success: false;
+                    success: false
                 });
             }
         });
-    };
+    }
     return returnObj;
 }
