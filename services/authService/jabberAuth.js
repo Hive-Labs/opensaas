@@ -7,16 +7,21 @@ module.exports = function(db) {
             if (token && !err) {
                 db.users.find(token.userID, function(err, user) {
                     if (!error && user) {
+                        console.log("Jabber auth success");
                         res.json({
                             success: true
                         });
                     } else {
+                        console.log("Invalid user.");
+                        console.log(err);
                         res.json({
                             success: false
                         });
                     }
                 });
             } else {
+                console.log("Invalid token.");
+                console.log(err);
                 res.json({
                     success: false
                 });
