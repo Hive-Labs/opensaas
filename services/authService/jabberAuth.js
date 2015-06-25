@@ -32,7 +32,7 @@ module.exports = function(db) {
                         var shasum = crypto.createHash('sha1');
                         shasum.update(accessToken);
                         if (user.password != shasum.digest('hex')) {
-                            console.log("Invalid password.");
+                            console.log("Invalid password." + accessToken + "," + shasum.digest("hex") + ","+ user.password);
                             res.json({
                                 success: false
                             });
