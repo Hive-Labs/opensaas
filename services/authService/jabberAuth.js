@@ -31,8 +31,9 @@ module.exports = function(db) {
                         crypto = require('crypto');
                         var shasum = crypto.createHash('sha1');
                         shasum.update(accessToken);
-                        if (user.password != shasum.digest('hex')) {
-                            console.log("Invalid password." + accessToken + "," + shasum.digest("hex") + ","+ user.password);
+                        var givenPass = shasum.digest('hex');
+                        if (user.password != givenPass) {
+                            console.log("Invalid password." + accessToken + "," + givenPass + ","+ user.password);
                             res.json({
                                 success: false
                             });
