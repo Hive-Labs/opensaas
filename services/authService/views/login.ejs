@@ -184,12 +184,13 @@ h1{
 	cursor: pointer;
 }
 .googleSignInButton{
-	background-image:url('/images/Red-signin-Long-base-44dp.png');
-	height:33px;
-	width:150px;
-	background-size:150px;
-	border-radius: 5px;
-	margin-top: 10px;
+	background-image: url('/images/Red-signin-Long-base-44dp.png');
+  height: 33px;
+  width: 150px;
+  background-size: 150px;
+  border-radius: 5px;
+  margin-left: 157px;
+  float: left;
 }
 .googleSignInButton:hover{
 	background-image:url('/images/Red-signin-Long-hover-44dp.png');
@@ -292,11 +293,11 @@ h1{
   <script type="text/javascript">
    $(function() {
     var images = ['bluevan.jpg', 'canoelake.jpg', 'mtjump.jpg', 'shaggy.jpg', 'sunsetbeach.jpg'];
-    $('#background').css({'background-image': 'url(/images/loginBackgroundImages/' + images[Math.floor(Math.random() * images.length)] + ')'});
+    $('#background').css({'background-image': 'url(/images/loginBackgroundImages/' + images[Math.floor(Math.random() * images.length)] + ')'});                                                                   
    });
-</script>
+</script>                         
 </head>
-<body>
+<body>                                                                            
 <div id="background"></div>
 <div id="appContainer" class="appContainer jumbotron">
 	<div class="hiveText">HIVE</div>
@@ -309,10 +310,10 @@ h1{
 		<input type="text" class="loginInput" placeholder="Email Address" name="username">
 		<input type="password" class="loginInput" placeholder="Password" name="password">
 		<button type="submit" class="btn btn-primary"><div class="signInText">Sign In</div></button>
-		<!--<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
-		</div>-->
+		<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
+		</div>
 	</form>
-</div>
+</div>                                                                                                                      
  <link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Montserrat+Alternates|Roboto+Slab' rel='stylesheet' type='text/css'>
  <!--<div class="footer">
         © Hive Labs, 2015
