@@ -39,7 +39,7 @@ module.exports = function(db) {
         if (checkIfNullOrEmpty(name) || checkIfNullOrEmpty(email) || checkIfNullOrEmpty(password)) {
             res.send(errorcodes.BAD_REQUEST("name, email, or password is null. name=" + name + " email=" + email + " password=" + password), 400);
         } else {
-            db.users.addUser(name, email, password, function(err, user) {
+            db.users.addUser(name, email, password, null, function(err, user) {
                 logger.info("site.newUser callback.");
                 if (!err) {
                     res.json(user);

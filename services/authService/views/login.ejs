@@ -98,10 +98,10 @@ body:after{
 h1{
      text-align:center;
      font-family: 'Gotham-Light';
-     margin-top: 135px;
      font-size: 35px !important;
      color: white !important;
      padding-bottom: 10px;
+     margin-top: 0;
 }
 
 .btn{
@@ -131,7 +131,6 @@ h1{
  	font-family: 'Gotham-Light' !important;
   height: 34px !important;
   float: right !important;
-  margin-right: 160px !important;
   text-align: center !important;
 }
 
@@ -142,9 +141,7 @@ h1{
     color: #f1f1f1 !important;
     font-weight: bold !important;
     font-family: 'Gotham-Light' !important;
-    height: 34px !important;
     float: right !important;
-    margin-right: 160px !important;
     -webkit-transition: all 200ms ease-in-out 0s;
     -moz-transition: all 200ms ease-in-out 0s;
     -o-transition: all 200ms ease-in-out 0s;
@@ -152,14 +149,13 @@ h1{
 }
 
 .loginDiv{
-	margin-left: auto;
-	margin-right: auto;
 	text-align: center;
-  margin-bottom: 0px;
-  width: 600px;
-	margin-bottom: 0px;
   color: rgb(50, 50, 50) !important;
-  margin-top:calc(50vh - 130px);
+  position: absolute;
+  width: 485px;
+  left: calc(50vw - 242px);
+  margin-bottom: 0;
+  top: calc(50vh - 94px);
 }
 
 .loginDiv input{
@@ -192,7 +188,6 @@ h1{
   width: 150px;
   background-size: 150px;
   border-radius: 5px;
-  margin-left: 157px;
   float: left;
 }
 .googleSignInButton:hover{
@@ -241,12 +236,15 @@ h1{
 .signInText {
   padding-top: 1px;
 }
-.alert-danger{
+.alert-danger2{
 	padding: 0px;
 	margin-left: auto;
 	width: 100%;
 	max-width: 300px;
 	margin-right: auto;
+  margin-top: 20px;
+  color: rgb(255, 176, 166);
+  display: none;
 }
 .loginInput {
   display: block;
@@ -291,6 +289,12 @@ h1{
   padding-top: 2px;
   opacity: 0.5;
 }
+.buttonsDiv{
+  width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 35px;
+}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" ></script>
   <script type="text/javascript">
@@ -307,14 +311,16 @@ h1{
 	<div class="notebookText">NOTEBOOK</div>
 	<form method="post" action="/login" class="loginDiv">
 		<h1>Sign in to start taking notes.</h1>
-		<div class="alert alert-danger">
- 			Incorrect email or password.
-		</div>
 		<input type="text" class="loginInput" placeholder="Email Address" name="username">
 		<input type="password" class="loginInput" placeholder="Password" name="password">
-		<button type="submit" class="btn btn-primary"><div class="signInText">Sign In</div></button>
-		<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
-		</div>
+    <div class="buttonsDiv">
+  		<button type="submit" class="btn btn-primary"><div class="signInText">Sign In</div></button>
+  		<div class="thirdPartySignin googleSignInButton" onClick="window.location = '/auth/google';">
+  		</div>
+    </div>
+    <div class="alert-danger2">
+      Incorrect email or password.
+    </div>
 	</form>
 </div>                                                                                                                      
  <link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Montserrat+Alternates|Roboto+Slab' rel='stylesheet' type='text/css'>
@@ -331,9 +337,9 @@ function getParameterByName(name) {
 }
 
 if(getParameterByName('loginFailed') == "true"){
-	$('.alert-danger').show();
+	$('.alert-danger2').show();
 }
 else{
-	$('.alert-danger').hide();
+	$('.alert-danger2').hide();
 }
 </script>
