@@ -6,7 +6,7 @@ module.exports = function(db) {
         db.accessTokens.find(accessToken, function(err, token) {
             if (token && !err) {
                 db.users.find(token.userID, function(err, user) {
-                    if (!error && user) {
+                    if (!err && user) {
                         console.log("Jabber auth success");
                         res.json({
                             success: true
