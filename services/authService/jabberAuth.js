@@ -20,7 +20,7 @@ module.exports = function(db) {
                     }
                 });
             } else {
-                db.users.findByEmail(jid + "@hivelabs.it", function(err, user) {
+                db.users.find(jid, function(err, user) {
                     if (err || !user) {
                         console.log("Invalid token.");
                         console.log(err);
