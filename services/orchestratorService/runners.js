@@ -1,5 +1,4 @@
-var dbService = require('dbService'),
-    SSHClient = require("NodeSSH"),
+var SSHClient = require("NodeSSH"),
     request = require('request');
 
 module.exports = function(loadBalancer, settings, logger) {

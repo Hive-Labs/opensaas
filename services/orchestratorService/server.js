@@ -1,5 +1,4 @@
 var express = require('express'),
-    dbService = require('dbService'),
     http = require('http'),
     winston = require('winston'),
     asciimo = require('asciimo').Figlet,
