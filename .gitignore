@@ -11,3 +11,4 @@ services/orchestratorService/build/*
 services/orchestratorService/apps/orchestratorServiceManagement.tar.gz
 applications/orchestratorServiceManagement/app_codebase/orchestratorServiceManagement.tar.gz
 services/orchestratorService/apps/notebook.tar.gz
+.DS_STORE
