@@ -1,8 +1,8 @@
 server:
   port: 3005
 
-  oAuthClientID: 'orchestratorManagement'
+  oAuthClientID: 'orchestratorManagementLocal'
 
   oAuthClientSecret: 'google1'
 
-  authServerHostname: 'http://auth.hivelabs.it'
+  authServerHostname: 'http://localhost:4455'

@@ -36,16 +36,16 @@ module.exports = function(app, logger) {
 
             //If there is an error, display it
             tarProcess.on('error', function(err) {
-                logger.info('Error Untarring:' + err);
+                logger.info('Tar:' + err);
             });
 
             //If there is an error, display it
             tarProcess.stderr.on('data', function(data) {
-                logger.info('Error Untarring: ' + data);
+                logger.info('Tar: ' + data);
             });
 
             tarProcess.stdout.on('data', function(data) {
-                logger.info('RUNNER:' + data);
+                logger.info('Tar:' + data);
             });
 
             //Once tar process finishes, continue...
@@ -57,16 +57,16 @@ module.exports = function(app, logger) {
 
                 //If there is an error, display it
                 npmProcess.on('error', function(err) {
-                    logger.info('Error npm:' + err);
+                    logger.info('Npm:' + err);
                 });
 
                 //If there is an error, display it
                 npmProcess.stderr.on('data', function(data) {
-                    logger.info('Error npm: ' + data);
+                    logger.info('Npm: ' + data);
                 });
 
                 npmProcess.stdout.on('data', function(data) {
-                    logger.info('RUNNER:' + data);
+                    logger.info('Npm:' + data);
                 });
 
                 npmProcess.on('close', function(code) {
@@ -98,19 +98,19 @@ module.exports = function(app, logger) {
                     //If child app throws an error or console.logs something, display it
                     this.nodeProcess.on('error', function(data) {
                         if (data) {
-                            logger.error('CHILD(ERROR):' + data);
+                            logger.error('CHILD:' + data);
                         }
                     });
 
                     this.nodeProcess.stderr.on('data', function(data) {
                         if (data) {
-                            logger.error('CHILD(ERROR):' + data);
+                            logger.error('CHILD:' + data);
                         }
                     });
 
                     this.nodeProcess.stdout.on('data', function(data) {
                         if (data) {
-                            logger.info('CHILD(DATA):' + data);
+                            logger.info('CHILD:' + data);
                         }
                     });
                     app.set("applicationNodeProcess", this.nodeProcess);

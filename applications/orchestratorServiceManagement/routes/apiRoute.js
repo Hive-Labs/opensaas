@@ -15,8 +15,9 @@ module.exports = function(servConf, dbService) {
 
     returnObj.logout = function(req, res) {
         res.clearCookie('access_token');
-        var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host;
-        res.redirect(301, req.protocol + "://" + hostname);
+        res.clearCookie('access_token');
+        res.redirect(servConf.get().server.authServerHostname + 
+                            '/logout');
     };
 
     function exchangeToken(auth_code, callback) {

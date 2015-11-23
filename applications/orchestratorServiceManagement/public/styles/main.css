@@ -1,3 +1,50 @@
+body{
+  background-color: #f1f1f1;
+}
+
+.icon-heart {
+  margin-right: 10px;
+  color: rgba(217, 83, 79, 0.76)
+}
+.btn-success {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #29a468 !important;
+    font-weight: bold !important;
+    font-family: 'Gotham-Light' !important;
+    text-align: center !important;
+    border: 2px solid #29a468 !important;
+    border-radius: 4px !important;
+}
+
+.btn-regular {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #555 !important;
+    font-weight: bold !important;
+    font-family: 'Gotham-Light' !important;
+    text-align: center !important;
+    border: 2px solid #555 !important;
+    border-radius: 4px !important;
+}
+
+#logRunnerModalLogText{
+  overflow-x: scroll; 
+}
+
+#logRunnerModalLogText p{
+  border-bottom: 1px solid rgba(128, 128, 128, 0.13);
+}
+
+.icon-heart:before {
+    content: "\e900";
+}
+
+.connectedHeader{
+  font-size: 20pt;
+  margin-bottom: 20px;
+}
+
 .dashboardDiv{
     padding:60px;
     overflow:auto;
@@ -7,6 +54,7 @@
 }
 .connectedRunnersInner{
   padding-left:45px;
+  margin-top: 30px;
 }
 .connectedServicesDetInner{
   padding-left:45px;
@@ -20,8 +68,8 @@ footer{
 .terminateRunnerModalRunnerInfo{
   padding-left:30px;
 }
-.twoColumn{
-    width:50%;
+.oneColumn{
+    width:100%;
     float:left;
 }
 .addRunnerBtn{
@@ -45,4 +93,21 @@ footer{
 }
 .shown{
   display: block;
+}
+
+footer{
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    left: calc(50% - 150px);
+    width: 300px;
+}
+
+footer p {
+  float: left;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: center;
 }

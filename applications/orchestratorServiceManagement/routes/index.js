@@ -15,13 +15,12 @@ module.exports = function(servConf, dbService) {
 						});
 						res.redirect('/');
 					} else {
-						logger.info("Client ID:");
-						logger.info(servConf.get().server.oAuthClientID);
-						res.render('login', {
-							client_id: servConf.get().server.oAuthClientID,
-							client_secret: servConf.get().server.oAuthClientSecret,
-							authServerHostname: servConf.get().server.authServerHostname
-						});
+						res.redirect(servConf.get().server.authServerHostname + 
+							'/dialog/authorize?response_type=code&client_id=' + 
+							servConf.get().server.oAuthClientID +
+							'&client_secret=' + 
+							servConf.get().server.oAuthClientSecret +
+							'&redirect_uri=http://' + req.headers.host);
 					}
 				});
 			});
@@ -31,13 +30,12 @@ module.exports = function(servConf, dbService) {
 				if (user) {
 					res.render('index');
 				} else {
-					logger.info("Client ID:");
-					logger.info(servConf.get().server.oAuthClientID);
-					res.render('login', {
-							client_id: servConf.get().server.oAuthClientID,
-							client_secret: servConf.get().server.oAuthClientSecret,
-							authServerHostname: servConf.get().server.authServerHostname
-					});
+					res.redirect(servConf.get().server.authServerHostname + 
+							'/dialog/authorize?response_type=code&client_id=' + 
+							servConf.get().server.oAuthClientID +
+							'&client_secret=' + 
+							servConf.get().server.oAuthClientSecret +
+							'&redirect_uri=http://' + req.headers.host);
 				}
 			});
 		}

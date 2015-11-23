@@ -41,7 +41,7 @@ module.exports = function(app, runners, applications, logger) {
         logger.info('GET /runners/' + req.params.id + "/log");
         var log = runners.log(req.params.id, function(err, log) {
             if (log && !err) {
-                res.end((log));
+                res.json(log);
             } else {
                 res.end('An error Occured');
             }

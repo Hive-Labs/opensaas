@@ -170,20 +170,20 @@ function monitorRunners() {
             if (!runnerID) {
                 logger.log('info', 'There are no available runners now. I am going to spin one up now.');
                 runners.spawnRunner();
-                //Wait 30 seconds for this new runner to spin up, then start deploying apps again.
+                //Wait 3 seconds for this new runner to spin up, then start deploying apps again.
                 setTimeout(function() {
                     applications.listDeployed(function(err, appList) {
                         applications.deployApps(appList);
                     });
                     monitorRunners();
-                }, 30000);
+                }, 3000);
             } else {
                 for (var i = 0; i < currentList.length; i++) {
                     checkRunner(currentList[i].id);
                 }
                 setTimeout(function() {
                     monitorRunners();
-                }, 5000);
+                }, 1000);
             }
         });
     });
@@ -199,7 +199,7 @@ function checkRunner(runnerID, callback) {
                         callback();
                     setTimeout(function callback(err3) {
                         applications.deployApps(applications.list());
-                    }, 15000);
+                    }, 3000);
                 });
             });
         }

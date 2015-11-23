@@ -7,8 +7,10 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 		$('#navBarFullName').text(userInfo.displayName);
 	});
 
-	var cancelRefresh = $timeout(function myFunction() {
+	var cancelRefresh;
+	(function myFunction() {
 		orchestratorRunnersAPI.get(function callback(data) {
+			console.log(data);
 			$scope.runners = data;
 			setTimeout(function() {
 				for (var i = 0; i < $scope.runners.length; i++) {
@@ -21,7 +23,7 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 			}, 30);
 		});
 		cancelRefresh = $timeout(myFunction, 15000);
-	}, 2000);
+	})();
 
 
 	$scope.terminate = function(runner) {
@@ -40,6 +42,7 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 	$scope.deploy = function() {
 		$('#deployRunnerModal').modal('show');
 		orchestratorAPI.listApps(function(data) {
+			console.log(data);
 			for (var i = 0; i < data.length; i++) {
 				$('#deployRunnerModalAppName').append("<option value='" + data[i] + "'>" + data[i] + "</option>");
 			}
@@ -65,16 +68,19 @@ angular.module('orchestratorServiceManagementApp').controller('MainCtrl', functi
 	$scope.log = function(runner) {
 		$('#logRunnerModal').modal('show');
 		orchestratorRunnersAPI.log(runner.id, function callback(log) {
+			console.log(log);
 			var arrayOfLines = log;
 			$("#logRunnerModalLogText").text('');
 			for (var i = 0; i < arrayOfLines.length; i++) {
 				var color;
-				if (i % 2 === 0) {
-					color = 'blue';
+				if (arrayOfLines[i].level == 'info') {
+					color = '#31708f';
 				} else {
 					color = 'green';
 				}
-				$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + JSON.stringify(arrayOfLines[i], null, '<br/>\t') + '</p>');
+				if(arrayOfLines[i].message.trim().indexOf("health") !== 0){
+					$("#logRunnerModalLogText").append('<p style="color:' + color + '">' + arrayOfLines[i].message + '</p>');
+				}
 			}
 		});
 	};
