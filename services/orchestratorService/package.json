@@ -7,7 +7,6 @@
     },
     "dependencies": {
         "express": "4.x",
-        "dbService": "*",
         "request": "*",
         "NodeSSH": "*",
         "node-expect": "*",
