@@ -23,7 +23,7 @@ adaptor_settings:
     port: 5984
     #retries: 3
     #retryTimeout: 30*1000
-    cache: true
+    cache: false
     raw: false
 
     # Authentication Settings

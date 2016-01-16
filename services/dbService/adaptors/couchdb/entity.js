@@ -100,6 +100,7 @@ module.exports = function(conn, settings) {
                         db.merge(_id, object, function(err, res) {
                             object._id = _id;
                             if (err) {
+                                console.log(err.error);
                                 logger.error("Error updating.");
                                 logger.error(err);
                                 next(exceptions.entity.updateException(res), object);
@@ -165,10 +166,8 @@ module.exports = function(conn, settings) {
             });
         },
 
-        attachFile: function(application, collection, entity, id, name, files, next) {
+        attachFile: function(application, collection, entity, id, name, file, mimeType, next) {
             logger.info("Attaching file: " + application + "/" + entity + "/" + id + "/attachments/" + name);
-            //  Get the first file the user POST'ed.
-            var file = files[Object.keys(files)[0]];
             //  Check to make sure the user actually sent a file.
             if (file != null) {
                 //  Set the database to the appropriate application (eg. NoteBook).
@@ -179,16 +178,13 @@ module.exports = function(conn, settings) {
                         logger.error(err);
                         next(err);
                     } else {
-                        //  Get more info about the document with the given id.
-                        db.get(id, function(err, res) {
-                            //  Check if there was error getting the document.
-                            if (!err && res != null) {
-                                //  Get the latest revision number from this result
-                                var rev = res._rev;
-                                //  Lookup the mime-type of the document
-                                var Magic = mmmMagic.Magic;
-                                var magic = new Magic(mmmMagic.MAGIC_MIME_TYPE);
-                                magic.detectFile(file.path, function(err, mimeType) {
+                        function getLatestDoc(retry) {
+                            //  Get more info about the document with the given id.
+                            db.get(id, function(err, res) {
+                                //  Check if there was error getting the document.
+                                if (!err && res != null) {
+                                    //  Get the latest revision number from this result
+                                    var rev = res._rev;
                                     //  We need to send the id data to cradle "save attachment" request
                                     var idData = {
                                         id: id,
@@ -199,26 +195,31 @@ module.exports = function(conn, settings) {
                                         name: name,
                                         "Content-Type": mimeType
                                     };
-                                    //  Create a fileStream to read the temporary document from.
-                                    var readStream = fs.createReadStream(file.path);
                                     //  db.saveAttachment returns a writable stream
                                     var writeStream = db.saveAttachment(idData, attachmentData, function(err2, res2) {
                                         //  Check if errors occured saving the attachment.
                                         if (err2) {
                                             logger.error("Error saving.");
                                             logger.error(err2);
+                                            if(retry < 5){
+                                                getLatestDoc(retry + 1);
+                                            }
+                                            else{
+                                                next(err2, res2);
+                                            }
                                         } else {
                                             logger.info("Saved file to id=" + id + ", rev=" + rev);
+                                            next(err2, res2);
                                         }
-                                        next(err2, res2);
                                     });
                                     //  Pipe the output of the readStream to the writable stream
-                                    readStream.pipe(writeStream);
-                                });
-                            } else {
-                                logger.error(err);
-                            }
-                        });
+                                    file.pipe(writeStream);
+                                } else {
+                                    logger.error(err);
+                                }
+                            });
+                        }
+                        getLatestDoc(0);
                     }
                 });
             } else {

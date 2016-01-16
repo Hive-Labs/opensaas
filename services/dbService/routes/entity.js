@@ -190,13 +190,17 @@ module.exports = function(persistent, cache) {
                     return;
                 }
             } else {
-                persistent.entity.attachFile(req.params.application,
-                    req.params.collection,
-                    req.params.entity,
-                    req.params.id,
-                    req.params.name,
-                    req.files,
-                    sendJSONResponse(res, 201, 400));
+                req.pipe(req.busboy);
+                req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+                    persistent.entity.attachFile(req.params.application,
+                        req.params.collection,
+                        req.params.entity,
+                        req.params.id,
+                        req.params.name,
+                        file,
+                        mimetype,
+                        sendJSONResponse(res, 201, 400));
+                });
             }
         },
 
@@ -252,9 +256,9 @@ module.exports = function(persistent, cache) {
 function sendJSONResponse(res, successCode, errorCode) {
     return function(err, obj) {
         if (!err) {
-            res.json(successCode, obj);
+            res.status(successCode).json(obj);
         } else {
-            res.json(errorCode, err);
+            res.status(errorCode).json(err);
         }
         res.end();
     };
@@ -273,9 +277,8 @@ function getCacheTime(req) {
         cacheSettings[i] = cacheSettings[i].trim();
     }
 
-    console.log(cacheSettings);
-    if ( !! cacheSettings[0] && (cacheSettings[0] === 'private' || cacheSettings[0] === 'Private')) {
-        if ( !! cacheSettings[1]) {
+    if (!!cacheSettings[0] && (cacheSettings[0] === 'private' || cacheSettings[0] === 'Private')) {
+        if (!!cacheSettings[1]) {
             return Number(cacheSettings[1].split('=')[1]);
         } else { // expire at max_cache_time
             return -1;

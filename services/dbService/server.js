@@ -7,16 +7,20 @@ var express = require('express'),
     servConf = require('nconf'),
     http = require('http'),
     path = require('path'),
+    nconf = require('nconf'),
+    bodyParser = require('body-parser'),
+    errorHandler = require('errorhandler'),
+    busboy = require('connect-busboy'),
     winston = require('winston');
-
-require('js-yaml');
 
 var app = express();
 
 // setup the configs
-servConf.defaults(require('./config.yml'))
-    .argv()
-    .env();
+servConf.file({
+    file: './config.yml',
+    format: require('nconf-yaml')
+});
+
 global.servConf = servConf;
 
 // setup the logger
@@ -34,17 +38,19 @@ global.exceptions = require('./exceptions');
 logger.cli();
 
 // all environments
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
+app.use(bodyParser.json());
+app.use(busboy({
+    limits: {
+        fileSize: 100 * 1024 * 1024
+    }
+}));
 app.disable('x-powered-by');
 
 
 // development only
 if ('development' == servConf.get('DB_ENV')) {
     logger.info('Running in development mode');
-    app.use(express.errorHandler());
+    app.use(errorHandler());
 }
 
 var routes = require('./routes')({
@@ -73,10 +79,10 @@ app.get('/entity/:application/:collection/:entity', routes.entity.findAll);
 app.post('/entity/:application/:collection/:entity', routes.entity.create);
 app.post('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.attachFile);
 app.get('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.findAttachment);
-app.del('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.removeAttachment);
+app.delete('/entity/:application/:collection/:entity/:id/attachments/:name', routes.entity.removeAttachment);
 app.post('/entity/:application/:collection/:entity/:id', routes.entity.update);
-app.del('/entity/:application/:collection/:entity/:id', routes.entity.del);
-app.del('/entity/:application/:collection/:entity', routes.entity.del);
+app.delete('/entity/:application/:collection/:entity/:id', routes.entity.del);
+app.delete('/entity/:application/:collection/:entity', routes.entity.del);
 
 
 http.createServer(app).listen(servConf.get().server.port, function() {
