@@ -38,7 +38,9 @@ global.exceptions = require('./exceptions');
 logger.cli();
 
 // all environments
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    limit: '100mb'
+}));
 app.use(busboy({
     limits: {
         fileSize: 100 * 1024 * 1024
