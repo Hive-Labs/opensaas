@@ -4,7 +4,12 @@ module.exports = function(db) {
         login = require('connect-ensure-login'),
         errorcodes = require("./errorcodes");
     returnObj.index = function(req, res) {
-        res.end('Hello ' + req.user.displayName);
+        if(res.session.returnTo){
+            res.redirect(req.session.returnTo);    
+            delete req.session.returnTo;
+        } else {
+            res.end('Hello ' + req.user.displayName);
+        }
     };
     returnObj.loginForm = function(req, res) {
         res.render('login');

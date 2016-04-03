@@ -76,11 +76,13 @@ module.exports = function(dbService, logger) {
 
                 dbService.set("credentials", "user", newUser, function(err, obj) {
                     if (!err) {
-                        newUser._id = "pending";
-                        returnObj.users.push(newUser);
-                        returnObj.init(function() {});
+                        //  Refresh local database after new user added.
+                        returnObj.init(function() {
+                            done(err, obj);
+                        });
+                    } else {
+                        done(err, obj);
                     }
-                    done(err, obj);
                 });
             }
         });

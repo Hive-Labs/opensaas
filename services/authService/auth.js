@@ -20,14 +20,13 @@ module.exports = function(dbService, providers, db) {
      * a user is logged in before asking them to approve the request.
      */
     passport.use(new LocalStrategy(
-        function(username, password, done) {
+        function verify(username, password, done) {
             db.users.findByEmail(username, function(err, user) {
                 if (err) {
                     return done(err);
                 }
                 if (!user || user.type != null) {
                     checkAllProviders = function(idx, callback) {
-                        console.log(idx);
                         if (idx >= providers.length) {
                             callback(null, false);
                         } else {
@@ -36,15 +35,13 @@ module.exports = function(dbService, providers, db) {
                                     checkAllProviders(idx + 1, callback);
                                 } else {
                                     if (!user) {
-                                        console.log("ADDING");
-                                        console.log(result);
                                         db.users.addUser(result.displayName, result.email, null, result.type, function(err, newUser) {
-                                            console.log(newUser);
-                                            callback(null, newUser);
+                                            //  We just added the user, now let's retry logging in.
+                                            verify(username, password, done);
                                         });
                                     }
                                     else{
-                                        console.log(user);
+                                        console.log("SUCCESS!");
                                         callback(null, user);
                                     }
                                 }
