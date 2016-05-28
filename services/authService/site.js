@@ -4,7 +4,7 @@ module.exports = function(db) {
         login = require('connect-ensure-login'),
         errorcodes = require("./errorcodes");
     returnObj.index = function(req, res) {
-        if(res.session.returnTo){
+        if(res.session && res.session.returnTo){
             res.redirect(req.session.returnTo);    
             delete req.session.returnTo;
         } else {
