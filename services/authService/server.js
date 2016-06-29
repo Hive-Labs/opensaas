@@ -3,8 +3,7 @@ var engine = require('ejs-locals'),
     email = require('./lib/email'),
     fs = require('fs'),
     http = require('http'),
-    https = require('https'),
-    MemoryStore = express.session.MemoryStore,
+    https = require('https'),    
     mongoose = require('mongoose'),
     passport = require('passport'),
     user = require('./user'),
@@ -14,6 +13,11 @@ var engine = require('ejs-locals'),
     models = require('./lib/models'),
     User = models.UserModel,
     settings = require('./config.json'),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
+    MemoryStore = session.MemoryStore,
     app = express();
 
 //  Setup the logger
@@ -30,18 +34,22 @@ global.logger = new winston.Logger({
 logger.cli();
 
 // Load all express middleware
-app.use(express.logger());
-app.use(express.bodyParser());
-app.use(express.query());
-app.use(express.cookieParser());
-app.use(express.session({
+app.use(morgan("combined"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(cookieParser());
+app.use(session({
     store: new MemoryStore({
         reapInterval: 5 * 60 * 1000
     }),
+    resave: false,
+    saveUninitialized: true,
     secret: settings.security.sessionPassword
 }));
 app.set('view engine', 'ejs');
-app.engine('ejs', engine);
+app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,7 +72,7 @@ db.users.init(function() {
     app.get('/login', site.loginForm);
     app.get('/users', ensureAuthenticated, site.usersForm);
     app.post('/user', ensureAuthenticated, site.newUser);
-    app.del('/user', ensureAuthenticated, site.removeUser);
+    app.delete('/user', ensureAuthenticated, site.removeUser);
     app.post('/login', site.login);
     app.get('/logout', site.logout);
     app.get('/account', ensureAuthenticated, site.account);

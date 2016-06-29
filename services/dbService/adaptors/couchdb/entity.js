@@ -51,8 +51,6 @@ module.exports = function(conn, settings) {
                     db.get(id, function(err, res) {
                         if (!err && res != null) {
                             delete res.view;
-                        } else {
-                            logger.error(err);
                         }
                         next(err, res);
                     });
@@ -197,20 +195,8 @@ module.exports = function(conn, settings) {
                                     };
                                     //  db.saveAttachment returns a writable stream
                                     var writeStream = db.saveAttachment(idData, attachmentData, function(err2, res2) {
-                                        //  Check if errors occured saving the attachment.
-                                        if (err2) {
-                                            logger.error("Error saving.");
-                                            logger.error(err2);
-                                            if(retry < 5){
-                                                getLatestDoc(retry + 1);
-                                            }
-                                            else{
-                                                next(err2, res2);
-                                            }
-                                        } else {
-                                            logger.info("Saved file to id=" + id + ", rev=" + rev);
-                                            next(err2, res2);
-                                        }
+                                        console.log(err2);
+                                        next()
                                     });
                                     //  Pipe the output of the readStream to the writable stream
                                     file.pipe(writeStream);
