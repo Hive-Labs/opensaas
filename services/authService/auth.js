@@ -6,7 +6,6 @@ module.exports = function(dbService, providers, db) {
         LocalStrategy = require('passport-local').Strategy,
         BasicStrategy = require('passport-http').BasicStrategy,
         ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
-        GoogleStrategy = require('passport-google-oauth2').Strategy,
         configuration = require('./config.json'),
         BearerStrategy = require('passport-http-bearer').Strategy,
         crypto = require('crypto');
@@ -42,6 +41,7 @@ module.exports = function(dbService, providers, db) {
                                     }
                                     else{
                                         console.log("SUCCESS!");
+                                        console.log(user);
                                         callback(null, user);
                                     }
                                 }
@@ -59,39 +59,6 @@ module.exports = function(dbService, providers, db) {
                 }
             });
         }));
-
-    /**
-     * GoogleStrategy
-     *
-     * This strategy is used to authenticate users using their google account.
-     */
-
-    passport.use(new GoogleStrategy({
-            clientID: configuration.google.clientID,
-            clientSecret: configuration.google.clientSecret,
-            callbackURL: configuration.server.hostname + '/auth/google/callback',
-            passReqToCallback: true
-        },
-        function(request, accessToken, refreshToken, profile, done) {
-            process.nextTick(function() {
-                db.users.findByEmail(profile.emails[0].value, function(err, user) {
-                    return done(null, user);
-                });
-            });
-        }
-    ));
-
-    passport.serializeUser(function(user, done) {
-        done(null, user._id || user.id);
-    });
-
-    passport.deserializeUser(function(id, done) {
-        console.log("Deserialize " + id);
-        db.users.find(id, function(err, user) {
-            done(err, user);
-        });
-    });
-
 
     /**
      * BasicStrategy & ClientPasswordStrategy
@@ -191,4 +158,12 @@ module.exports = function(dbService, providers, db) {
                 }
             });
         }));
+
+    passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done) {
+      done(null, user);
+    });
 }

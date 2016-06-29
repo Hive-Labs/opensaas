@@ -194,6 +194,10 @@ module.exports = function(dbService, db) {
                 return done(null, client, client.redirectURI);
             });
         }),
+        function(req,res,next){
+            req.query.transaction_id = req.oauth2.transactionID;
+            next();
+        },
         server.decision()
     ];
 

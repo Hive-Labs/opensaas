@@ -61,16 +61,6 @@ module.exports = function(db) {
         successReturnToOrRedirect: '/',
         failureRedirect: '/login?loginFailed=true'
     });
-    returnObj.googleAuth = passport.authenticate('google', {
-        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']
-    });
-    returnObj.login = passport.authenticate('local', {
-        successReturnToOrRedirect: '/',
-        failureRedirect: '/login?loginFailed=true'
-    });
-    returnObj.googleAuth = passport.authenticate('google', {
-        scope: ['https://www.googleapis.com/auth/plus.login', , 'https://www.googleapis.com/auth/plus.profile.emails.read']
-    });
     returnObj.logout = function(req, res) {
         req.logout();
         if (req.query.redirectUri) {

@@ -17,6 +17,7 @@ var engine = require('ejs-locals'),
     morgan = require('morgan'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
+    expressValidator = require('express-validator'),
     MemoryStore = session.MemoryStore,
     app = express();
 
@@ -34,23 +35,20 @@ global.logger = new winston.Logger({
 logger.cli();
 
 // Load all express middleware
-app.use(morgan("combined"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
+//app.use(morgan("combined"));
+app.use(bodyParser());
+app.use(express.query());
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(session({
     store: new MemoryStore({
         reapInterval: 5 * 60 * 1000
     }),
-    resave: false,
-    saveUninitialized: true,
     secret: settings.security.sessionPassword
 }));
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -76,15 +74,10 @@ db.users.init(function() {
     app.post('/login', site.login);
     app.get('/logout', site.logout);
     app.get('/account', ensureAuthenticated, site.account);
-    app.get('/auth/google', site.googleAuth);
 
     app.get('/dialog/authorize', oauth2.authorization);
     app.post('/dialog/authorize/decision', oauth2.decision);
     app.post('/oauth/token', oauth2.token);
-    app.get('/auth/google/callback', passport.authenticate('google', {
-        successReturnToOrRedirect: '/',
-        failureRedirect: '/login?loginFailed=true'
-    }));
 
     app.get('/api/user', user.info);
     app.put("/api/user", passport.authenticate('bearer', {
